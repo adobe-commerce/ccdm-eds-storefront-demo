@@ -1,9 +1,15 @@
-import { loadScript } from '../../scripts/aem.js';
+/* eslint-disable import/no-unresolved */
+
+// setting importmap to `@dropins/storefront-search` doesn't seem to work anymore ???
+import { render as provider } from 'http://localhost:3002/render.js';
+import SearchPopover from 'http://localhost:3002/containers/SearchPopover.js';
+
+// import { loadScript } from '../../scripts/aem.js';
 import { getConfigValue } from '../../scripts/configs.js';
 
 (async () => {
-  const widgetProd = '/scripts/widgets/SearchAsYouType.js';
-  await loadScript(widgetProd);
+  // const widgetProd = '/scripts/widgets/SearchAsYouType.js';
+  // await loadScript(widgetProd);
 
   const storeDetails = {
     environmentId: await getConfigValue('commerce-environment-id'),
@@ -35,15 +41,8 @@ import { getConfigValue } from '../../scripts/configs.js';
     },
   };
 
-  await new Promise((resolve) => {
-    const interval = setInterval(() => {
-      if (window.LiveSearchAutocomplete) {
-        clearInterval(interval);
-        resolve();
-      }
-    }, 200);
-  });
+  // attach the popover element to the "search_autocomplete" div
+  const rootElement = document.getElementById('search_autocomplete');
 
-  // eslint-disable-next-line no-new
-  new window.LiveSearchAutocomplete(storeDetails);
+  provider.render(SearchPopover, { storefrontDetails: storeDetails })(rootElement);
 })();

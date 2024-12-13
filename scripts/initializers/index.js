@@ -60,6 +60,7 @@ export default async function initializeDropins() {
   // Initialize Global Drop-ins
   await import('./auth.js');
   import('./cart.js');
+  import('./search.js');
 }
 
 export function initializeDropin(cb) {

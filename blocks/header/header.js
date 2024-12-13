@@ -160,6 +160,19 @@ export default async function decorate(block) {
           }
         });
       });
+
+    // listen for click on each item
+    navSections
+      .querySelectorAll(':scope .default-content-wrapper > ul > li > ul > li')
+      .forEach((navItem) => {
+        navItem.addEventListener('click', () => {
+          const navSection = navItem.parentNode.parentNode.querySelector('p');
+          const selectedItem = navItem.textContent;
+
+          navSection.innerText = `Dealer: ${selectedItem}`;
+          events.emit('search/event', { type: navSection.textContent, payload: selectedItem });
+        });
+      });
   }
 
   const navTools = nav.querySelector('.nav-tools');

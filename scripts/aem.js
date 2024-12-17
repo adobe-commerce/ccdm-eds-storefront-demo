@@ -506,8 +506,7 @@ async function fetchPlaceholders(prefix = 'default') {
   window.placeholders = window.placeholders || {};
   if (!window.placeholders[prefix]) {
     window.placeholders[prefix] = new Promise((resolve) => {
-      const url = getMetadata('placeholders') || `${prefix === 'default' ? '' : prefix}/placeholders.json`;
-      fetch(url)
+      fetch(`${prefix === 'default' ? '' : prefix}/placeholders.json`)
         .then((resp) => {
           if (resp.ok) {
             return resp.json();
@@ -516,17 +515,11 @@ async function fetchPlaceholders(prefix = 'default') {
         })
         .then((json) => {
           const placeholders = {};
-          json.data.forEach(({ Key, Value }) => {
-            if (Key) {
-              const keys = Key.split('.');
-              const lastKey = keys.pop();
-              const target = keys.reduce((obj, key) => {
-                obj[key] = obj[key] || {};
-                return obj[key];
-              }, placeholders);
-              target[lastKey] = Value;
-            }
-          });
+          json.data
+            .filter((placeholder) => placeholder.Key)
+            .forEach((placeholder) => {
+              placeholders[toCamelCase(placeholder.Key)] = placeholder.Text;
+            });
           window.placeholders[prefix] = placeholders;
           resolve(window.placeholders[prefix]);
         })

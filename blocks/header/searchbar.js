@@ -8,10 +8,15 @@ import SearchPopover from 'http://localhost:3002/containers/SearchPopover.js';
 import { getConfigValue } from '../../scripts/configs.js';
 
 (async () => {
-  // const widgetProd = '/scripts/widgets/SearchAsYouType.js';
-  // await loadScript(widgetProd);
+  /*
+   * NOTE! There's a few ways to initialize the dropin config. Default values
+   * can be set in the /scripts/initializers/search.js file. This should be the place to
+   * set your default configs. You CAN pass in the default configs in this file, but they
+   * will overwrite the initializer config completely.
+   */
 
   const storeDetails = {
+    // STOREFRONT CONFIG
     environmentId: await getConfigValue('commerce-environment-id'),
     environmentType: (await getConfigValue('commerce-endpoint')).includes('sandbox') ? 'testing' : '',
     apiKey: await getConfigValue('commerce-x-api-key'),
@@ -19,6 +24,7 @@ import { getConfigValue } from '../../scripts/configs.js';
     websiteCode: await getConfigValue('commerce-website-code'),
     storeCode: await getConfigValue('commerce-store-code'),
     storeViewCode: await getConfigValue('commerce-store-view-code'),
+    // SEARCH CONFIG
     config: {
       pageSize: 8,
       perPageConfig: {
@@ -32,8 +38,10 @@ import { getConfigValue } from '../../scripts/configs.js';
       allowAllProducts: false,
     },
     context: {
+      // why is this different? just stick it in the storefront config
       customerGroup: await getConfigValue('commerce-customer-group'),
     },
+    // ROUTE CONFIG
     route: ({ sku, urlKey }) => `/products/${urlKey}/${sku}`,
     searchRoute: {
       route: '/search',

@@ -117,6 +117,10 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
   }
 }
 
+const addModelsToList = (list, models) => {
+
+};
+
 /**
  * loads and decorates the header, mainly the nav
  * @param {Element} block The header block element
@@ -148,10 +152,43 @@ export default async function decorate(block) {
 
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
+    const data = JSON.parse(window.localStorage.getItem('_demo:data'));
+    const selectedBrand = JSON.parse(window.localStorage.getItem('_demo:context'));
+    const selectedModel = window.localStorage.getItem('_demo:model');
+
     navSections
       .querySelectorAll(':scope .default-content-wrapper > ul > li')
       .forEach((navSection) => {
-        if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
+        const dropdownText = navSection.querySelector('p').textContent.split(':')[0];
+        const dropdownId = dropdownText.toLowerCase().replace(' ', '-');
+
+        if (navSection.querySelector('ul')) {
+          navSection.id = `select-${dropdownId}`;
+          navSection.classList.add('nav-drop');
+        }
+
+        if (selectedBrand && navSection.id === 'select-brand') {
+          navSection.querySelector('p').textContent = `Brand: ${selectedBrand.value}`;
+        }
+
+        // on select model clicks
+        if (selectedBrand && navSection.id === 'select-model') {
+          const modelList = navSection.querySelector('ul');
+          modelList.innerHTML = '';
+
+          selectedBrand.models.forEach((model) => {
+            const li = document.createElement('li');
+            li.textContent = model;
+            modelList.appendChild(li);
+          });
+        }
+
+        if (selectedModel && navSection.id === 'select-model') {
+          if (selectedBrand.models.includes(selectedModel)) {
+            navSection.querySelector('p').textContent = `Model: ${selectedModel}`;
+          }
+        }
+
         navSection.addEventListener('click', () => {
           if (isDesktop.matches) {
             const expanded = navSection.getAttribute('aria-expanded') === 'true';
@@ -161,16 +198,49 @@ export default async function decorate(block) {
         });
       });
 
-    // listen for click on each item
-    navSections
-      .querySelectorAll(':scope .default-content-wrapper > ul > li > ul > li')
+    // FOR CCDM DEMO ONLY
+
+    const dropdownItems = navSections.querySelectorAll(':scope .default-content-wrapper > ul > li > ul > li');
+
+    dropdownItems
+      // listen for individual clicks
       .forEach((navItem) => {
         navItem.addEventListener('click', () => {
           const navSection = navItem.parentNode.parentNode.querySelector('p');
+          // let selectedItem = navItem.textContent;
           const selectedItem = navItem.textContent;
 
-          navSection.innerText = `Dealer: ${selectedItem}`;
-          events.emit('search/event', { type: navSection.textContent, payload: selectedItem });
+          if (navSection.textContent.includes('Brand')) {
+            navSection.innerText = `Brand: ${selectedItem}`;
+            events.emit('search/event', { type: 'Brand', payload: selectedItem });
+
+            const { models } = data[selectedItem];
+
+            const modelList = document.getElementById('select-model').querySelector('ul');
+            modelList.innerHTML = '';
+            models.forEach((model) => {
+              const li = document.createElement('li');
+              li.textContent = model;
+              modelList.appendChild(li);
+            });
+
+            if (!models.includes(selectedModel)) {
+              const modelSelect = document.getElementById('select-model').querySelector('p');
+              modelSelect.innerText = 'Model';
+
+              events.emit('search/event', { type: 'Model', payload: '' });
+            }
+          }
+
+          if (navSection.textContent.includes('Model')) {
+            navSection.innerText = `Model: ${selectedItem}`;
+            events.emit('search/event', { type: 'Model', payload: selectedItem });
+          }
+
+          if (navSection.textContent.includes('Price Book')) {
+            navSection.innerText = `Price Book: ${selectedItem}`;
+            events.emit('search/event', { type: 'PriceBook', payload: selectedItem });
+          }
         });
       });
   }
@@ -237,7 +307,7 @@ export default async function decorate(block) {
     <button type="button" class="nav-search-button">Search</button>
     <div class="nav-search-input nav-search-panel nav-tools-panel">
       <form action="/search" method="GET">
-        <input id="search" type="search" name="q" placeholder="Search" />
+        <input id="search" type="search" name="q" placeholder="Search" autocomplete="off" />
         <div id="search_autocomplete" class="search-autocomplete"></div>
       </form>
     </div>

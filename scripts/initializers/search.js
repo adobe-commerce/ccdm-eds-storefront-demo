@@ -17,7 +17,7 @@ await initializeDropin(async () => {
   setFetchGraphQlHeaders({
     'Content-Type': 'application/json',
     'AC-Environment-Id': await getConfigValue('commerce-environment-id'),
-    'AC-Scope-Locale': await getConfigValue('commerce-scope-locale'),
+    'AC-Scope-Locale': await getConfigValue('commerce-scope-locale') ?? 'en-US',
     'X-Api-Key': await getConfigValue('commerce-x-api-key'),
     // configurable headers (for the demo);
     'AC-Channel-Id': 'b726c1e9-2842-4ab5-9b19-ca65c23bbb3b',

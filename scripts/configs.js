@@ -67,6 +67,18 @@ const getConfigForEnvironment = async (environment) => {
 };
 
 /**
+ * This function retrieves the whole configuration for a given environment.
+ *
+ * @param {string} [environment] - Optional, overwrite the current environment.
+ * @returns {Promise<string|undefined>} - The value of the configuration parameter, or undefined.
+ */
+export const getConfig = async (environment) => {
+  const env = environment || calcEnvironment();
+  const config = await getConfigForEnvironment(env);
+  return config.data;
+};
+
+/**
  * This function retrieves a configuration value for a given environment.
  *
  * @param {string} configParam - The configuration parameter to retrieve.
@@ -79,6 +91,7 @@ export const getConfigValue = async (configParam, environment) => {
   const configElements = config.data;
   return configElements.find((c) => c.key === configParam)?.value;
 };
+
 
 export const getCookie = (cookieName) => {
   const cookies = document.cookie.split(';');

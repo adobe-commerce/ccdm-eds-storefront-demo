@@ -29,7 +29,7 @@
     }
 </script>
 
-<link rel="stylesheet" href="/styles/styles.css" />
+<link rel="stylesheet" href="/styles/dropins.css" />
 
 <script src="/scripts/aem.js" type="module"></script>
 <script src="/scripts/scripts.js" type="module"></script>
@@ -48,3 +48,13 @@
 <link rel="modulepreload" href="/scripts/__dropins__/tools/preact-compat.js" />
 <link rel="modulepreload" href="/scripts/__dropins__/tools/preact-hooks.js" />
 <link rel="modulepreload" href="/scripts/__dropins__/tools/components.js" />
+
+<!-- for development purposes -->
+<script type="module" src="http://localhost:5173/@vite/client"></script>
+<script type="module">
+    import RefreshRuntime from 'http://localhost:5173/@react-refresh'
+    RefreshRuntime.injectIntoGlobalHook(window)
+    window.$RefreshReg$ = () => {}
+    window.$RefreshSig$ = () => (type) => type
+    window.__vite_plugin_react_preamble_installed__ = true
+</script>

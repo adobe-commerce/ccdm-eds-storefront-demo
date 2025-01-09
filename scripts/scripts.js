@@ -188,6 +188,9 @@ async function loadEager(doc) {
 
     // initialize pdp
     await import('./initializers/pdp.js');
+    // preloadFile('/scripts/__dropins__/storefront-search/api.js', 'script');
+    // preloadFile('/scripts/__dropins__/storefront-search/render.js', 'script');
+    // preloadFile('/scripts/__dropins__/storefront-search/containers/SearchPopover.js', 'script');
 
     // Preload PDP Dropins assets
     preloadFile('/scripts/__dropins__/storefront-pdp/api.js', 'script');

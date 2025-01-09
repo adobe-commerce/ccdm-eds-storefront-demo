@@ -4,7 +4,7 @@ import {
   initialize,
   setEndpoint,
   setFetchGraphQlHeaders,
-} from 'http:localhost:3002/api.js';
+} from '/scripts/__dropins__/storefront-search/api.js';
 // eslint-disable-next-line import/no-cycle
 import { initializeDropin } from './index.js';
 import { getConfigValue } from '../configs.js';

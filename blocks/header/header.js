@@ -327,6 +327,9 @@ export default async function decorate(block) {
 
     searchPanel.classList.toggle('nav-tools-panel--show', show);
 
+    // preloadFile('/scripts/__dropins__/storefront-search/api.js', 'script');
+    // preloadFile('/scripts/__dropins__/storefront-search/render.js', 'script');
+    // preloadFile('/scripts/__dropins__/storefront-search/containers/SearchPopover.js', 'script');
     if (show) {
       await import('./searchbar.js');
       searchInput.focus();

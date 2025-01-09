@@ -1,4 +1,6 @@
-import { LiveSearchPLP } from 'http://localhost:8081/src/plp/LiveSearchPLP.tsx';
+// import { LiveSearchPLP } from 'http://localhost:8081/src/plp/LiveSearchPLP.tsx';
+// import { render as provider  } from "/scripts/__dropins__/storefront-plp/render.js";
+import { LiveSearchPLP } from "/scripts/__dropins__/storefront-plp/containers/ProductListingPage.js";
 import { readBlockConfig } from '../../scripts/aem.js';
 import { getConfigValue } from '../../scripts/configs.js';
 
@@ -73,6 +75,7 @@ export default async function decorate(block) {
   // });
 
   return LiveSearchPLP({ storeDetails, root: block });
+  // provider.render(ProductListingPage, { storeDetails })(block);
 }
 
 // import { LiveSearchPLP } from 'http://localhost:8081/src/plp/LiveSearchPLP.tsx';

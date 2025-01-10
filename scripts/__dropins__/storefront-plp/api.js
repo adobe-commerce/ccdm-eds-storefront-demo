@@ -1,1 +1,31 @@
-import{f as p,g as h,r as g,b as l,s as d,c as m,a as G}from"./chunks/searchProducts.js";import{Initializer as a}from"@dropins/tools/lib.js";import"./chunks/currency-symbol-map.js";import"@dropins/tools/fetch-graphql.js";const e=new a({init:async t=>{const s={};e.config.setConfig({...s,...t})},listeners:()=>[]}),n=e.config;export{n as config,p as fetchGraphQl,h as getConfig,e as initialize,g as removeFetchGraphQlHeader,l as searchProducts,d as setEndpoint,m as setFetchGraphQlHeader,G as setFetchGraphQlHeaders};
+import { f, g, r, b, s, c, a } from "./chunks/searchProducts.js";
+import { Initializer } from "@dropins/tools/lib.js";
+import "./chunks/currency-symbol-map.js";
+import "@dropins/tools/fetch-graphql.js";
+const initialize = new Initializer({
+  init: async (config2) => {
+    const defaultConfig = {};
+    initialize.config.setConfig({
+      ...defaultConfig,
+      ...config2
+    });
+  },
+  listeners: () => [
+    // events.on('authenticated', (authenticated) => {
+    //   console.log('authenticated', authenticated);
+    // }),
+  ]
+});
+const config = initialize.config;
+export {
+  config,
+  f as fetchGraphQl,
+  g as getConfig,
+  initialize,
+  r as removeFetchGraphQlHeader,
+  b as searchProducts,
+  s as setEndpoint,
+  c as setFetchGraphQlHeader,
+  a as setFetchGraphQlHeaders
+};
+//# sourceMappingURL=api.js.map

@@ -1,4 +1,389 @@
-import{jsx as a,jsxs as m,Fragment as Z}from"@dropins/tools/preact-jsx-runtime.js";import{createContext as tt,useEffect as Ve,useContext as rt,useState as be,useMemo as Qt,useRef as Zt,render as Kt}from"@dropins/tools/preact-compat.js";/* empty css             */import{createContext as qe}from"@dropins/tools/preact.js";import{useState as y,useEffect as G,useMemo as Ye,useContext as Ie,useRef as Ae,useCallback as Jt}from"@dropins/tools/preact-hooks.js";import{events as Xt}from"http://localhost:3000/scripts/__dropins__/tools/event-bus.js";import{a as Yt}from"../chunks/currency-symbol-map.js";const U=[];for(let e=0;e<256;++e)U.push((e+256).toString(16).slice(1));function Wt(e,t=0){return(U[e[t+0]]+U[e[t+1]]+U[e[t+2]]+U[e[t+3]]+"-"+U[e[t+4]]+U[e[t+5]]+"-"+U[e[t+6]]+U[e[t+7]]+"-"+U[e[t+8]]+U[e[t+9]]+"-"+U[e[t+10]]+U[e[t+11]]+U[e[t+12]]+U[e[t+13]]+U[e[t+14]]+U[e[t+15]]).toLowerCase()}let Qe;const er=new Uint8Array(16);function tr(){if(!Qe){if(typeof crypto>"u"||!crypto.getRandomValues)throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");Qe=crypto.getRandomValues.bind(crypto)}return Qe(er)}const rr=typeof crypto<"u"&&crypto.randomUUID&&crypto.randomUUID.bind(crypto),ot={randomUUID:rr};function He(e,t,r){if(ot.randomUUID&&!t&&!e)return ot.randomUUID();e=e||{};const n=e.random||(e.rng||tr)();return n[6]=n[6]&15|64,n[8]=n[8]&63|128,Wt(n)}const at=24,ar="12,24,36",We=3,Le={desktop:4,tablet:3,mobile:2},At=[{attribute:"relevance",direction:"DESC"}],sr=[{attribute:"position",direction:"ASC"}],me="livesearch-plp",nr="yes",ir="no",or=()=>{window.scrollTo({top:0})},lr=(...e)=>e.filter(Boolean).join(" "),lt=(e,t=3,r)=>{var i;const n=[],o=new URL(window.location.href).protocol;for(const c of e){const d=(i=c.url)==null?void 0:i.replace(/^https?:\/\//,"");d&&n.push(`${o}//${d}`)}if(r){const c=`${o}//${r.replace(/^https?:\/\//,"")}`,d=c.indexOf(c);d>-1&&n.splice(d,1),n.unshift(c)}return n.slice(0,t)},ct=(e,t)=>{const[r,n]=e.split("?"),s=new URLSearchParams(n);return Object.entries(t).forEach(([o,i])=>{i!=null&&s.set(o,String(i))}),`${r}?${s.toString()}`},cr=(e,t)=>{const r={fit:"cover",crop:!1,dpi:1},n=[];for(const s of e){const o=ct(s,{...r,width:t}),c=[1,2,3].map(d=>`${ct(s,{...r,auto:"webp",quality:80,width:t*d})} ${d}x`);n.push({src:o,srcset:c})}return n},oe=(e,t,r,n=!1,s=!1)=>{var l;let o,i;"productView"in e&&(o=e.productView.price,i=o.regular,s&&(i=o.final));let c=(i==null?void 0:i.amount.currency)??"USD";t?c=t:c=Yt(c)??"$";const d=r?((l=i==null?void 0:i.amount)==null?void 0:l.value)??0*parseFloat(r):i==null?void 0:i.amount.value;return d?`${c}${d.toFixed(2)}`:""},dr=()=>{const e=localStorage!=null&&localStorage.getItem("ds-view-history-time-decay")?JSON.parse(localStorage.getItem("ds-view-history-time-decay")):null;return e&&Array.isArray(e)?e.slice(-200).map(t=>({sku:t.sku,dateTime:t.date})):[]},It={search:"q",search_query:"search_query",pagination:"p",sort:"product_list_order",page_size:"page_size"},dt=e=>{const t=new URL(window.location.href),r=new URLSearchParams(t.searchParams),n=e.attribute;if(e.range){const s=e.range;he(n)?(r.delete(n),r.append(n,`${s.from}--${s.to}`)):r.append(n,`${s.from}--${s.to}`)}else{const s=e.in||[],o=r.getAll(n);s.map(i=>{o.includes(i)||r.append(n,i)})}ge(t.pathname,r)},ut=(e,t)=>{const r=new URL(window.location.href),n=new URLSearchParams(r.searchParams),s=r.searchParams.getAll(e);n.delete(e),t&&(s.splice(s.indexOf(t),1),s.forEach(o=>n.append(e,o))),ge(r.pathname,n)},ur=()=>{const e=new URL(window.location.href),t=new URLSearchParams(e.searchParams);for(const r of e.searchParams.keys())Object.values(It).includes(r)||t.delete(r);ge(e.pathname,t)},pr=e=>{const t=new URL(window.location.href),r=new URLSearchParams(t.searchParams);r.set("product_list_order",e),ge(t.pathname,r)},mr=e=>{const t=new URL(window.location.href),r=new URLSearchParams(t.searchParams);r.set("view_type",e),ge(t.pathname,r)},hr=e=>{const t=new URL(window.location.href),r=new URLSearchParams(t.searchParams);e===at?r.delete("page_size"):r.set("page_size",e.toString()),ge(t.pathname,r)},Ft=e=>{const t=new URL(window.location.href),r=new URLSearchParams(t.searchParams);e===1?r.delete("p"):r.set("p",e.toString()),ge(t.pathname,r)},gr=e=>{var n;const t=Tt(),r=[];for(const[s,o]of t.entries())if(e.includes(s)&&!Object.values(It).includes(s))if(o.includes("--")){const i=o.split("--"),c={attribute:s,range:{from:Number(i[0]),to:Number(i[1])}};r.push(c)}else{const i=r.findIndex(c=>c.attribute==s);if(i!==-1)(n=r[i].in)==null||n.push(o);else{const c={attribute:s,in:[o]};r.push(c)}}return r},he=e=>{const r=Tt().get(e);return r||""},Tt=()=>{const e=window.location.search;return new URLSearchParams(e)},ge=(e,t)=>{t.toString()===""?window.history.pushState({},"",`${e}`):window.history.pushState({},"",`${e}?${t.toString()}`)},Ze=e=>new DOMParser().parseFromString(e,"text/html").documentElement.textContent,fr=()=>[{label:"Most Relevant",value:"relevance_DESC"},{label:"Price: Low to High",value:"price_ASC"},{label:"Price: High to Low",value:"price_DESC"}],br=(e,t,r,n)=>{const s=n?[{label:e.SortDropdown.positionLabel,value:"position_ASC"}]:[{label:e.SortDropdown.relevanceLabel,value:"relevance_DESC"}],o=r!="1";return t&&t.length>0&&t.forEach(i=>{!i.attribute.includes("relevance")&&!(i.attribute.includes("inStock")&&o)&&!i.attribute.includes("position")&&(i.numeric&&i.attribute.includes("price")?(s.push({label:`${i.label}: Low to High`,value:`${i.attribute}_ASC`}),s.push({label:`${i.label}: High to Low`,value:`${i.attribute}_DESC`})):s.push({label:`${i.label}`,value:`${i.attribute}_DESC`}))}),s},Bt=e=>{if(!e)return;const t=e.lastIndexOf("_");return[{attribute:e.substring(0,t),direction:e.substring(t+1)==="ASC"?"ASC":"DESC"}]},vr=(e,t)=>{const{rootMargin:r}=t,[n,s]=y(null);return G(()=>{if(!(e!=null&&e.current))return;const o=new IntersectionObserver(([i])=>{s(i),i.isIntersecting&&o.unobserve(i.target)},{rootMargin:r});return o.observe(e.current),()=>{o.disconnect()}},[e,r]),n},wr=["environmentId","environmentType","websiteCode","storeCode","storeViewCode","config","context","apiUrl","apiKey","route","searchQuery"],yr=e=>e!=="apiUrl"?e:typeof e=="string"?(e=e.replace(/[^a-z0-9áéíóúñü \.,_-]/gim,""),e.trim()):e,pt=e=>(Object.keys(e).forEach(t=>{if(!wr.includes(t)){console.error(`Invalid key ${t} in StoreDetailsProps`),delete e[t];return}e[t]=yr(e[t])}),e),Pr=`
+import * as React from "@dropins/tools/preact-compat.js";
+import { createContext as createContext$1, useEffect as useEffect$1, useContext as useContext$1, useState as useState$1, useMemo as useMemo$1, useRef as useRef$1, render } from "@dropins/tools/preact-compat.js";
+/* empty css              */
+import { t, u } from "../chunks/jsxRuntime.module.js";
+import { createContext, Fragment } from "@dropins/tools/preact.js";
+import { useState, useEffect, useMemo, useContext, useRef, useCallback } from "@dropins/tools/preact-hooks.js";
+import { a as getSymbolFromCurrency } from "../chunks/currency-symbol-map.js";
+const byteToHex = [];
+for (let i = 0; i < 256; ++i) {
+  byteToHex.push((i + 256).toString(16).slice(1));
+}
+function unsafeStringify(arr, offset = 0) {
+  return (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + "-" + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + "-" + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + "-" + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + "-" + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase();
+}
+let getRandomValues;
+const rnds8 = new Uint8Array(16);
+function rng() {
+  if (!getRandomValues) {
+    if (typeof crypto === "undefined" || !crypto.getRandomValues) {
+      throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");
+    }
+    getRandomValues = crypto.getRandomValues.bind(crypto);
+  }
+  return getRandomValues(rnds8);
+}
+const randomUUID = typeof crypto !== "undefined" && crypto.randomUUID && crypto.randomUUID.bind(crypto);
+const native = { randomUUID };
+function v4(options, buf, offset) {
+  if (native.randomUUID && !buf && !options) {
+    return native.randomUUID();
+  }
+  options = options || {};
+  const rnds = options.random || (options.rng || rng)();
+  rnds[6] = rnds[6] & 15 | 64;
+  rnds[8] = rnds[8] & 63 | 128;
+  return unsafeStringify(rnds);
+}
+const DEFAULT_PAGE_SIZE = 24;
+const DEFAULT_PAGE_SIZE_OPTIONS = "12,24,36";
+const DEFAULT_MIN_QUERY_LENGTH = 3;
+const PRODUCT_COLUMNS = {
+  desktop: 4,
+  tablet: 3,
+  mobile: 2
+};
+const SEARCH_SORT_DEFAULT = [{
+  attribute: "relevance",
+  direction: "DESC"
+}];
+const CATEGORY_SORT_DEFAULT = [{
+  attribute: "position",
+  direction: "ASC"
+}];
+const SEARCH_UNIT_ID = "livesearch-plp";
+const BOOLEAN_YES = "yes";
+const BOOLEAN_NO = "no";
+const moveToTop = () => {
+  window.scrollTo({
+    top: 0
+  });
+};
+const classNames = (...classes) => {
+  return classes.filter(Boolean).join(" ");
+};
+const getProductImageURLs = (images, amount = 3, topImageUrl) => {
+  var _a;
+  const imageUrlArray = [];
+  const url = new URL(window.location.href);
+  const protocol = url.protocol;
+  for (const image of images) {
+    const imageUrl = (_a = image.url) == null ? void 0 : _a.replace(/^https?:\/\//, "");
+    if (imageUrl) {
+      imageUrlArray.push(`${protocol}//${imageUrl}`);
+    }
+  }
+  if (topImageUrl) {
+    const topImageUrlFormatted = `${protocol}//${topImageUrl.replace(/^https?:\/\//, "")}`;
+    const index = topImageUrlFormatted.indexOf(topImageUrlFormatted);
+    if (index > -1) {
+      imageUrlArray.splice(index, 1);
+    }
+    imageUrlArray.unshift(topImageUrlFormatted);
+  }
+  return imageUrlArray.slice(0, amount);
+};
+const resolveImageUrl = (url, opts) => {
+  const [base, query] = url.split("?");
+  const params = new URLSearchParams(query);
+  Object.entries(opts).forEach(([key, value]) => {
+    if (value !== void 0 && value !== null) {
+      params.set(key, String(value));
+    }
+  });
+  return `${base}?${params.toString()}`;
+};
+const generateOptimizedImages = (imageUrls, baseImageWidth) => {
+  const baseOptions = {
+    fit: "cover",
+    crop: false,
+    dpi: 1
+  };
+  const imageUrlArray = [];
+  for (const imageUrl of imageUrls) {
+    const src = resolveImageUrl(imageUrl, {
+      ...baseOptions,
+      width: baseImageWidth
+    });
+    const dpiSet = [1, 2, 3];
+    const srcset = dpiSet.map((dpi) => {
+      return `${resolveImageUrl(imageUrl, {
+        ...baseOptions,
+        auto: "webp",
+        quality: 80,
+        width: baseImageWidth * dpi
+      })} ${dpi}x`;
+    });
+    imageUrlArray.push({
+      src,
+      srcset
+    });
+  }
+  return imageUrlArray;
+};
+const getProductPrice = (product, currencySymbol, currencyRate, useMaximum = false, useFinal = false) => {
+  var _a;
+  let priceType;
+  let price;
+  if ("productView" in product) {
+    priceType = product.productView.price;
+    price = priceType.regular;
+    if (useFinal) price = priceType.final;
+  }
+  let currency = (price == null ? void 0 : price.amount.currency) ?? "USD";
+  if (currencySymbol) {
+    currency = currencySymbol;
+  } else {
+    currency = getSymbolFromCurrency(currency) ?? "$";
+  }
+  const convertedPrice = currencyRate ? ((_a = price == null ? void 0 : price.amount) == null ? void 0 : _a.value) ?? 0 * parseFloat(currencyRate) : price == null ? void 0 : price.amount.value;
+  return convertedPrice ? `${currency}${convertedPrice.toFixed(2)}` : "";
+};
+const getUserViewHistory = () => {
+  const userViewHistory = (localStorage == null ? void 0 : localStorage.getItem("ds-view-history-time-decay")) ? JSON.parse(localStorage.getItem("ds-view-history-time-decay")) : null;
+  if (userViewHistory && Array.isArray(userViewHistory)) {
+    return userViewHistory.slice(-200).map((v) => ({
+      sku: v.sku,
+      dateTime: v.date
+    }));
+  }
+  return [];
+};
+const nonFilterKeys = {
+  search: "q",
+  search_query: "search_query",
+  pagination: "p",
+  sort: "product_list_order",
+  page_size: "page_size"
+};
+const addUrlFilter = (filter) => {
+  const url = new URL(window.location.href);
+  const params = new URLSearchParams(url.searchParams);
+  const attribute = filter.attribute;
+  if (filter.range) {
+    const filt = filter.range;
+    if (getValueFromUrl(attribute)) {
+      params.delete(attribute);
+      params.append(attribute, `${filt.from}--${filt.to}`);
+    } else {
+      params.append(attribute, `${filt.from}--${filt.to}`);
+    }
+  } else {
+    const filt = filter.in || [];
+    const filterParams = params.getAll(attribute);
+    filt.map((f) => {
+      if (!filterParams.includes(f)) {
+        params.append(attribute, f);
+      }
+    });
+  }
+  setWindowHistory(url.pathname, params);
+};
+const removeUrlFilter = (name, option) => {
+  const url = new URL(window.location.href);
+  const params = new URLSearchParams(url.searchParams);
+  const allValues = url.searchParams.getAll(name);
+  params.delete(name);
+  if (option) {
+    allValues.splice(allValues.indexOf(option), 1);
+    allValues.forEach((val) => params.append(name, val));
+  }
+  setWindowHistory(url.pathname, params);
+};
+const removeAllUrlFilters = () => {
+  const url = new URL(window.location.href);
+  const params = new URLSearchParams(url.searchParams);
+  for (const key of url.searchParams.keys()) {
+    if (!Object.values(nonFilterKeys).includes(key)) {
+      params.delete(key);
+    }
+  }
+  setWindowHistory(url.pathname, params);
+};
+const handleUrlSort = (sortOption) => {
+  const url = new URL(window.location.href);
+  const params = new URLSearchParams(url.searchParams);
+  params.set("product_list_order", sortOption);
+  setWindowHistory(url.pathname, params);
+};
+const handleViewType = (viewType) => {
+  const url = new URL(window.location.href);
+  const params = new URLSearchParams(url.searchParams);
+  params.set("view_type", viewType);
+  setWindowHistory(url.pathname, params);
+};
+const handleUrlPageSize = (pageSizeOption) => {
+  const url = new URL(window.location.href);
+  const params = new URLSearchParams(url.searchParams);
+  if (pageSizeOption === DEFAULT_PAGE_SIZE) {
+    params.delete("page_size");
+  } else {
+    params.set("page_size", pageSizeOption.toString());
+  }
+  setWindowHistory(url.pathname, params);
+};
+const handleUrlPagination = (pageNumber) => {
+  const url = new URL(window.location.href);
+  const params = new URLSearchParams(url.searchParams);
+  if (pageNumber === 1) {
+    params.delete("p");
+  } else {
+    params.set("p", pageNumber.toString());
+  }
+  setWindowHistory(url.pathname, params);
+};
+const getFiltersFromUrl = (filterableAttributes) => {
+  var _a;
+  const params = getSearchParams();
+  const filters = [];
+  for (const [key, value] of params.entries()) {
+    if (filterableAttributes.includes(key) && !Object.values(nonFilterKeys).includes(key)) {
+      if (value.includes("--")) {
+        const range = value.split("--");
+        const filter = {
+          attribute: key,
+          range: {
+            from: Number(range[0]),
+            to: Number(range[1])
+          }
+        };
+        filters.push(filter);
+      } else {
+        const attributeIndex = filters.findIndex((filter) => filter.attribute == key);
+        if (attributeIndex !== -1) {
+          (_a = filters[attributeIndex].in) == null ? void 0 : _a.push(value);
+        } else {
+          const filter = {
+            attribute: key,
+            in: [value]
+          };
+          filters.push(filter);
+        }
+      }
+    }
+  }
+  return filters;
+};
+const getValueFromUrl = (param) => {
+  const params = getSearchParams();
+  const filter = params.get(param);
+  if (filter) {
+    return filter;
+  }
+  return "";
+};
+const getSearchParams = () => {
+  const search = window.location.search;
+  return new URLSearchParams(search);
+};
+const setWindowHistory = (pathname, params) => {
+  if (params.toString() === "") {
+    window.history.pushState({}, "", `${pathname}`);
+  } else {
+    window.history.pushState({}, "", `${pathname}?${params.toString()}`);
+  }
+};
+const htmlStringDecode = (input) => {
+  const doc = new DOMParser().parseFromString(input, "text/html");
+  return doc.documentElement.textContent;
+};
+const defaultSortOptions = () => {
+  return [{
+    label: "Most Relevant",
+    value: "relevance_DESC"
+  }, {
+    label: "Price: Low to High",
+    value: "price_ASC"
+  }, {
+    label: "Price: High to Low",
+    value: "price_DESC"
+  }];
+};
+const getSortOptionsfromMetadata = (translation, sortMetadata, displayOutOfStock, categoryPath) => {
+  const sortOptions = categoryPath ? [{
+    label: translation.SortDropdown.positionLabel,
+    value: "position_ASC"
+  }] : [{
+    label: translation.SortDropdown.relevanceLabel,
+    value: "relevance_DESC"
+  }];
+  const displayInStockOnly = displayOutOfStock != "1";
+  if (sortMetadata && sortMetadata.length > 0) {
+    sortMetadata.forEach((e) => {
+      if (!e.attribute.includes("relevance") && !(e.attribute.includes("inStock") && displayInStockOnly) && !e.attribute.includes("position")) {
+        if (e.numeric && e.attribute.includes("price")) {
+          sortOptions.push({
+            label: `${e.label}: Low to High`,
+            value: `${e.attribute}_ASC`
+          });
+          sortOptions.push({
+            label: `${e.label}: High to Low`,
+            value: `${e.attribute}_DESC`
+          });
+        } else {
+          sortOptions.push({
+            label: `${e.label}`,
+            value: `${e.attribute}_DESC`
+          });
+        }
+      }
+    });
+  }
+  return sortOptions;
+};
+const generateGQLSortInput = (sortOption) => {
+  if (!sortOption) {
+    return void 0;
+  }
+  const index = sortOption.lastIndexOf("_");
+  return [{
+    attribute: sortOption.substring(0, index),
+    direction: sortOption.substring(index + 1) === "ASC" ? "ASC" : "DESC"
+  }];
+};
+const useIntersectionObserver = (ref, options) => {
+  const {
+    rootMargin
+  } = options;
+  const [observerEntry, setObserverEntry] = t(useState(null), "observerEntry");
+  useEffect(() => {
+    if (!(ref == null ? void 0 : ref.current)) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      setObserverEntry(entry);
+      if (entry.isIntersecting) {
+        observer.unobserve(entry.target);
+      }
+    }, {
+      rootMargin
+    });
+    observer.observe(ref.current);
+    return () => {
+      observer.disconnect();
+    };
+  }, [ref, rootMargin]);
+  return observerEntry;
+};
+const validStoreDetailsKeys = ["environmentId", "environmentType", "websiteCode", "storeCode", "storeViewCode", "config", "context", "apiUrl", "apiKey", "route", "searchQuery"];
+const sanitizeString = (value) => {
+  if (value !== "apiUrl") return value;
+  if (typeof value === "string") {
+    value = value.replace(/[^a-z0-9áéíóúñü \.,_-]/gim, "");
+    return value.trim();
+  }
+  return value;
+};
+const validateStoreDetailsKeys = (storeDetails) => {
+  Object.keys(storeDetails).forEach((key) => {
+    if (!validStoreDetailsKeys.includes(key)) {
+      console.error(`Invalid key ${key} in StoreDetailsProps`);
+      delete storeDetails[key];
+      return;
+    }
+    storeDetails[key] = sanitizeString(storeDetails[key]);
+  });
+  return storeDetails;
+};
+const Facet = `
     fragment Facet on Aggregation {
         title
         attribute
@@ -24,7 +409,8 @@ import{jsx as a,jsxs as m,Fragment as Z}from"@dropins/tools/preact-jsx-runtime.j
             }
         }
     }
-`,xr=`
+`;
+const ProductView = `
     fragment ProductView on ProductSearchItem {
         productView {
             __typename
@@ -106,7 +492,8 @@ import{jsx as a,jsxs as m,Fragment as Z}from"@dropins/tools/preact-jsx-runtime.j
             matched_words
         }
     }
-`,Cr=`
+`;
+const Product = `
     fragment Product on ProductSearchItem {
         product {
             __typename
@@ -174,7 +561,8 @@ import{jsx as a,jsxs as m,Fragment as Z}from"@dropins/tools/preact-jsx-runtime.j
             }
         }
     }
-`,kr=`
+`;
+const ATTRIBUTE_METADATA_QUERY = `
     query attributeMetadata {
         attributeMetadata {
         sortable {
@@ -189,7 +577,8 @@ import{jsx as a,jsxs as m,Fragment as Z}from"@dropins/tools/preact-jsx-runtime.j
         }
         }
     }
-`,Sr=`
+`;
+const PRODUCT_SEARCH_QUERY = `
     query productSearch(
         $phrase: String!
         $pageSize: Int
@@ -228,10 +617,11 @@ import{jsx as a,jsxs as m,Fragment as Z}from"@dropins/tools/preact-jsx-runtime.j
             }
         }
     }
-    ${Cr}
-    ${xr}
-    ${Pr}
-`,_r=`
+    ${Product}
+    ${ProductView}
+    ${Facet}
+`;
+const REFINE_PRODUCT_QUERY = `
     query refineProduct(
         $optionIds: [String!]!
         $sku: String!
@@ -305,7 +695,8 @@ import{jsx as a,jsxs as m,Fragment as Z}from"@dropins/tools/preact-jsx-runtime.j
             }
         }
     }
-`,Lr=`
+`;
+const GET_CUSTOMER_CART = `
     query customerCart {
         customerCart {
             id
@@ -319,7 +710,2656 @@ import{jsx as a,jsxs as m,Fragment as Z}from"@dropins/tools/preact-jsx-runtime.j
             }
         }
     }
-`,zt=e=>({"Content-Type":"application/json","AC-Environment-Id":"c09ecfb1-333a-4db3-9669-ce07ec0e3a00","AC-Channel-Id":"b726c1e9-2842-4ab5-9b19-ca65c23bbb3b","AC-Policy-Make":"Aurora","AC-Policy-Model":"Nexus","AC-Price-Book-Id":"aurora","AC-Scope-Locale":"en-US","X-Api-Key":"search_gql","X-Request-Id":e.xRequestId}),Nr=async({environmentId:e,websiteCode:t,storeCode:r,storeViewCode:n,apiKey:s,apiUrl:o,phrase:i,pageSize:c=24,displayOutOfStock:d,currentPage:l=1,xRequestId:u=He(),filter:p=[],sort:v=[],context:g,categorySearch:f=!1,headers:b})=>{var k,I;const h={phrase:i,pageSize:c,currentPage:l,filter:p,sort:v,context:g};let P="Search";f&&(P="Catalog");const L={attribute:"visibility",in:[P,"Catalog, Search"]};h.filter.push(L);const S=d!="1",x={attribute:"inStock",eq:"true"};S&&h.filter.push(x);const B=He();va(me,B,i,p,c,l,v);const w=(k=window.magentoStorefrontEvents)==null?void 0:k.publish;w!=null&&w.searchRequestSent&&w.searchRequestSent(me);const M=await(await fetch(o,{method:"POST",headers:b,body:JSON.stringify({query:Sr,variables:{...h}})})).json();return wa(me,B,(I=M==null?void 0:M.data)==null?void 0:I.productSearch),w!=null&&w.searchResponseReceived&&w.searchResponseReceived(me),f?w!=null&&w.categoryResultsView&&w.categoryResultsView(me):w!=null&&w.searchResultsView&&w.searchResultsView(me),M==null?void 0:M.data},Ar=async({environmentId:e,websiteCode:t,storeCode:r,storeViewCode:n,apiKey:s,apiUrl:o,xRequestId:i=He()})=>{const c=zt({environmentId:e,websiteCode:t,storeCode:r,storeViewCode:n,apiKey:s,xRequestId:i,customerGroup:""}),l=await(await fetch(o,{method:"POST",headers:c,body:JSON.stringify({query:kr})})).json();return l==null?void 0:l.data},Ir=async({environmentId:e,websiteCode:t,storeCode:r,storeViewCode:n,apiKey:s,apiUrl:o,xRequestId:i=He(),context:c,optionIds:d,sku:l})=>{const u={optionIds:d,sku:l},p=zt({environmentId:e,websiteCode:t,storeCode:r,storeViewCode:n,apiKey:s,xRequestId:i,customerGroup:(c==null?void 0:c.customerGroup)??""}),g=await(await fetch(o,{method:"POST",headers:p,body:JSON.stringify({query:_r,variables:{...u}})})).json();return g==null?void 0:g.data},Mt=qe({environmentId:"",environmentType:"",websiteCode:"",storeCode:"",storeViewCode:"",apiUrl:"",apiKey:"",config:{},context:{},route:void 0,searchQuery:"q"}),Fr=({children:e,environmentId:t,environmentType:r,websiteCode:n,storeCode:s,storeViewCode:o,config:i,context:c,apiUrl:d,apiKey:l,route:u,searchQuery:p})=>{const g={...Ye(()=>({environmentId:t,environmentType:r,websiteCode:n,storeCode:s,storeViewCode:o,config:i,context:{customerGroup:(c==null?void 0:c.customerGroup)??"",userViewHistory:(c==null?void 0:c.userViewHistory)??[]},apiUrl:d,apiKey:l,route:u,searchQuery:p}),[t,n,s,o])};return a(Mt.Provider,{value:g,children:e})},te=()=>Ie(Mt),Et=qe({sortable:[],filterableInSearch:[]}),Tr=({children:e})=>{const[t,r]=y({sortable:[],filterableInSearch:null}),n=te();G(()=>{(async()=>{const i=await Ar({...n,apiUrl:n.apiUrl});i!=null&&i.attributeMetadata&&r({sortable:i.attributeMetadata.sortable,filterableInSearch:i.attributeMetadata.filterableInSearch.map(c=>c.attribute)})})()},[]);const s={...t};return a(Et.Provider,{value:s,children:e})},Rt=()=>Ie(Et),Ot=tt({}),Br=({children:e})=>{const t=te(),r=he(t.searchQuery||"q"),n=he("product_list_order"),s=Bt(n),o=s||At,[i,c]=y(r),[d,l]=y(""),[u,p]=y([]),[v,g]=y([]),[f,b]=y(o),[h,P]=y(0),L=k=>{const I=[...u,k];p(I),dt(k)},S=k=>{const I=[...u],O=I.findIndex(D=>D.attribute===k.attribute);I[O]=k,p(I),dt(k)},x=(k,I)=>{const O=[...u].filter(D=>D.attribute!==k);p(O),ut(k,I)},B=()=>{ur(),p([])},w=(k,I)=>{var Q;const O=[...u].filter(j=>j.attribute!==k.attribute),D=(Q=k.in)==null?void 0:Q.filter(j=>j!==I);O.push({attribute:k.attribute,in:D}),D!=null&&D.length?(p(O),ut(k.attribute,I)):x(k.attribute,I)},C=k=>{let I=0;return k.forEach(O=>{O.in?I+=O.in.length:I+=1}),I};Ve(()=>{const k=C(u);P(k)},[u]);const M={phrase:i,categoryPath:d,filters:u,sort:f,categoryNames:v,filterCount:h,setPhrase:c,setCategoryPath:l,setFilters:p,setCategoryNames:g,setSort:b,createFilter:L,updateFilter:S,updateFilterOptions:w,removeFilter:x,clearFilters:B};return a(Ot.Provider,{value:M,children:e})},ue=()=>rt(Ot),zr={Filter:{title:"Филтри",showTitle:"Показване на филтри",hideTitle:"Скриване на филтри",clearAll:"Изчистване на всичко"},InputButtonGroup:{title:"Категории",price:"Цена",customPrice:"Персонализирана цена",priceIncluded:"да",priceExcluded:"не",priceExcludedMessage:"Не {title}",priceRange:" и по-висока",showmore:"Показване на повече"},Loading:{title:"Зареждане"},NoResults:{heading:"Няма резултати за вашето търсене.",subheading:"Моля, опитайте отново..."},SortDropdown:{title:"Сортиране по",option:"Сортиране по: {selectedOption}",relevanceLabel:"Най-подходящи",positionLabel:"Позиция"},CategoryFilters:{results:"резултати за {phrase}",products:"{totalCount} продукта"},ProductCard:{asLowAs:"Само {discountPrice}",startingAt:"От {productPrice}",bundlePrice:"От {fromBundlePrice} до {toBundlePrice}",from:"От {productPrice}"},ProductContainers:{minquery:"Вашата дума за търсене {variables.phrase} не достига минимума от {minQueryLength} знака.",noresults:"Вашето търсене не даде резултати.",pagePicker:"Показване на {pageSize} на страница",showAll:"всички"},SearchBar:{placeholder:"Търсене..."}},Mr={Filter:{title:"Filtres",showTitle:"Mostra els filtres",hideTitle:"Amaga els filtres",clearAll:"Esborra-ho tot"},InputButtonGroup:{title:"Categories",price:"Preu",customPrice:"Preu personalitzat",priceIncluded:"sí",priceExcluded:"no",priceExcludedMessage:"No {title}",priceRange:" i superior",showmore:"Mostra més"},Loading:{title:"Carregant"},NoResults:{heading:"No hi ha resultats per a la vostra cerca.",subheading:"Siusplau torna-ho a provar..."},SortDropdown:{title:"Ordenar per",option:"Ordena per: {selectedOption}",relevanceLabel:"El més rellevant",positionLabel:"Posició"},CategoryFilters:{results:"Resultats per a {phrase}",products:"{totalCount}productes"},ProductCard:{asLowAs:"Mínim de {discountPrice}",startingAt:"A partir de {productPrice}",bundlePrice:"Des de {fromBundlePrice} A {toBundlePrice}",from:"Des de {productPrice}"},ProductContainers:{minquery:"El vostre terme de cerca {variables.phrase} no ha arribat al mínim de {minQueryLength} caràcters.",noresults:"La vostra cerca no ha retornat cap resultat.",pagePicker:"Mostra {pageSize} per pàgina",showAll:"tots"},SearchBar:{placeholder:"Cerca..."}},Er={Filter:{title:"Filtry",showTitle:"Zobrazit filtry",hideTitle:"Skrýt filtry",clearAll:"Vymazat vše"},InputButtonGroup:{title:"Kategorie",price:"Cena",customPrice:"Vlastní cena",priceIncluded:"ano",priceExcluded:"ne",priceExcludedMessage:"Ne {title}",priceRange:" a výše",showmore:"Zobrazit více"},Loading:{title:"Načítá se"},NoResults:{heading:"Nebyly nalezeny žádné výsledky.",subheading:"Zkuste to znovu..."},SortDropdown:{title:"Seřadit podle",option:"Seřadit podle: {selectedOption}",relevanceLabel:"Nejrelevantnější",positionLabel:"Umístění"},CategoryFilters:{results:"výsledky pro {phrase}",products:"Produkty: {totalCount}"},ProductCard:{asLowAs:"Pouze za {discountPrice}",startingAt:"Cena od {productPrice}",bundlePrice:"Z {fromBundlePrice} na {toBundlePrice}",from:"Z {productPrice}"},ProductContainers:{minquery:"Hledaný výraz {variables.phrase} nedosáhl minima počtu znaků ({minQueryLength}).",noresults:"Při hledání nebyly nalezeny žádné výsledky.",pagePicker:"Zobrazit {pageSize} na stránku",showAll:"vše"},SearchBar:{placeholder:"Hledat..."}},Rr={Filter:{title:"Filtre",showTitle:"Vis filtre",hideTitle:"Skjul filtre",clearAll:"Ryd alt"},InputButtonGroup:{title:"Kategorier",price:"Pris",customPrice:"Brugerdefineret pris",priceIncluded:"ja",priceExcluded:"nej",priceExcludedMessage:"Ikke {title}",priceRange:" og over",showmore:"Vis mere"},Loading:{title:"Indlæser"},NoResults:{heading:"Ingen søgeresultater for din søgning",subheading:"Prøv igen..."},SortDropdown:{title:"Sortér efter",option:"Sortér efter: {selectedOption}",relevanceLabel:"Mest relevant",positionLabel:"Position"},CategoryFilters:{results:"resultater for {phrase}",products:"{totalCount} produkter"},ProductCard:{asLowAs:"Så lav som {discountPrice}",startingAt:"Fra {productPrice}",bundlePrice:"Fra {fromBundlePrice} til {toBundlePrice}",from:"Fra {productPrice}"},ProductContainers:{minquery:"Dit søgeord {variables.phrase} har ikke minimum på {minQueryLength} tegn.",noresults:"Din søgning gav ingen resultater.",pagePicker:"Vis {pageSize} pr. side",showAll:"alle"},SearchBar:{placeholder:"Søg..."}},Or={Filter:{title:"Filter",showTitle:"Filter einblenden",hideTitle:"Filter ausblenden",clearAll:"Alle löschen"},InputButtonGroup:{title:"Kategorien",price:"Preis",customPrice:"Benutzerdefinierter Preis",priceIncluded:"ja",priceExcluded:"nein",priceExcludedMessage:"Nicht {title}",priceRange:" und höher",showmore:"Mehr anzeigen"},Loading:{title:"Ladevorgang läuft"},NoResults:{heading:"Keine Ergebnisse zu Ihrer Suche.",subheading:"Versuchen Sie es erneut..."},SortDropdown:{title:"Sortieren nach",option:"Sortieren nach: {selectedOption}",relevanceLabel:"Höchste Relevanz",positionLabel:"Position"},CategoryFilters:{results:"Ergebnisse für {phrase}",products:"{totalCount} Produkte"},ProductCard:{asLowAs:"Schon ab {discountPrice}",startingAt:"Ab {productPrice}",bundlePrice:"Aus {fromBundlePrice} zu {toBundlePrice}",from:"Ab {productPrice}"},ProductContainers:{minquery:"Ihr Suchbegriff {variables.phrase} ist kürzer als das Minimum von {minQueryLength} Zeichen.",noresults:"Zu Ihrer Suche wurden keine Ergebnisse zurückgegeben.",pagePicker:"{pageSize} pro Seite anzeigen",showAll:"alle"},SearchBar:{placeholder:"Suchen..."}},$r={Filter:{title:"Φίλτρα",showTitle:"Εμφάνιση φίλτρων",hideTitle:"Απόκρυψη φίλτρων",clearAll:"Απαλοιφή όλων"},InputButtonGroup:{title:"Κατηγορίες",price:"Τιμή",customPrice:"Προσαρμοσμένη τιμή",priceIncluded:"ναι",priceExcluded:"όχι",priceExcludedMessage:"Όχι {title}",priceRange:" και παραπάνω",showmore:"Εμφάνιση περισσότερων"},Loading:{title:"Γίνεται φόρτωση"},NoResults:{heading:"Δεν υπάρχουν αποτελέσματα για την αναζήτησή σας.",subheading:"Προσπαθήστε ξανά..."},SortDropdown:{title:"Ταξινόμηση κατά",option:"Ταξινόμηση κατά: {selectedOption}",relevanceLabel:"Το πιο σχετικό",positionLabel:"Θέση"},CategoryFilters:{results:"αποτελέσματα για {phrase}",products:"{totalCount} προϊόντα"},ProductCard:{asLowAs:"Τόσο χαμηλά όσο {discountPrice}",startingAt:"Έναρξη από {productPrice}",bundlePrice:"Από {fromBundlePrice} Προς {toBundlePrice}",from:"Από {productPrice}"},ProductContainers:{minquery:"Ο όρος αναζήτησής σας {variables.phrase} δεν έχει φτάσει στο ελάχιστο {minQueryLength} χαρακτήρες.",noresults:"Η αναζήτηση δεν επέστρεψε κανένα αποτέλεσμα.",pagePicker:"Προβολή {pageSize} ανά σελίδα",showAll:"όλα"},SearchBar:{placeholder:"Αναζήτηση..."}},Dr={Filter:{title:"Filters",showTitle:"Show filters",hideTitle:"Hide filters",clearAll:"Clear all"},InputButtonGroup:{title:"Categories",price:"Price",customPrice:"Custom Price",priceIncluded:"yes",priceExcluded:"no",priceExcludedMessage:"Not {title}",priceRange:" and above",showmore:"Show more"},Loading:{title:"Loading"},NoResults:{heading:"No results for your search.",subheading:"Please try again..."},SortDropdown:{title:"Sort by",option:"Sort by: {selectedOption}",relevanceLabel:"Most Relevant",positionLabel:"Position"},CategoryFilters:{results:"results for {phrase}",products:"{totalCount} products"},ProductCard:{asLowAs:"As low as {discountPrice}",startingAt:"Starting at {productPrice}",bundlePrice:"From {fromBundlePrice} To {toBundlePrice}",from:"From {productPrice}"},ProductContainers:{minquery:"Your search term {variables.phrase} has not reached the minimum of {minQueryLength} characters.",noresults:"Your search returned no results.",pagePicker:"Show {pageSize} per page",showAll:"all"},SearchBar:{placeholder:"Search..."}},mt={Filter:{title:"Filters",showTitle:"Show filters",hideTitle:"Hide filters",clearAll:"Clear all"},InputButtonGroup:{title:"Categories",price:"Price",customPrice:"Custom Price",priceIncluded:"yes",priceExcluded:"no",priceExcludedMessage:"Not {title}",priceRange:" and above",showmore:"Show more"},Loading:{title:"Loading"},NoResults:{heading:"No results for your search.",subheading:"Please try again..."},SortDropdown:{title:"Sort by",option:"Sort by: {selectedOption}",relevanceLabel:"Most Relevant",positionLabel:"Position",sortAttributeASC:"{label}: Low to High",sortAttributeDESC:"{label}: High to Low",sortASC:"Price: Low to High",sortDESC:"Price: High to Low",productName:"Product Name",productInStock:"In Stock",productLowStock:"Low Stock"},CategoryFilters:{results:"results for {phrase}",products:"{totalCount} products"},ProductCard:{asLowAs:"As low as {discountPrice}",startingAt:"Starting at {productPrice}",bundlePrice:"From {fromBundlePrice} To {toBundlePrice}",from:"From {productPrice}"},ProductContainers:{minquery:"Your search term {variables.phrase} has not reached the minimum of {minQueryLength} characters.",noresults:"Your search returned no results.",pagePicker:"Show {pageSize} per page",showAll:"all"},SearchBar:{placeholder:"Search..."},ListView:{viewDetails:"View details"}},Vr={Filter:{title:"Filtros",showTitle:"Mostrar filtros",hideTitle:"Ocultar filtros",clearAll:"Borrar todo"},InputButtonGroup:{title:"Categorías",price:"Precio",customPrice:"Precio personalizado",priceIncluded:"sí",priceExcluded:"no",priceExcludedMessage:"No es {title}",priceRange:" y más",showmore:"Mostrar más"},Loading:{title:"Cargando"},NoResults:{heading:"No hay resultados para tu búsqueda.",subheading:"Inténtalo de nuevo..."},SortDropdown:{title:"Ordenar por",option:"Ordenar por: {selectedOption}",relevanceLabel:"Más relevantes",positionLabel:"Posición"},CategoryFilters:{results:"resultados de {phrase}",products:"{totalCount} productos"},ProductCard:{asLowAs:"Por solo {discountPrice}",startingAt:"A partir de {productPrice}",bundlePrice:"Desde {fromBundlePrice} hasta {toBundlePrice}",from:"Desde {productPrice}"},ProductContainers:{minquery:"El término de búsqueda {variables.phrase} no llega al mínimo de {minQueryLength} caracteres.",noresults:"Tu búsqueda no ha dado resultados.",pagePicker:"Mostrar {pageSize} por página",showAll:"todo"},SearchBar:{placeholder:"Buscar..."}},Hr={Filter:{title:"Filtrid",showTitle:"Kuva filtrid",hideTitle:"Peida filtrid",clearAll:"Tühjenda kõik"},InputButtonGroup:{title:"Kategooriad",price:"Hind",customPrice:"Kohandatud hind",priceIncluded:"jah",priceExcluded:"ei",priceExcludedMessage:"Mitte {title}",priceRange:" ja üleval",showmore:"Kuva rohkem"},Loading:{title:"Laadimine"},NoResults:{heading:"Teie otsingule pole tulemusi.",subheading:"Proovige uuesti…"},SortDropdown:{title:"Sortimisjärjekord",option:"Sortimisjärjekord: {selectedOption}",relevanceLabel:"Kõige asjakohasem",positionLabel:"Asukoht"},CategoryFilters:{results:"{phrase} tulemused",products:"{totalCount} toodet"},ProductCard:{asLowAs:"Ainult {discountPrice}",startingAt:"Alates {productPrice}",bundlePrice:"Alates {fromBundlePrice} kuni {toBundlePrice}",from:"Alates {productPrice}"},ProductContainers:{minquery:"Teie otsingutermin {variables.phrase} ei sisalda vähemalt {minQueryLength} tähemärki.",noresults:"Teie otsing ei andnud tulemusi.",pagePicker:"Näita {pageSize} lehekülje kohta",showAll:"kõik"},SearchBar:{placeholder:"Otsi…"}},Ur={Filter:{title:"Iragazkiak",showTitle:"Erakutsi iragazkiak",hideTitle:"Ezkutatu iragazkiak",clearAll:"Garbitu dena"},InputButtonGroup:{title:"Kategoriak",price:"Prezioa",customPrice:"Prezio pertsonalizatua",priceIncluded:"bai",priceExcluded:"ez",priceExcludedMessage:"Ez da {title}",priceRange:" eta gorago",showmore:"Erakutsi gehiago"},Loading:{title:"Kargatzen"},NoResults:{heading:"Ez dago emaitzarik zure bilaketarako.",subheading:"Saiatu berriro mesedez..."},SortDropdown:{title:"Ordenatu",option:"Ordenatu honen arabera: {selectedOption}",relevanceLabel:"Garrantzitsuena",positionLabel:"Posizioa"},CategoryFilters:{results:"{phrase} bilaketaren emaitzak",products:"{totalCount} produktu"},ProductCard:{asLowAs:"{discountPrice} bezain baxua",startingAt:"{productPrice}-tatik hasita",bundlePrice:"{fromBundlePrice} eta {toBundlePrice} artean",from:"{productPrice}-tatik hasita"},ProductContainers:{minquery:"Zure bilaketa-terminoa ({variables.phrase}) ez da iritsi gutxieneko {minQueryLength} karakteretara.",noresults:"Zure bilaketak ez du emaitzarik eman.",pagePicker:"Erakutsi {pageSize} orriko",showAll:"guztiak"},SearchBar:{placeholder:"Bilatu..."}},jr={Filter:{title:"فیلترها",showTitle:"نمایش فیلترها",hideTitle:"محو فیلترها",clearAll:"پاک کردن همه"},InputButtonGroup:{title:"دسته‌ها",price:"قیمت",customPrice:"قیمت سفارشی",priceIncluded:"بله",priceExcluded:"خیر",priceExcludedMessage:"نه {title}",priceRange:" و بالاتر",showmore:"نمایش بیشتر"},Loading:{title:"درحال بارگیری"},NoResults:{heading:"جستجوی شما نتیجه‌ای دربر نداشت.",subheading:"لطفاً دوباره امتحان کنید..."},SortDropdown:{title:"مرتب‌سازی براساس",option:"مرتب‌سازی براساس: {selectedOption}",relevanceLabel:"مرتبط‌ترین",positionLabel:"موقعیت"},CategoryFilters:{results:"نتایج برای {phrase}",products:"{totalCount} محصولات"},ProductCard:{asLowAs:"برابر با {discountPrice}",startingAt:"شروع از {productPrice}",bundlePrice:"از {fromBundlePrice} تا {toBundlePrice}",from:"از {productPrice}"},ProductContainers:{minquery:"عبارت جستجوی شما {variables.phrase} به حداقل تعداد کاراکترهای لازم یعنی {minQueryLength} کاراکتر نرسیده است.",noresults:"جستجوی شما نتیجه‌ای را حاصل نکرد.",pagePicker:"نمایش {pageSize} در هر صفحه",showAll:"همه"},SearchBar:{placeholder:"جستجو..."}},qr={Filter:{title:"Suodattimet",showTitle:"Näytä suodattimet",hideTitle:"Piilota suodattimet",clearAll:"Poista kaikki"},InputButtonGroup:{title:"Luokat",price:"Hinta",customPrice:"Mukautettu hinta",priceIncluded:"kyllä",priceExcluded:"ei",priceExcludedMessage:"Ei {title}",priceRange:" ja enemmän",showmore:"Näytä enemmän"},Loading:{title:"Ladataan"},NoResults:{heading:"Haullasi ei löytynyt tuloksia.",subheading:"Yritä uudelleen..."},SortDropdown:{title:"Lajitteluperuste",option:"Lajitteluperuste: {selectedOption}",relevanceLabel:"Olennaisimmat",positionLabel:"Sijainti"},CategoryFilters:{results:"tulosta ilmaukselle {phrase}",products:"{totalCount} tuotetta"},ProductCard:{asLowAs:"Parhaimmillaan {discountPrice}",startingAt:"Alkaen {productPrice}",bundlePrice:"{fromBundlePrice} alkaen {toBundlePrice} asti",from:"{productPrice} alkaen"},ProductContainers:{minquery:"Hakusanasi {variables.phrase} ei ole saavuttanut {minQueryLength} merkin vähimmäismäärää.",noresults:"Hakusi ei palauttanut tuloksia.",pagePicker:"Näytä {pageSize} sivua kohti",showAll:"kaikki"},SearchBar:{placeholder:"Hae..."}},Gr={Filter:{title:"Filtres",showTitle:"Afficher les filtres",hideTitle:"Masquer les filtres",clearAll:"Tout effacer"},InputButtonGroup:{title:"Catégories",price:"Prix",customPrice:"Prix personnalisé",priceIncluded:"oui",priceExcluded:"non",priceExcludedMessage:"Exclure {title}",priceRange:" et plus",showmore:"Plus"},Loading:{title:"Chargement"},NoResults:{heading:"Votre recherche n’a renvoyé aucun résultat",subheading:"Veuillez réessayer…"},SortDropdown:{title:"Trier par",option:"Trier par : {selectedOption}",relevanceLabel:"Pertinence",positionLabel:"Position"},CategoryFilters:{results:"résultats trouvés pour {phrase}",products:"{totalCount} produits"},ProductCard:{asLowAs:"Prix descendant jusqu’à {discountPrice}",startingAt:"À partir de {productPrice}",bundlePrice:"De {fromBundlePrice} à {toBundlePrice}",from:"De {productPrice}"},ProductContainers:{minquery:"Votre terme de recherche « {variables.phrase} » est en dessous de la limite minimale de {minQueryLength} caractères.",noresults:"Votre recherche n’a renvoyé aucun résultat.",pagePicker:"Affichage : {pageSize} par page",showAll:"tout"},SearchBar:{placeholder:"Rechercher…"}},Qr={Filter:{title:"Filtros",showTitle:"Mostrar filtros",hideTitle:"Ocultar filtros",clearAll:"Borrar todo"},InputButtonGroup:{title:"Categorías",price:"Prezo",customPrice:"Prezo personalizado",priceIncluded:"si",priceExcluded:"non",priceExcludedMessage:"Non {title}",priceRange:" e superior",showmore:"Mostrar máis"},Loading:{title:"Cargando"},NoResults:{heading:"Non hai resultados para a súa busca.",subheading:"Ténteo de novo..."},SortDropdown:{title:"Ordenar por",option:"Ordenar por: {selectedOption}",relevanceLabel:"Máis relevante",positionLabel:"Posición"},CategoryFilters:{results:"resultados para {phrase}",products:"{totalCount} produtos"},ProductCard:{asLowAs:"A partir de só {discountPrice}",startingAt:"A partir de {productPrice}",bundlePrice:"Desde {fromBundlePrice} ata {toBundlePrice}",from:"Desde {productPrice}"},ProductContainers:{minquery:"O seu termo de busca {variables.phrase} non alcanzou o mínimo de {minQueryLength} caracteres.",noresults:"A súa busca non obtivo resultados.",pagePicker:"Mostrar {pageSize} por páxina",showAll:"todos"},SearchBar:{placeholder:"Buscar..."}},Zr={Filter:{title:"फिल्टर",showTitle:"फ़िल्टर दिखाएं",hideTitle:"फ़िल्टर छुपाएं",clearAll:"सभी साफ करें"},InputButtonGroup:{title:"श्रेणियाँ",price:"कीमत",customPrice:"कस्टम कीमत",priceIncluded:"हां",priceExcluded:"नहीं",priceExcludedMessage:"नहीं {title}",priceRange:" और ऊपर",showmore:"और दिखाएं"},Loading:{title:"लोड हो रहा है"},NoResults:{heading:"आपकी खोज के लिए कोई परिणाम नहीं.",subheading:"कृपया फिर कोशिश करें..."},SortDropdown:{title:"इसके अनुसार क्रमबद्ध करें",option:"इसके अनुसार क्रमबद्ध करें: {selectedOption}",relevanceLabel:"सबसे अधिक प्रासंगिक",positionLabel:"पद"},CategoryFilters:{results:"{phrase} के लिए परिणाम",products:"{totalCount} प्रोडक्ट्स"},ProductCard:{asLowAs:"{discountPrice} जितना कम ",startingAt:"{productPrice} से शुरू",bundlePrice:"{fromBundlePrice} से {toBundlePrice} तक",from:"{productPrice} से "},ProductContainers:{minquery:"आपका खोज शब्द {variables.phrase} न्यूनतम {minQueryLength} वर्ण तक नहीं पहुंच पाया है।",noresults:"आपकी खोज का कोई परिणाम नहीं निकला।",pagePicker:"प्रति पृष्ठ {pageSize}दिखाओ",showAll:"सब"},SearchBar:{placeholder:"खोज..."}},Kr={Filter:{title:"Szűrők",showTitle:"Szűrők megjelenítése",hideTitle:"Szűrők elrejtése",clearAll:"Összes törlése"},InputButtonGroup:{title:"Kategóriák",price:"Ár",customPrice:"Egyedi ár",priceIncluded:"igen",priceExcluded:"nem",priceExcludedMessage:"Nem {title}",priceRange:" és fölötte",showmore:"További információk megjelenítése"},Loading:{title:"Betöltés"},NoResults:{heading:"Nincs találat a keresésre.",subheading:"Kérjük, próbálja meg újra..."},SortDropdown:{title:"Rendezési szempont",option:"Rendezési szempont: {selectedOption}",relevanceLabel:"Legrelevánsabb",positionLabel:"Pozíció"},CategoryFilters:{results:"eredmények a következőre: {phrase}",products:"{totalCount} termék"},ProductCard:{asLowAs:"Ennyire alacsony: {discountPrice}",startingAt:"Kezdő ár: {productPrice}",bundlePrice:"Ettől: {fromBundlePrice} Eddig: {toBundlePrice}",from:"Ettől: {productPrice}"},ProductContainers:{minquery:"A keresett kifejezés: {variables.phrase} nem érte el a minimum {minQueryLength} karaktert.",noresults:"A keresés nem hozott eredményt.",pagePicker:"{pageSize} megjelenítése oldalanként",showAll:"összes"},SearchBar:{placeholder:"Keresés..."}},Jr={Filter:{title:"Filter",showTitle:"Tampilkan filter",hideTitle:"Sembunyikan filter",clearAll:"Bersihkan semua"},InputButtonGroup:{title:"Kategori",price:"Harga",customPrice:"Harga Kustom",priceIncluded:"ya",priceExcluded:"tidak",priceExcludedMessage:"Bukan {title}",priceRange:" ke atas",showmore:"Tampilkan lainnya"},Loading:{title:"Memuat"},NoResults:{heading:"Tidak ada hasil untuk pencarian Anda.",subheading:"Coba lagi..."},SortDropdown:{title:"Urut berdasarkan",option:"Urut berdasarkan: {selectedOption}",relevanceLabel:"Paling Relevan",positionLabel:"Posisi"},CategoryFilters:{results:"hasil untuk {phrase}",products:"{totalCount} produk"},ProductCard:{asLowAs:"Paling rendah {discountPrice}",startingAt:"Mulai dari {productPrice}",bundlePrice:"Mulai {fromBundlePrice} hingga {toBundlePrice}",from:"Mulai {productPrice}"},ProductContainers:{minquery:"Istilah pencarian {variables.phrase} belum mencapai batas minimum {minQueryLength} karakter.",noresults:"Pencarian Anda tidak memberikan hasil.",pagePicker:"Menampilkan {pageSize} per halaman",showAll:"semua"},SearchBar:{placeholder:"Cari..."}},Xr={Filter:{title:"Filtri",showTitle:"Mostra filtri",hideTitle:"Nascondi filtri",clearAll:"Cancella tutto"},InputButtonGroup:{title:"Categorie",price:"Prezzo",customPrice:"Prezzo personalizzato",priceIncluded:"sì",priceExcluded:"no",priceExcludedMessage:"Non {title}",priceRange:" e superiore",showmore:"Mostra altro"},Loading:{title:"Caricamento"},NoResults:{heading:"Nessun risultato per la ricerca.",subheading:"Riprova..."},SortDropdown:{title:"Ordina per",option:"Ordina per: {selectedOption}",relevanceLabel:"Più rilevante",positionLabel:"Posizione"},CategoryFilters:{results:"risultati per {phrase}",products:"{totalCount} prodotti"},ProductCard:{asLowAs:"A partire da {discountPrice}",startingAt:"A partire da {productPrice}",bundlePrice:"Da {fromBundlePrice} a {toBundlePrice}",from:"Da {productPrice}"},ProductContainers:{minquery:"Il termine di ricerca {variables.phrase} non ha raggiunto il minimo di {minQueryLength} caratteri.",noresults:"La ricerca non ha prodotto risultati.",pagePicker:"Mostra {pageSize} per pagina",showAll:"tutto"},SearchBar:{placeholder:"Cerca..."}},Yr={Filter:{title:"フィルター",showTitle:"フィルターを表示",hideTitle:"フィルターを隠す",clearAll:"すべて消去"},InputButtonGroup:{title:"カテゴリ",price:"価格",customPrice:"カスタム価格",priceIncluded:"はい",priceExcluded:"いいえ",priceExcludedMessage:"{title}ではない",priceRange:" 以上",showmore:"すべてを表示"},Loading:{title:"読み込み中"},NoResults:{heading:"検索結果はありません。",subheading:"再試行してください"},SortDropdown:{title:"並べ替え条件",option:"{selectedOption}に並べ替え",relevanceLabel:"最も関連性が高い",positionLabel:"配置"},CategoryFilters:{results:"{phrase}の検索結果",products:"{totalCount}製品"},ProductCard:{asLowAs:"割引料金 : {discountPrice}",startingAt:"初年度価格 : {productPrice}",bundlePrice:"{fromBundlePrice} から {toBundlePrice}",from:"{productPrice} から"},ProductContainers:{minquery:"ご入力の検索語{variables.phrase}は、最低文字数 {minQueryLength} 文字に達していません。",noresults:"検索結果はありませんでした。",pagePicker:"1 ページあたり {pageSize} を表示",showAll:"すべて"},SearchBar:{placeholder:"検索"}},Wr={Filter:{title:"필터",showTitle:"필터 표시",hideTitle:"필터 숨기기",clearAll:"모두 지우기"},InputButtonGroup:{title:"범주",price:"가격",customPrice:"맞춤 가격",priceIncluded:"예",priceExcluded:"아니요",priceExcludedMessage:"{title} 아님",priceRange:" 이상",showmore:"자세히 표시"},Loading:{title:"로드 중"},NoResults:{heading:"현재 검색에 대한 결과가 없습니다.",subheading:"다시 시도해 주십시오."},SortDropdown:{title:"정렬 기준",option:"정렬 기준: {selectedOption}",relevanceLabel:"관련성 가장 높음",positionLabel:"위치"},CategoryFilters:{results:"{phrase}에 대한 검색 결과",products:"{totalCount}개 제품"},ProductCard:{asLowAs:"최저 {discountPrice}",startingAt:"최저가: {productPrice}",bundlePrice:"{fromBundlePrice} ~ {toBundlePrice}",from:"{productPrice}부터"},ProductContainers:{minquery:"검색어 “{variables.phrase}”이(가) 최소 문자 길이인 {minQueryLength}자 미만입니다.",noresults:"검색 결과가 없습니다.",pagePicker:"페이지당 {pageSize}개 표시",showAll:"모두"},SearchBar:{placeholder:"검색..."}},ea={Filter:{title:"Filtrai",showTitle:"Rodyti filtrus",hideTitle:"Slėpti filtrus",clearAll:"Išvalyti viską"},InputButtonGroup:{title:"Kategorijos",price:"Kaina",customPrice:"Individualizuota kaina",priceIncluded:"taip",priceExcluded:"ne",priceExcludedMessage:"Ne {title}",priceRange:" ir aukščiau",showmore:"Rodyti daugiau"},Loading:{title:"Įkeliama"},NoResults:{heading:"Nėra jūsų ieškos rezultatų.",subheading:"Bandykite dar kartą..."},SortDropdown:{title:"Rikiuoti pagal",option:"Rikiuoti pagal: {selectedOption}",relevanceLabel:"Svarbiausias",positionLabel:"Padėtis"},CategoryFilters:{results:"rezultatai {phrase}",products:"Produktų: {totalCount}"},ProductCard:{asLowAs:"Žema kaip {discountPrice}",startingAt:"Pradedant nuo {productPrice}",bundlePrice:"Nuo {fromBundlePrice} iki {toBundlePrice}",from:"Nuo {productPrice}"},ProductContainers:{minquery:"Jūsų ieškos sąlyga {variables.phrase} nesiekia minimalaus skaičiaus simbolių: {minQueryLength}.",noresults:"Jūsų ieška nedavė jokių rezultatų.",pagePicker:"Rodyti {pageSize} psl.",showAll:"viskas"},SearchBar:{placeholder:"Ieška..."}},ta={Filter:{title:"Filtri",showTitle:"Rādīt filtrus",hideTitle:"Slēpt filtrus",clearAll:"Notīrīt visus"},InputButtonGroup:{title:"Kategorijas",price:"Cena",customPrice:"Pielāgot cenu",priceIncluded:"jā",priceExcluded:"nē",priceExcludedMessage:"Nav {title}",priceRange:" un augstāk",showmore:"Rādīt vairāk"},Loading:{title:"Notiek ielāde"},NoResults:{heading:"Jūsu meklēšanai nav rezultātu.",subheading:"Mēģiniet vēlreiz…"},SortDropdown:{title:"Kārtot pēc",option:"Kārtot pēc: {selectedOption}",relevanceLabel:"Visatbilstošākais",positionLabel:"Pozīcija"},CategoryFilters:{results:"{phrase} rezultāti",products:"{totalCount} produkti"},ProductCard:{asLowAs:"Tik zemu kā {discountPrice}",startingAt:"Sākot no {productPrice}",bundlePrice:"No {fromBundlePrice} uz{toBundlePrice}",from:"No {productPrice}"},ProductContainers:{minquery:"Jūsu meklēšanas vienums {variables.phrase} nav sasniedzis minimumu {minQueryLength} rakstzīmes.",noresults:"Jūsu meklēšana nedeva nekādus rezultātus.",pagePicker:"Rādīt {pageSize} vienā lapā",showAll:"viss"},SearchBar:{placeholder:"Meklēt…"}},ra={Filter:{title:"Filtre",showTitle:"Vis filtre",hideTitle:"Skjul filtre",clearAll:"Fjern alle"},InputButtonGroup:{title:"Kategorier",price:"Pris",customPrice:"Egendefinert pris",priceIncluded:"ja",priceExcluded:"nei",priceExcludedMessage:"Ikke {title}",priceRange:" og over",showmore:"Vis mer"},Loading:{title:"Laster inn"},NoResults:{heading:"Finner ingen resultater for søket.",subheading:"Prøv igjen."},SortDropdown:{title:"Sorter etter",option:"Sorter etter: {selectedOption}",relevanceLabel:"Mest aktuelle",positionLabel:"Plassering"},CategoryFilters:{results:"resultater for {phrase}",products:"{totalCount} produkter"},ProductCard:{asLowAs:"Så lavt som {discountPrice}",startingAt:"Fra {productPrice}",bundlePrice:"Fra {fromBundlePrice} til {toBundlePrice}",from:"Fra {productPrice}"},ProductContainers:{minquery:"Søkeordet {variables.phrase} har ikke de påkrevde {minQueryLength} tegnene.",noresults:"Søket ditt ga ingen resultater.",pagePicker:"Vis {pageSize} per side",showAll:"alle"},SearchBar:{placeholder:"Søk …"}},aa={Filter:{title:"Filters",showTitle:"Filters weergeven",hideTitle:"Filters verbergen",clearAll:"Alles wissen"},InputButtonGroup:{title:"Categorieën",price:"Prijs",customPrice:"Aangepaste prijs",priceIncluded:"ja",priceExcluded:"nee",priceExcludedMessage:"Niet {title}",priceRange:" en meer",showmore:"Meer tonen"},Loading:{title:"Laden"},NoResults:{heading:"Geen resultaten voor je zoekopdracht.",subheading:"Probeer het opnieuw..."},SortDropdown:{title:"Sorteren op",option:"Sorteren op: {selectedOption}",relevanceLabel:"Meest relevant",positionLabel:"Positie"},CategoryFilters:{results:"resultaten voor {phrase}",products:"{totalCount} producten"},ProductCard:{asLowAs:"Slechts {discountPrice}",startingAt:"Vanaf {productPrice}",bundlePrice:"Van {fromBundlePrice} tot {toBundlePrice}",from:"Vanaf {productPrice}"},ProductContainers:{minquery:"Je zoekterm {variables.phrase} bevat niet het minimumaantal van {minQueryLength} tekens.",noresults:"Geen resultaten gevonden voor je zoekopdracht.",pagePicker:"{pageSize} weergeven per pagina",showAll:"alles"},SearchBar:{placeholder:"Zoeken..."}},sa={Filter:{title:"Filtros",showTitle:"Mostrar filtros",hideTitle:"Ocultar filtros",clearAll:"Limpar tudo"},InputButtonGroup:{title:"Categorias",price:"Preço",customPrice:"Preço personalizado",priceIncluded:"sim",priceExcluded:"não",priceExcludedMessage:"Não {title}",priceRange:" e acima",showmore:"Mostrar mais"},Loading:{title:"Carregando"},NoResults:{heading:"Nenhum resultado para sua busca.",subheading:"Tente novamente..."},SortDropdown:{title:"Classificar por",option:"Classificar por: {selectedOption}",relevanceLabel:"Mais relevantes",positionLabel:"Posição"},CategoryFilters:{results:"resultados para {phrase}",products:"{totalCount} produtos"},ProductCard:{asLowAs:"Por apenas {discountPrice}",startingAt:"A partir de {productPrice}",bundlePrice:"De {fromBundlePrice} por {toBundlePrice}",from:"De {productPrice}"},ProductContainers:{minquery:"Seu termo de pesquisa {variables.phrase} não atingiu o mínimo de {minQueryLength} caracteres.",noresults:"Sua busca não retornou resultados.",pagePicker:"Mostrar {pageSize} por página",showAll:"tudo"},SearchBar:{placeholder:"Pesquisar..."}},na={Filter:{title:"Filtros",showTitle:"Mostrar filtros",hideTitle:"Ocultar filtros",clearAll:"Limpar tudo"},InputButtonGroup:{title:"Categorias",price:"Preço",customPrice:"Preço Personalizado",priceIncluded:"sim",priceExcluded:"não",priceExcludedMessage:"Não {title}",priceRange:" e acima",showmore:"Mostrar mais"},Loading:{title:"A carregar"},NoResults:{heading:"Não existem resultados para a sua pesquisa.",subheading:"Tente novamente..."},SortDropdown:{title:"Ordenar por",option:"Ordenar por: {selectedOption}",relevanceLabel:"Mais Relevantes",positionLabel:"Posição"},CategoryFilters:{results:"resultados para {phrase}",products:"{totalCount} produtos"},ProductCard:{asLowAs:"A partir de {discountPrice}",startingAt:"A partir de {productPrice}",bundlePrice:"De {fromBundlePrice} a {toBundlePrice}",from:"A partir de {productPrice}"},ProductContainers:{minquery:"O seu termo de pesquisa {variables.phrase} não atingiu o mínimo de {minQueryLength} carateres.",noresults:"A sua pesquisa não devolveu resultados.",pagePicker:"Mostrar {pageSize} por página",showAll:"tudo"},SearchBar:{placeholder:"Procurar..."}},ia={Filter:{title:"Filtre",showTitle:"Afișați filtrele",hideTitle:"Ascundeți filtrele",clearAll:"Ștergeți tot"},InputButtonGroup:{title:"Categorii",price:"Preț",customPrice:"Preț personalizat",priceIncluded:"da",priceExcluded:"nu",priceExcludedMessage:"Fără {title}",priceRange:" și mai mult",showmore:"Afișați mai multe"},Loading:{title:"Se încarcă"},NoResults:{heading:"Niciun rezultat pentru căutarea dvs.",subheading:"Încercați din nou..."},SortDropdown:{title:"Sortați după",option:"Sortați după: {selectedOption}",relevanceLabel:"Cele mai relevante",positionLabel:"Poziție"},CategoryFilters:{results:"rezultate pentru {phrase}",products:"{totalCount} produse"},ProductCard:{asLowAs:"Preț redus până la {discountPrice}",startingAt:"Începând de la {productPrice}",bundlePrice:"De la {fromBundlePrice} la {toBundlePrice}",from:"De la {productPrice}"},ProductContainers:{minquery:"Termenul căutat {variables.phrase} nu a atins numărul minim de {minQueryLength} caractere.",noresults:"Nu există rezultate pentru căutarea dvs.",pagePicker:"Afișați {pageSize} per pagină",showAll:"toate"},SearchBar:{placeholder:"Căutare..."}},oa={Filter:{title:"Фильтры",showTitle:"Показать фильтры",hideTitle:"Скрыть фильтры",clearAll:"Очистить все"},InputButtonGroup:{title:"Категории",price:"Цена",customPrice:"Индивидуальная цена",priceIncluded:"да",priceExcluded:"нет",priceExcludedMessage:"Нет {title}",priceRange:" и выше",showmore:"Показать еще"},Loading:{title:"Загрузка"},NoResults:{heading:"Нет результатов по вашему поисковому запросу.",subheading:"Повторите попытку..."},SortDropdown:{title:"Сортировка по",option:"Сортировать по: {selectedOption}",relevanceLabel:"Самые подходящие",positionLabel:"Положение"},CategoryFilters:{results:"Результаты по запросу «{phrase}»",products:"Продукты: {totalCount}"},ProductCard:{asLowAs:"Всего за {discountPrice}",startingAt:"От {productPrice}",bundlePrice:"От {fromBundlePrice} до {toBundlePrice}",from:"От {productPrice}"},ProductContainers:{minquery:"Поисковый запрос «{variables.phrase}» содержит меньше {minQueryLength} символов.",noresults:"Нет результатов по вашему запросу.",pagePicker:"Показывать {pageSize} на странице",showAll:"все"},SearchBar:{placeholder:"Поиск..."}},la={Filter:{title:"Filter",showTitle:"Visa filter",hideTitle:"Dölj filter",clearAll:"Rensa allt"},InputButtonGroup:{title:"Kategorier",price:"Pris",customPrice:"Anpassat pris",priceIncluded:"ja",priceExcluded:"nej",priceExcludedMessage:"Inte {title}",priceRange:" eller mer",showmore:"Visa mer"},Loading:{title:"Läser in"},NoResults:{heading:"Inga sökresultat.",subheading:"Försök igen …"},SortDropdown:{title:"Sortera på",option:"Sortera på: {selectedOption}",relevanceLabel:"Mest relevant",positionLabel:"Position"},CategoryFilters:{results:"resultat för {phrase}",products:"{totalCount} produkter"},ProductCard:{asLowAs:"Så lite som {discountPrice}",startingAt:"Från {productPrice}",bundlePrice:"Från {fromBundlePrice} till {toBundlePrice}",from:"Från {productPrice}"},ProductContainers:{minquery:"Din sökterm {variables.phrase} har inte nått upp till minimiantalet tecken, {minQueryLength}.",noresults:"Sökningen gav inget resultat.",pagePicker:"Visa {pageSize} per sida",showAll:"alla"},SearchBar:{placeholder:"Sök …"}},ca={Filter:{title:"ตัวกรอง",showTitle:"แสดงตัวกรอง",hideTitle:"ซ่อนตัวกรอง",clearAll:"ล้างทั้งหมด"},InputButtonGroup:{title:"หมวดหมู่",price:"ราคา",customPrice:"ปรับแต่งราคา",priceIncluded:"ใช่",priceExcluded:"ไม่",priceExcludedMessage:"ไม่ใช่ {title}",priceRange:" และสูงกว่า",showmore:"แสดงมากขึ้น"},Loading:{title:"กำลังโหลด"},NoResults:{heading:"ไม่มีผลลัพธ์สำหรับการค้นหาของคุณ",subheading:"โปรดลองอีกครั้ง..."},SortDropdown:{title:"เรียงตาม",option:"เรียงตาม: {selectedOption}",relevanceLabel:"เกี่ยวข้องมากที่สุด",positionLabel:"ตำแหน่ง"},CategoryFilters:{results:"ผลลัพธ์สำหรับ {phrase}",products:"{totalCount} ผลิตภัณฑ์"},ProductCard:{asLowAs:"ต่ำสุดที่ {discountPrice}",startingAt:"เริ่มต้นที่ {productPrice}",bundlePrice:"ตั้งแต่ {fromBundlePrice} ถึง {toBundlePrice}",from:"ตั้งแต่ {productPrice}"},ProductContainers:{minquery:"คำว่า {variables.phrase} ที่คุณใช้ค้นหายังมีจำนวนอักขระไม่ถึงจำนวนขั้นต่ำ {minQueryLength} อักขระ",noresults:"การค้นหาของคุณไม่มีผลลัพธ์",pagePicker:"แสดง {pageSize} ต่อหน้า",showAll:"ทั้งหมด"},SearchBar:{placeholder:"ค้นหา..."}},da={Filter:{title:"Filtreler",showTitle:"Filtreleri göster",hideTitle:"Filtreleri gizle",clearAll:"Tümünü temizle"},InputButtonGroup:{title:"Kategoriler",price:"Fiyat",customPrice:"Özel Fiyat",priceIncluded:"evet",priceExcluded:"hayır",priceExcludedMessage:"Hariç: {title}",priceRange:" ve üzeri",showmore:"Diğerlerini göster"},Loading:{title:"Yükleniyor"},NoResults:{heading:"Aramanız hiç sonuç döndürmedi",subheading:"Lütfen tekrar deneyin..."},SortDropdown:{title:"Sırala",option:"Sıralama ölçütü: {selectedOption}",relevanceLabel:"En Çok İlişkili",positionLabel:"Konum"},CategoryFilters:{results:"{phrase} için sonuçlar",products:"{totalCount} ürün"},ProductCard:{asLowAs:"En düşük: {discountPrice}",startingAt:"Başlangıç fiyatı: {productPrice}",bundlePrice:"{fromBundlePrice} - {toBundlePrice} arası",from:"Başlangıç: {productPrice}"},ProductContainers:{minquery:"Arama teriminiz ({variables.phrase}) minimum {minQueryLength} karakter sınırlamasından daha kısa.",noresults:"Aramanız hiç sonuç döndürmedi.",pagePicker:"Sayfa başına {pageSize} göster",showAll:"tümü"},SearchBar:{placeholder:"Ara..."}},ua={Filter:{title:"筛选条件",showTitle:"显示筛选条件",hideTitle:"隐藏筛选条件",clearAll:"全部清除"},InputButtonGroup:{title:"类别",price:"价格",customPrice:"自定义价格",priceIncluded:"是",priceExcluded:"否",priceExcludedMessage:"不是 {title}",priceRange:" 及以上",showmore:"显示更多"},Loading:{title:"正在加载"},NoResults:{heading:"无搜索结果。",subheading:"请重试..."},SortDropdown:{title:"排序依据",option:"排序依据：{selectedOption}",relevanceLabel:"最相关",positionLabel:"位置"},CategoryFilters:{results:"{phrase} 的结果",products:"{totalCount} 个产品"},ProductCard:{asLowAs:"低至 {discountPrice}",startingAt:"起价为 {productPrice}",bundlePrice:"从 {fromBundlePrice} 到 {toBundlePrice}",from:"从 {productPrice} 起"},ProductContainers:{minquery:"您的搜索词 {variables.phrase} 尚未达到最少 {minQueryLength} 个字符这一要求。",noresults:"您的搜索未返回任何结果。",pagePicker:"每页显示 {pageSize} 项",showAll:"全部"},SearchBar:{placeholder:"搜索..."}},pa={Filter:{title:"篩選器",showTitle:"顯示篩選器",hideTitle:"隱藏篩選器",clearAll:"全部清除"},InputButtonGroup:{title:"類別",price:"價格",customPrice:"自訂價格",priceIncluded:"是",priceExcluded:"否",priceExcludedMessage:"不是 {title}",priceRange:" 以上",showmore:"顯示更多"},Loading:{title:"載入中"},NoResults:{heading:"沒有符合搜尋的結果。",subheading:"請再試一次…"},SortDropdown:{title:"排序依據",option:"排序方式：{selectedOption}",relevanceLabel:"最相關",positionLabel:"位置"},CategoryFilters:{results:"{phrase} 的結果",products:"{totalCount} 個產品"},ProductCard:{asLowAs:"低至 {discountPrice}",startingAt:"起價為 {productPrice}",bundlePrice:"從 {fromBundlePrice} 到 {toBundlePrice}",from:"起價為 {productPrice}"},ProductContainers:{minquery:"您的搜尋字詞 {variables.phrase} 未達到最少 {minQueryLength} 個字元。",noresults:"您的搜尋未傳回任何結果。",pagePicker:"顯示每頁 {pageSize}",showAll:"全部"},SearchBar:{placeholder:"搜尋…"}},st={default:mt,bg_BG:zr,ca_ES:Mr,cs_CZ:Er,da_DK:Rr,de_DE:Or,el_GR:$r,en_GB:Dr,en_US:mt,es_ES:Vr,et_EE:Hr,eu_ES:Ur,fa_IR:jr,fi_FI:qr,fr_FR:Gr,gl_ES:Qr,hi_IN:Zr,hu_HU:Kr,id_ID:Jr,it_IT:Xr,ja_JP:Yr,ko_KR:Wr,lt_LT:ea,lv_LV:ta,nb_NO:ra,nl_NL:aa,pt_BR:sa,pt_PT:na,ro_RO:ia,ru_RU:oa,sv_SE:la,th_TH:ca,tr_TR:da,zh_Hans_CN:ua,zh_Hant_TW:pa},nt=tt(st.default),le=()=>rt(nt),ma=e=>Object.keys(st).includes(e)?e:"default",ha=({children:e})=>{var n;const t=te(),r=ma(((n=t==null?void 0:t.config)==null?void 0:n.locale)??"");return a(nt.Provider,{value:st[r],children:e})},$t=qe({variables:{phrase:""},loading:!1,items:[],setItems:()=>{},currentPage:1,setCurrentPage:()=>{},pageSize:at,setPageSize:()=>{},totalCount:0,setTotalCount:()=>{},totalPages:0,setTotalPages:()=>{},facets:[],setFacets:()=>{},categoryName:"",setCategoryName:()=>{},currencySymbol:"",setCurrencySymbol:()=>{},currencyRate:"",setCurrencyRate:()=>{},minQueryLength:We,minQueryLengthReached:!1,setMinQueryLengthReached:()=>{},pageSizeOptions:[],setRoute:void 0,refineProduct:()=>{},pageLoading:!1,setPageLoading:()=>{},categoryPath:void 0,viewType:"",setViewType:()=>{},listViewType:"",setListViewType:()=>{},resolveCartId:()=>Promise.resolve(""),refreshCart:()=>{},addToCart:()=>Promise.resolve()}),ga=({children:e})=>{var we,ye,Pe,xe,Ce,ke;const t=he("p"),r=t?Number(t):1,n=ue(),s=te(),o=Rt(),i=he("page_size"),c=Number((ye=(we=s==null?void 0:s.config)==null?void 0:we.perPageConfig)==null?void 0:ye.defaultPageSizeOption)||at,d=i?Number(i):c,u=le().ProductContainers.showAll;let p=JSON.parse(window.localStorage.getItem("_demo:context"));p.id||(p=JSON.parse(window.localStorage.getItem("_demo:data")).Aurora);const[v,g]=y({"Content-Type":"application/json","AC-Environment-Id":"c09ecfb1-333a-4db3-9669-ce07ec0e3a00","AC-Scope-Locale":"en-US","X-Api-Key":"search_gql","AC-Channel-Id":p.id,"AC-Price-Book-Id":p.value.toLowerCase()}),[f,b]=y(!0),[h,P]=y(!0),[L,S]=y([]),[x,B]=y(r),[w,C]=y(d),[M,k]=y(0),[I,O]=y(0),[D,Q]=y([]),[j,re]=y(((Pe=s==null?void 0:s.config)==null?void 0:Pe.categoryName)??""),[ae,z]=y([]),[N,T]=y(((xe=s==null?void 0:s.config)==null?void 0:xe.currencySymbol)??""),[$,E]=y(((Ce=s==null?void 0:s.config)==null?void 0:Ce.currencyRate)??""),[H,se]=y(!1),pe=Ye(()=>{var A;return((A=s==null?void 0:s.config)==null?void 0:A.minQueryLength)||We},[s==null?void 0:s.config.minQueryLength]),fe=(ke=s.config)==null?void 0:ke.currentCategoryUrlPath,ee=he("view_type"),[X,ve]=y(ee||"gridView"),[Fe,Te]=y("default"),ne=Ye(()=>({phrase:n.phrase,filter:n.filters,sort:n.sort,context:s.context,pageSize:w,displayOutOfStock:s.config.displayOutOfStock,currentPage:x}),[n.phrase,n.filters,n.sort,s.context,s.config.displayOutOfStock,w,x]),Be=async(A,F)=>await Ir({...s,optionIds:A,sku:F}),ze={variables:ne,loading:f,items:L,setItems:S,currentPage:x,setCurrentPage:B,pageSize:w,setPageSize:C,totalCount:M,setTotalCount:k,totalPages:I,setTotalPages:O,facets:D,setFacets:Q,categoryName:j,setCategoryName:re,currencySymbol:N,setCurrencySymbol:T,currencyRate:$,setCurrencyRate:E,minQueryLength:pe,minQueryLengthReached:H,setMinQueryLengthReached:se,pageSizeOptions:ae,setRoute:s.route,refineProduct:Be,pageLoading:h,setPageLoading:P,categoryPath:fe,viewType:X,setViewType:ve,listViewType:Fe,setListViewType:Te,cartId:s.config.resolveCartId,refreshCart:s.config.refreshCart,resolveCartId:s.config.resolveCartId,addToCart:s.config.addToCart},ce=async(A={})=>{var F,q,Y,K,R,W,de,Se,_e,V;try{if(b(!0),or(),Me()){const ie=[...ne.filter];Oe(fe,ie);const _=await Nr({...ne,...s,apiUrl:s.apiUrl,filter:ie,categorySearch:!!fe,headers:A});S(((F=_==null?void 0:_.productSearch)==null?void 0:F.items)||[]),Q(((q=_==null?void 0:_.productSearch)==null?void 0:q.facets)||[]),k(((Y=_==null?void 0:_.productSearch)==null?void 0:Y.total_count)||0),O(((R=(K=_==null?void 0:_.productSearch)==null?void 0:K.page_info)==null?void 0:R.total_pages)||1),$e(((W=_==null?void 0:_.productSearch)==null?void 0:W.facets)||[]),Ee((de=_==null?void 0:_.productSearch)==null?void 0:de.total_count),Re((Se=_==null?void 0:_.productSearch)==null?void 0:Se.total_count,(V=(_e=_==null?void 0:_.productSearch)==null?void 0:_e.page_info)==null?void 0:V.total_pages)}b(!1),P(!1)}catch{b(!1),P(!1)}},Me=()=>{var A;return!((A=s.config)!=null&&A.currentCategoryUrlPath)&&n.phrase.trim().length<(Number(s.config.minQueryLength)||We)?(S([]),Q([]),k(0),O(1),se(!1),!1):(se(!0),!0)},Ee=A=>{var K,R,W;const F=[];(((R=(K=s==null?void 0:s.config)==null?void 0:K.perPageConfig)==null?void 0:R.pageSizeOptions)||ar).split(",").forEach(de=>{F.push({label:de,value:parseInt(de,10)})}),((W=s==null?void 0:s.config)==null?void 0:W.allowAllProducts)=="1"&&F.push({label:u,value:A!==null?A>500?500:A:0}),z(F)},Re=(A,F)=>{A&&A>0&&F===1&&(B(1),Ft(1))},Oe=(A,F)=>{if(A){const q={attribute:"categoryPath",eq:A};F.push(q),(ne.sort.length<1||ne.sort===At)&&(ne.sort=sr)}},$e=A=>{A.map(F=>{var Y;if(((Y=F==null?void 0:F.buckets[0])==null?void 0:Y.__typename)==="CategoryView"){const K=F.buckets.map(R=>{if(R.__typename==="CategoryView")return{name:R.name,value:R.title,attribute:F.attribute}});n.setCategoryNames(K)}})};return G(()=>{o.filterableInSearch&&ce(v)},[n.filters]),G(()=>{if(o.filterableInSearch){const A=gr(o.filterableInSearch);n.setFilters(A)}},[o.filterableInSearch]),G(()=>{f||ce(v)},[n.phrase,n.sort,x,w]),G(()=>{const A=Xt.on("search/event",({type:F,payload:q})=>{console.log({type:F,payload:q});const Y=window==null?void 0:window.localStorage.getItem("_demo:data"),K=JSON.parse(Y??"{}");if(F==="Brand"){const R=K[q],W={...v,"AC-Channel-Id":R.id,"AC-Price-Book-Id":R.value.toLowerCase()};g(W),ce(W)}if(F==="Model"){const R={...v,"AC-Policy-Model":q};g(R),ce(R)}if(F==="PriceBook"){const R={...v,"AC-Price-Book-Id":q.toLowerCase()};g(R),ce(R)}});return()=>{A==null||A.off()}},[]),a($t.Provider,{value:ze,children:e})},J=()=>Ie($t),et={mobile:!1,tablet:!1,desktop:!1,columns:Le.desktop},Ge=()=>{const{screenSize:e}=rt(Dt),[t,r]=y(et);return G(()=>{r(e||et)},[e]),{screenSize:t}},Dt=tt({}),fa=e=>e.desktop?Le.desktop:e.tablet?Le.tablet:e.mobile?Le.mobile:Le.desktop,ba=({children:e})=>{const t=()=>{const o=et;return o.mobile=window.matchMedia("screen and (max-width: 767px)").matches,o.tablet=window.matchMedia("screen and (min-width: 768px) and (max-width: 960px)").matches,o.desktop=window.matchMedia("screen and (min-width: 961px)").matches,o.columns=fa(o),o},[r,n]=y(t());G(()=>(window.addEventListener("resize",s),()=>{window.removeEventListener("resize",s)}));const s=()=>{n({...r,...t()})};return a(Dt.Provider,{value:{screenSize:r},children:e})},va=(e,t,r,n,s,o,i)=>{const c=window.magentoStorefrontEvents;if(!c)return;const d=c.context.getSearchInput()??{units:[]},l={searchUnitId:e,searchRequestId:t,queryTypes:["products","suggestions"],phrase:r,pageSize:s,currentPage:o,filter:n,sort:i},u=d.units.findIndex(p=>p.searchUnitId===e);u<0?d.units.push(l):d.units[u]=l,c.context.setSearchInput(d)},wa=(e,t,r)=>{var c,d;const n=window.magentoStorefrontEvents;if(!n)return;const s=n.context.getSearchResults()??{units:[]},o=s.units.findIndex(l=>l.searchUnitId===e),i={searchUnitId:e,searchRequestId:t,products:ya(r.items),categories:[],suggestions:Pa(r.suggestions),page:((c=r==null?void 0:r.page_info)==null?void 0:c.current_page)||1,perPage:((d=r==null?void 0:r.page_info)==null?void 0:d.page_size)||20,facets:xa(r.facets)};o<0?s.units.push(i):s.units[o]=i,n.context.setSearchResults(s)},ya=e=>e?e.map((r,n)=>{var s,o,i,c,d,l;return{name:(s=r==null?void 0:r.product)==null?void 0:s.name,sku:(o=r==null?void 0:r.product)==null?void 0:o.sku,url:((i=r==null?void 0:r.product)==null?void 0:i.canonical_url)??"",imageUrl:(d=(c=r==null?void 0:r.productView)==null?void 0:c.images)!=null&&d.length?((l=r==null?void 0:r.productView)==null?void 0:l.images[0].url)??"":"",price:r.productView.price.final.amount.value,rank:n}}):[],Pa=e=>e?e.map((r,n)=>({suggestion:r,rank:n})):[],xa=e=>e?e.map(r=>({attribute:r==null?void 0:r.attribute,title:r==null?void 0:r.title,type:(r==null?void 0:r.type)||"PINNED",buckets:r==null?void 0:r.buckets.map(n=>n)})):[];async function ht(e="",t={},r="",n=""){const s=n?`${n}/graphql`:`${window.origin}/graphql`;return await fetch(s,{method:"POST",headers:{"Content-Type":"application/json",Store:r},body:JSON.stringify({query:e,variables:t})}).then(i=>i.json())}const Ca=`
+`;
+function getMake() {
+  const context = JSON.parse(window.localStorage.getItem("_demo:context"));
+  const data = JSON.parse(window.localStorage.getItem("_demo:data"));
+  const makeId = context == null ? void 0 : context.id;
+  let make;
+  for (const [key, value] of Object.entries(data)) {
+    if ((value == null ? void 0 : value.id) === makeId) {
+      make = key;
+    }
+  }
+  return {
+    make,
+    makeId
+  };
+}
+function getPriceBookHeader() {
+  const priceBook = window.localStorage.getItem("_demo:price-book") || "Brand";
+  if (priceBook === "Brand") {
+    const context = JSON.parse(window.localStorage.getItem("_demo:context"));
+    return context == null ? void 0 : context.value.toLowerCase();
+  }
+  return priceBook.toLowerCase();
+}
+const getHeaders = (headers) => {
+  const model = window.localStorage.getItem("_demo:model");
+  const {
+    makeId
+  } = getMake();
+  const priceBook = getPriceBookHeader();
+  const newHeaders = {
+    "Content-Type": "application/json",
+    // "Magento-Environment-Id": headers.environmentId,
+    // "Magento-Website-Code": headers.websiteCode,
+    // "Magento-Store-Code": headers.storeCode,
+    // "Magento-Store-View-Code": headers.storeViewCode,
+    // "X-Api-Key": headers.apiKey,
+    "AC-Environment-Id": "c09ecfb1-333a-4db3-9669-ce07ec0e3a00",
+    ...makeId ? {
+      "AC-Channel-Id": makeId
+    } : {},
+    ...model ? {
+      "AC-Policy-Model": model
+    } : {},
+    ...priceBook ? {
+      "AC-Price-Book-Id": priceBook
+    } : {},
+    // "AC-Policy-Make": make,
+    // THIS IS DIFFERENT THAN OUR DROPIN LOCALE WITH UNDERSCORES (e.g. en_US) EVEN THOUGH THE DOCUMENTATION HAS UNDERSCORES
+    "AC-Scope-Locale": "en-US",
+    // env.locale.replace("_", "-"),
+    "X-Api-Key": "search_gql",
+    "X-Request-Id": headers.xRequestId
+    // "Magento-Customer-Group": headers.customerGroup,
+  };
+  console.log(newHeaders);
+  return newHeaders;
+};
+const getProductSearch = async ({
+  environmentId,
+  websiteCode,
+  storeCode,
+  storeViewCode,
+  apiKey,
+  apiUrl,
+  phrase,
+  pageSize = 24,
+  displayOutOfStock,
+  currentPage = 1,
+  xRequestId = v4(),
+  filter = [],
+  sort = [],
+  context,
+  categorySearch = false,
+  headers
+}) => {
+  var _a, _b;
+  const variables = {
+    phrase,
+    pageSize,
+    currentPage,
+    filter,
+    sort,
+    context
+  };
+  let searchType = "Search";
+  if (categorySearch) {
+    searchType = "Catalog";
+  }
+  const defaultFilters = {
+    attribute: "visibility",
+    in: [searchType, "Catalog, Search"]
+  };
+  variables.filter.push(defaultFilters);
+  const displayInStockOnly = displayOutOfStock != "1";
+  const inStockFilter = {
+    attribute: "inStock",
+    eq: "true"
+  };
+  if (displayInStockOnly) {
+    variables.filter.push(inStockFilter);
+  }
+  const searchRequestId = v4();
+  updateSearchInputCtx(SEARCH_UNIT_ID, searchRequestId, phrase, filter, pageSize, currentPage, sort);
+  const magentoStorefrontEvtPublish = (_a = window.magentoStorefrontEvents) == null ? void 0 : _a.publish;
+  (magentoStorefrontEvtPublish == null ? void 0 : magentoStorefrontEvtPublish.searchRequestSent) && magentoStorefrontEvtPublish.searchRequestSent(SEARCH_UNIT_ID);
+  const response = await fetch(apiUrl, {
+    method: "POST",
+    headers: getHeaders({
+      xRequestId
+    }),
+    body: JSON.stringify({
+      query: PRODUCT_SEARCH_QUERY,
+      variables: {
+        ...variables
+      }
+    })
+  });
+  const results = await response.json();
+  updateSearchResultsCtx(SEARCH_UNIT_ID, searchRequestId, (_b = results == null ? void 0 : results.data) == null ? void 0 : _b.productSearch);
+  (magentoStorefrontEvtPublish == null ? void 0 : magentoStorefrontEvtPublish.searchResponseReceived) && magentoStorefrontEvtPublish.searchResponseReceived(SEARCH_UNIT_ID);
+  if (categorySearch) {
+    (magentoStorefrontEvtPublish == null ? void 0 : magentoStorefrontEvtPublish.categoryResultsView) && magentoStorefrontEvtPublish.categoryResultsView(SEARCH_UNIT_ID);
+  } else {
+    (magentoStorefrontEvtPublish == null ? void 0 : magentoStorefrontEvtPublish.searchResultsView) && magentoStorefrontEvtPublish.searchResultsView(SEARCH_UNIT_ID);
+  }
+  return results == null ? void 0 : results.data;
+};
+const getAttributeMetadata = async ({
+  environmentId,
+  websiteCode,
+  storeCode,
+  storeViewCode,
+  apiKey,
+  apiUrl,
+  xRequestId = v4()
+}) => {
+  const headers = getHeaders({
+    environmentId,
+    websiteCode,
+    storeCode,
+    storeViewCode,
+    apiKey,
+    xRequestId,
+    customerGroup: ""
+  });
+  const response = await fetch(apiUrl, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      query: ATTRIBUTE_METADATA_QUERY
+    })
+  });
+  const results = await response.json();
+  return results == null ? void 0 : results.data;
+};
+const refineProductSearch = async ({
+  environmentId,
+  websiteCode,
+  storeCode,
+  storeViewCode,
+  apiKey,
+  apiUrl,
+  xRequestId = v4(),
+  context,
+  optionIds,
+  sku
+}) => {
+  const variables = {
+    optionIds,
+    sku
+  };
+  const headers = getHeaders({
+    environmentId,
+    websiteCode,
+    storeCode,
+    storeViewCode,
+    apiKey,
+    xRequestId,
+    customerGroup: (context == null ? void 0 : context.customerGroup) ?? ""
+  });
+  const response = await fetch(apiUrl, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      query: REFINE_PRODUCT_QUERY,
+      variables: {
+        ...variables
+      }
+    })
+  });
+  const results = await response.json();
+  return results == null ? void 0 : results.data;
+};
+var _jsxFileName$D = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/context/store.tsx";
+const StoreContext = createContext({
+  environmentId: "",
+  environmentType: "",
+  websiteCode: "",
+  storeCode: "",
+  storeViewCode: "",
+  apiUrl: "",
+  apiKey: "",
+  config: {},
+  context: {},
+  route: void 0,
+  searchQuery: "q"
+});
+const StoreContextProvider = ({
+  children,
+  environmentId,
+  environmentType,
+  websiteCode,
+  storeCode,
+  storeViewCode,
+  config,
+  context,
+  apiUrl,
+  apiKey,
+  route,
+  searchQuery
+}) => {
+  const storeProps = t(useMemo(() => ({
+    environmentId,
+    environmentType,
+    websiteCode,
+    storeCode,
+    storeViewCode,
+    config,
+    context: {
+      customerGroup: (context == null ? void 0 : context.customerGroup) ?? "",
+      userViewHistory: (context == null ? void 0 : context.userViewHistory) ?? []
+    },
+    apiUrl,
+    apiKey,
+    //   apiUrl: environmentType?.toLowerCase() === 'testing' ? TEST_URL : API_URL,
+    //   apiKey:
+    //       environmentType?.toLowerCase() === 'testing' && !apiKey
+    //           ? SANDBOX_KEY
+    //           : apiKey,
+    route,
+    searchQuery
+  }), [environmentId, websiteCode, storeCode, storeViewCode]), "storeProps");
+  const storeContext = {
+    ...storeProps
+  };
+  return u(StoreContext.Provider, {
+    value: storeContext,
+    children
+  }, void 0, false, {
+    fileName: _jsxFileName$D,
+    lineNumber: 75,
+    columnNumber: 12
+  }, void 0);
+};
+const useStore = () => {
+  const storeCtx = useContext(StoreContext);
+  return storeCtx;
+};
+var _jsxFileName$C = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/context/attributeMetadata.tsx";
+const AttributeMetadataContext = createContext({
+  sortable: [],
+  filterableInSearch: []
+});
+const AttributeMetadataProvider = ({
+  children
+}) => {
+  const [attributeMetadata, setAttributeMetadata] = t(useState({
+    sortable: [],
+    filterableInSearch: null
+  }), "attributeMetadata");
+  const storeCtx = useStore();
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getAttributeMetadata({
+        ...storeCtx,
+        apiUrl: storeCtx.apiUrl
+      });
+      if (data == null ? void 0 : data.attributeMetadata) {
+        setAttributeMetadata({
+          sortable: data.attributeMetadata.sortable,
+          filterableInSearch: data.attributeMetadata.filterableInSearch.map((attribute) => attribute.attribute)
+        });
+      }
+    };
+    fetchData();
+  }, []);
+  const attributeMetadataContext = {
+    ...attributeMetadata
+  };
+  return u(AttributeMetadataContext.Provider, {
+    value: attributeMetadataContext,
+    children
+  }, void 0, false, {
+    fileName: _jsxFileName$C,
+    lineNumber: 64,
+    columnNumber: 9
+  }, void 0);
+};
+const useAttributeMetadata = () => {
+  const attributeMetadataCtx = useContext(AttributeMetadataContext);
+  return attributeMetadataCtx;
+};
+var _jsxFileName$B = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/context/search.tsx";
+const SearchContext = createContext$1({});
+const SearchProvider = ({
+  children
+}) => {
+  const storeCtx = useStore();
+  const phraseFromUrl = getValueFromUrl(storeCtx.searchQuery || "q");
+  const sortFromUrl = getValueFromUrl("product_list_order");
+  const graphQLSort = generateGQLSortInput(sortFromUrl);
+  const sortDefault = graphQLSort ? graphQLSort : SEARCH_SORT_DEFAULT;
+  const [phrase, setPhrase] = t(useState(phraseFromUrl), "phrase");
+  const [categoryPath, setCategoryPath] = t(useState(""), "categoryPath");
+  const [filters, setFilters] = t(useState([]), "filters");
+  const [categoryNames, setCategoryNames] = t(useState([]), "categoryNames");
+  const [sort, setSort] = t(useState(sortDefault), "sort");
+  const [filterCount, setFilterCount] = t(useState(0), "filterCount");
+  const createFilter = (filter) => {
+    const newFilters = [...filters, filter];
+    setFilters(newFilters);
+    addUrlFilter(filter);
+  };
+  const updateFilter = (filter) => {
+    const newFilters = [...filters];
+    const index = newFilters.findIndex((e) => e.attribute === filter.attribute);
+    newFilters[index] = filter;
+    setFilters(newFilters);
+    addUrlFilter(filter);
+  };
+  const removeFilter = (name, option) => {
+    const newFilters = [...filters].filter((e) => {
+      return e.attribute !== name;
+    });
+    setFilters(newFilters);
+    removeUrlFilter(name, option);
+  };
+  const clearFilters = () => {
+    removeAllUrlFilters();
+    setFilters([]);
+  };
+  const updateFilterOptions = (facetFilter, option) => {
+    var _a;
+    const newFilters = [...filters].filter((e) => e.attribute !== facetFilter.attribute);
+    const newOptions = (_a = facetFilter.in) == null ? void 0 : _a.filter((e) => e !== option);
+    newFilters.push({
+      attribute: facetFilter.attribute,
+      in: newOptions
+    });
+    if (newOptions == null ? void 0 : newOptions.length) {
+      setFilters(newFilters);
+      removeUrlFilter(facetFilter.attribute, option);
+    } else {
+      removeFilter(facetFilter.attribute, option);
+    }
+  };
+  const getFilterCount = (filters2) => {
+    let count = 0;
+    filters2.forEach((filter) => {
+      if (filter.in) {
+        count += filter.in.length;
+      } else {
+        count += 1;
+      }
+    });
+    return count;
+  };
+  useEffect$1(() => {
+    const count = getFilterCount(filters);
+    setFilterCount(count);
+  }, [filters]);
+  const context = {
+    phrase,
+    categoryPath,
+    filters,
+    sort,
+    categoryNames,
+    filterCount,
+    setPhrase,
+    setCategoryPath,
+    setFilters,
+    setCategoryNames,
+    setSort,
+    createFilter,
+    updateFilter,
+    updateFilterOptions,
+    removeFilter,
+    clearFilters
+  };
+  return u(SearchContext.Provider, {
+    value: context,
+    children
+  }, void 0, false, {
+    fileName: _jsxFileName$B,
+    lineNumber: 137,
+    columnNumber: 12
+  }, void 0);
+};
+const useSearch = () => {
+  const searchCtx = useContext$1(SearchContext);
+  return searchCtx;
+};
+const bg_BG = {
+  Filter: {
+    title: "Филтри",
+    showTitle: "Показване на филтри",
+    hideTitle: "Скриване на филтри",
+    clearAll: "Изчистване на всичко"
+  },
+  InputButtonGroup: {
+    title: "Категории",
+    price: "Цена",
+    customPrice: "Персонализирана цена",
+    priceIncluded: "да",
+    priceExcluded: "не",
+    priceExcludedMessage: "Не {title}",
+    priceRange: " и по-висока",
+    showmore: "Показване на повече"
+  },
+  Loading: {
+    title: "Зареждане"
+  },
+  NoResults: {
+    heading: "Няма резултати за вашето търсене.",
+    subheading: "Моля, опитайте отново..."
+  },
+  SortDropdown: {
+    title: "Сортиране по",
+    option: "Сортиране по: {selectedOption}",
+    relevanceLabel: "Най-подходящи",
+    positionLabel: "Позиция"
+  },
+  CategoryFilters: {
+    results: "резултати за {phrase}",
+    products: "{totalCount} продукта"
+  },
+  ProductCard: {
+    asLowAs: "Само {discountPrice}",
+    startingAt: "От {productPrice}",
+    bundlePrice: "От {fromBundlePrice} до {toBundlePrice}",
+    from: "От {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Вашата дума за търсене {variables.phrase} не достига минимума от {minQueryLength} знака.",
+    noresults: "Вашето търсене не даде резултати.",
+    pagePicker: "Показване на {pageSize} на страница",
+    showAll: "всички"
+  },
+  SearchBar: {
+    placeholder: "Търсене..."
+  }
+};
+const ca_ES = {
+  Filter: {
+    title: "Filtres",
+    showTitle: "Mostra els filtres",
+    hideTitle: "Amaga els filtres",
+    clearAll: "Esborra-ho tot"
+  },
+  InputButtonGroup: {
+    title: "Categories",
+    price: "Preu",
+    customPrice: "Preu personalitzat",
+    priceIncluded: "sí",
+    priceExcluded: "no",
+    priceExcludedMessage: "No {title}",
+    priceRange: " i superior",
+    showmore: "Mostra més"
+  },
+  Loading: {
+    title: "Carregant"
+  },
+  NoResults: {
+    heading: "No hi ha resultats per a la vostra cerca.",
+    subheading: "Siusplau torna-ho a provar..."
+  },
+  SortDropdown: {
+    title: "Ordenar per",
+    option: "Ordena per: {selectedOption}",
+    relevanceLabel: "El més rellevant",
+    positionLabel: "Posició"
+  },
+  CategoryFilters: {
+    results: "Resultats per a {phrase}",
+    products: "{totalCount}productes"
+  },
+  ProductCard: {
+    asLowAs: "Mínim de {discountPrice}",
+    startingAt: "A partir de {productPrice}",
+    bundlePrice: "Des de {fromBundlePrice} A {toBundlePrice}",
+    from: "Des de {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "El vostre terme de cerca {variables.phrase} no ha arribat al mínim de {minQueryLength} caràcters.",
+    noresults: "La vostra cerca no ha retornat cap resultat.",
+    pagePicker: "Mostra {pageSize} per pàgina",
+    showAll: "tots"
+  },
+  SearchBar: {
+    placeholder: "Cerca..."
+  }
+};
+const cs_CZ = {
+  Filter: {
+    title: "Filtry",
+    showTitle: "Zobrazit filtry",
+    hideTitle: "Skrýt filtry",
+    clearAll: "Vymazat vše"
+  },
+  InputButtonGroup: {
+    title: "Kategorie",
+    price: "Cena",
+    customPrice: "Vlastní cena",
+    priceIncluded: "ano",
+    priceExcluded: "ne",
+    priceExcludedMessage: "Ne {title}",
+    priceRange: " a výše",
+    showmore: "Zobrazit více"
+  },
+  Loading: {
+    title: "Načítá se"
+  },
+  NoResults: {
+    heading: "Nebyly nalezeny žádné výsledky.",
+    subheading: "Zkuste to znovu..."
+  },
+  SortDropdown: {
+    title: "Seřadit podle",
+    option: "Seřadit podle: {selectedOption}",
+    relevanceLabel: "Nejrelevantnější",
+    positionLabel: "Umístění"
+  },
+  CategoryFilters: {
+    results: "výsledky pro {phrase}",
+    products: "Produkty: {totalCount}"
+  },
+  ProductCard: {
+    asLowAs: "Pouze za {discountPrice}",
+    startingAt: "Cena od {productPrice}",
+    bundlePrice: "Z {fromBundlePrice} na {toBundlePrice}",
+    from: "Z {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Hledaný výraz {variables.phrase} nedosáhl minima počtu znaků ({minQueryLength}).",
+    noresults: "Při hledání nebyly nalezeny žádné výsledky.",
+    pagePicker: "Zobrazit {pageSize} na stránku",
+    showAll: "vše"
+  },
+  SearchBar: {
+    placeholder: "Hledat..."
+  }
+};
+const da_DK = {
+  Filter: {
+    title: "Filtre",
+    showTitle: "Vis filtre",
+    hideTitle: "Skjul filtre",
+    clearAll: "Ryd alt"
+  },
+  InputButtonGroup: {
+    title: "Kategorier",
+    price: "Pris",
+    customPrice: "Brugerdefineret pris",
+    priceIncluded: "ja",
+    priceExcluded: "nej",
+    priceExcludedMessage: "Ikke {title}",
+    priceRange: " og over",
+    showmore: "Vis mere"
+  },
+  Loading: {
+    title: "Indlæser"
+  },
+  NoResults: {
+    heading: "Ingen søgeresultater for din søgning",
+    subheading: "Prøv igen..."
+  },
+  SortDropdown: {
+    title: "Sortér efter",
+    option: "Sortér efter: {selectedOption}",
+    relevanceLabel: "Mest relevant",
+    positionLabel: "Position"
+  },
+  CategoryFilters: {
+    results: "resultater for {phrase}",
+    products: "{totalCount} produkter"
+  },
+  ProductCard: {
+    asLowAs: "Så lav som {discountPrice}",
+    startingAt: "Fra {productPrice}",
+    bundlePrice: "Fra {fromBundlePrice} til {toBundlePrice}",
+    from: "Fra {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Dit søgeord {variables.phrase} har ikke minimum på {minQueryLength} tegn.",
+    noresults: "Din søgning gav ingen resultater.",
+    pagePicker: "Vis {pageSize} pr. side",
+    showAll: "alle"
+  },
+  SearchBar: {
+    placeholder: "Søg..."
+  }
+};
+const de_DE = {
+  Filter: {
+    title: "Filter",
+    showTitle: "Filter einblenden",
+    hideTitle: "Filter ausblenden",
+    clearAll: "Alle löschen"
+  },
+  InputButtonGroup: {
+    title: "Kategorien",
+    price: "Preis",
+    customPrice: "Benutzerdefinierter Preis",
+    priceIncluded: "ja",
+    priceExcluded: "nein",
+    priceExcludedMessage: "Nicht {title}",
+    priceRange: " und höher",
+    showmore: "Mehr anzeigen"
+  },
+  Loading: {
+    title: "Ladevorgang läuft"
+  },
+  NoResults: {
+    heading: "Keine Ergebnisse zu Ihrer Suche.",
+    subheading: "Versuchen Sie es erneut..."
+  },
+  SortDropdown: {
+    title: "Sortieren nach",
+    option: "Sortieren nach: {selectedOption}",
+    relevanceLabel: "Höchste Relevanz",
+    positionLabel: "Position"
+  },
+  CategoryFilters: {
+    results: "Ergebnisse für {phrase}",
+    products: "{totalCount} Produkte"
+  },
+  ProductCard: {
+    asLowAs: "Schon ab {discountPrice}",
+    startingAt: "Ab {productPrice}",
+    bundlePrice: "Aus {fromBundlePrice} zu {toBundlePrice}",
+    from: "Ab {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Ihr Suchbegriff {variables.phrase} ist kürzer als das Minimum von {minQueryLength} Zeichen.",
+    noresults: "Zu Ihrer Suche wurden keine Ergebnisse zurückgegeben.",
+    pagePicker: "{pageSize} pro Seite anzeigen",
+    showAll: "alle"
+  },
+  SearchBar: {
+    placeholder: "Suchen..."
+  }
+};
+const el_GR = {
+  Filter: {
+    title: "Φίλτρα",
+    showTitle: "Εμφάνιση φίλτρων",
+    hideTitle: "Απόκρυψη φίλτρων",
+    clearAll: "Απαλοιφή όλων"
+  },
+  InputButtonGroup: {
+    title: "Κατηγορίες",
+    price: "Τιμή",
+    customPrice: "Προσαρμοσμένη τιμή",
+    priceIncluded: "ναι",
+    priceExcluded: "όχι",
+    priceExcludedMessage: "Όχι {title}",
+    priceRange: " και παραπάνω",
+    showmore: "Εμφάνιση περισσότερων"
+  },
+  Loading: {
+    title: "Γίνεται φόρτωση"
+  },
+  NoResults: {
+    heading: "Δεν υπάρχουν αποτελέσματα για την αναζήτησή σας.",
+    subheading: "Προσπαθήστε ξανά..."
+  },
+  SortDropdown: {
+    title: "Ταξινόμηση κατά",
+    option: "Ταξινόμηση κατά: {selectedOption}",
+    relevanceLabel: "Το πιο σχετικό",
+    positionLabel: "Θέση"
+  },
+  CategoryFilters: {
+    results: "αποτελέσματα για {phrase}",
+    products: "{totalCount} προϊόντα"
+  },
+  ProductCard: {
+    asLowAs: "Τόσο χαμηλά όσο {discountPrice}",
+    startingAt: "Έναρξη από {productPrice}",
+    bundlePrice: "Από {fromBundlePrice} Προς {toBundlePrice}",
+    from: "Από {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Ο όρος αναζήτησής σας {variables.phrase} δεν έχει φτάσει στο ελάχιστο {minQueryLength} χαρακτήρες.",
+    noresults: "Η αναζήτηση δεν επέστρεψε κανένα αποτέλεσμα.",
+    pagePicker: "Προβολή {pageSize} ανά σελίδα",
+    showAll: "όλα"
+  },
+  SearchBar: {
+    placeholder: "Αναζήτηση..."
+  }
+};
+const en_GB = {
+  Filter: {
+    title: "Filters",
+    showTitle: "Show filters",
+    hideTitle: "Hide filters",
+    clearAll: "Clear all"
+  },
+  InputButtonGroup: {
+    title: "Categories",
+    price: "Price",
+    customPrice: "Custom Price",
+    priceIncluded: "yes",
+    priceExcluded: "no",
+    priceExcludedMessage: "Not {title}",
+    priceRange: " and above",
+    showmore: "Show more"
+  },
+  Loading: {
+    title: "Loading"
+  },
+  NoResults: {
+    heading: "No results for your search.",
+    subheading: "Please try again..."
+  },
+  SortDropdown: {
+    title: "Sort by",
+    option: "Sort by: {selectedOption}",
+    relevanceLabel: "Most Relevant",
+    positionLabel: "Position"
+  },
+  CategoryFilters: {
+    results: "results for {phrase}",
+    products: "{totalCount} products"
+  },
+  ProductCard: {
+    asLowAs: "As low as {discountPrice}",
+    startingAt: "Starting at {productPrice}",
+    bundlePrice: "From {fromBundlePrice} To {toBundlePrice}",
+    from: "From {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Your search term {variables.phrase} has not reached the minimum of {minQueryLength} characters.",
+    noresults: "Your search returned no results.",
+    pagePicker: "Show {pageSize} per page",
+    showAll: "all"
+  },
+  SearchBar: {
+    placeholder: "Search..."
+  }
+};
+const en_US = {
+  Filter: {
+    title: "Filters",
+    showTitle: "Show filters",
+    hideTitle: "Hide filters",
+    clearAll: "Clear all"
+  },
+  InputButtonGroup: {
+    title: "Categories",
+    price: "Price",
+    customPrice: "Custom Price",
+    priceIncluded: "yes",
+    priceExcluded: "no",
+    priceExcludedMessage: "Not {title}",
+    priceRange: " and above",
+    showmore: "Show more"
+  },
+  Loading: {
+    title: "Loading"
+  },
+  NoResults: {
+    heading: "No results for your search.",
+    subheading: "Please try again..."
+  },
+  SortDropdown: {
+    title: "Sort by",
+    option: "Sort by: {selectedOption}",
+    relevanceLabel: "Most Relevant",
+    positionLabel: "Position",
+    sortAttributeASC: "{label}: Low to High",
+    sortAttributeDESC: "{label}: High to Low",
+    sortASC: "Price: Low to High",
+    sortDESC: "Price: High to Low",
+    productName: "Product Name",
+    productInStock: "In Stock",
+    productLowStock: "Low Stock"
+  },
+  CategoryFilters: {
+    results: "results for {phrase}",
+    products: "{totalCount} products"
+  },
+  ProductCard: {
+    asLowAs: "As low as {discountPrice}",
+    startingAt: "Starting at {productPrice}",
+    bundlePrice: "From {fromBundlePrice} To {toBundlePrice}",
+    from: "From {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Your search term {variables.phrase} has not reached the minimum of {minQueryLength} characters.",
+    noresults: "Your search returned no results.",
+    pagePicker: "Show {pageSize} per page",
+    showAll: "all"
+  },
+  SearchBar: {
+    placeholder: "Search..."
+  },
+  ListView: {
+    viewDetails: "View details"
+  }
+};
+const es_ES = {
+  Filter: {
+    title: "Filtros",
+    showTitle: "Mostrar filtros",
+    hideTitle: "Ocultar filtros",
+    clearAll: "Borrar todo"
+  },
+  InputButtonGroup: {
+    title: "Categorías",
+    price: "Precio",
+    customPrice: "Precio personalizado",
+    priceIncluded: "sí",
+    priceExcluded: "no",
+    priceExcludedMessage: "No es {title}",
+    priceRange: " y más",
+    showmore: "Mostrar más"
+  },
+  Loading: {
+    title: "Cargando"
+  },
+  NoResults: {
+    heading: "No hay resultados para tu búsqueda.",
+    subheading: "Inténtalo de nuevo..."
+  },
+  SortDropdown: {
+    title: "Ordenar por",
+    option: "Ordenar por: {selectedOption}",
+    relevanceLabel: "Más relevantes",
+    positionLabel: "Posición"
+  },
+  CategoryFilters: {
+    results: "resultados de {phrase}",
+    products: "{totalCount} productos"
+  },
+  ProductCard: {
+    asLowAs: "Por solo {discountPrice}",
+    startingAt: "A partir de {productPrice}",
+    bundlePrice: "Desde {fromBundlePrice} hasta {toBundlePrice}",
+    from: "Desde {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "El término de búsqueda {variables.phrase} no llega al mínimo de {minQueryLength} caracteres.",
+    noresults: "Tu búsqueda no ha dado resultados.",
+    pagePicker: "Mostrar {pageSize} por página",
+    showAll: "todo"
+  },
+  SearchBar: {
+    placeholder: "Buscar..."
+  }
+};
+const et_EE = {
+  Filter: {
+    title: "Filtrid",
+    showTitle: "Kuva filtrid",
+    hideTitle: "Peida filtrid",
+    clearAll: "Tühjenda kõik"
+  },
+  InputButtonGroup: {
+    title: "Kategooriad",
+    price: "Hind",
+    customPrice: "Kohandatud hind",
+    priceIncluded: "jah",
+    priceExcluded: "ei",
+    priceExcludedMessage: "Mitte {title}",
+    priceRange: " ja üleval",
+    showmore: "Kuva rohkem"
+  },
+  Loading: {
+    title: "Laadimine"
+  },
+  NoResults: {
+    heading: "Teie otsingule pole tulemusi.",
+    subheading: "Proovige uuesti…"
+  },
+  SortDropdown: {
+    title: "Sortimisjärjekord",
+    option: "Sortimisjärjekord: {selectedOption}",
+    relevanceLabel: "Kõige asjakohasem",
+    positionLabel: "Asukoht"
+  },
+  CategoryFilters: {
+    results: "{phrase} tulemused",
+    products: "{totalCount} toodet"
+  },
+  ProductCard: {
+    asLowAs: "Ainult {discountPrice}",
+    startingAt: "Alates {productPrice}",
+    bundlePrice: "Alates {fromBundlePrice} kuni {toBundlePrice}",
+    from: "Alates {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Teie otsingutermin {variables.phrase} ei sisalda vähemalt {minQueryLength} tähemärki.",
+    noresults: "Teie otsing ei andnud tulemusi.",
+    pagePicker: "Näita {pageSize} lehekülje kohta",
+    showAll: "kõik"
+  },
+  SearchBar: {
+    placeholder: "Otsi…"
+  }
+};
+const eu_ES = {
+  Filter: {
+    title: "Iragazkiak",
+    showTitle: "Erakutsi iragazkiak",
+    hideTitle: "Ezkutatu iragazkiak",
+    clearAll: "Garbitu dena"
+  },
+  InputButtonGroup: {
+    title: "Kategoriak",
+    price: "Prezioa",
+    customPrice: "Prezio pertsonalizatua",
+    priceIncluded: "bai",
+    priceExcluded: "ez",
+    priceExcludedMessage: "Ez da {title}",
+    priceRange: " eta gorago",
+    showmore: "Erakutsi gehiago"
+  },
+  Loading: {
+    title: "Kargatzen"
+  },
+  NoResults: {
+    heading: "Ez dago emaitzarik zure bilaketarako.",
+    subheading: "Saiatu berriro mesedez..."
+  },
+  SortDropdown: {
+    title: "Ordenatu",
+    option: "Ordenatu honen arabera: {selectedOption}",
+    relevanceLabel: "Garrantzitsuena",
+    positionLabel: "Posizioa"
+  },
+  CategoryFilters: {
+    results: "{phrase} bilaketaren emaitzak",
+    products: "{totalCount} produktu"
+  },
+  ProductCard: {
+    asLowAs: "{discountPrice} bezain baxua",
+    startingAt: "{productPrice}-tatik hasita",
+    bundlePrice: "{fromBundlePrice} eta {toBundlePrice} artean",
+    from: "{productPrice}-tatik hasita"
+  },
+  ProductContainers: {
+    minquery: "Zure bilaketa-terminoa ({variables.phrase}) ez da iritsi gutxieneko {minQueryLength} karakteretara.",
+    noresults: "Zure bilaketak ez du emaitzarik eman.",
+    pagePicker: "Erakutsi {pageSize} orriko",
+    showAll: "guztiak"
+  },
+  SearchBar: {
+    placeholder: "Bilatu..."
+  }
+};
+const fa_IR = {
+  Filter: {
+    title: "فیلترها",
+    showTitle: "نمایش فیلترها",
+    hideTitle: "محو فیلترها",
+    clearAll: "پاک کردن همه"
+  },
+  InputButtonGroup: {
+    title: "دسته‌ها",
+    price: "قیمت",
+    customPrice: "قیمت سفارشی",
+    priceIncluded: "بله",
+    priceExcluded: "خیر",
+    priceExcludedMessage: "نه {title}",
+    priceRange: " و بالاتر",
+    showmore: "نمایش بیشتر"
+  },
+  Loading: {
+    title: "درحال بارگیری"
+  },
+  NoResults: {
+    heading: "جستجوی شما نتیجه‌ای دربر نداشت.",
+    subheading: "لطفاً دوباره امتحان کنید..."
+  },
+  SortDropdown: {
+    title: "مرتب‌سازی براساس",
+    option: "مرتب‌سازی براساس: {selectedOption}",
+    relevanceLabel: "مرتبط‌ترین",
+    positionLabel: "موقعیت"
+  },
+  CategoryFilters: {
+    results: "نتایج برای {phrase}",
+    products: "{totalCount} محصولات"
+  },
+  ProductCard: {
+    asLowAs: "برابر با {discountPrice}",
+    startingAt: "شروع از {productPrice}",
+    bundlePrice: "از {fromBundlePrice} تا {toBundlePrice}",
+    from: "از {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "عبارت جستجوی شما {variables.phrase} به حداقل تعداد کاراکترهای لازم یعنی {minQueryLength} کاراکتر نرسیده است.",
+    noresults: "جستجوی شما نتیجه‌ای را حاصل نکرد.",
+    pagePicker: "نمایش {pageSize} در هر صفحه",
+    showAll: "همه"
+  },
+  SearchBar: {
+    placeholder: "جستجو..."
+  }
+};
+const fi_FI = {
+  Filter: {
+    title: "Suodattimet",
+    showTitle: "Näytä suodattimet",
+    hideTitle: "Piilota suodattimet",
+    clearAll: "Poista kaikki"
+  },
+  InputButtonGroup: {
+    title: "Luokat",
+    price: "Hinta",
+    customPrice: "Mukautettu hinta",
+    priceIncluded: "kyllä",
+    priceExcluded: "ei",
+    priceExcludedMessage: "Ei {title}",
+    priceRange: " ja enemmän",
+    showmore: "Näytä enemmän"
+  },
+  Loading: {
+    title: "Ladataan"
+  },
+  NoResults: {
+    heading: "Haullasi ei löytynyt tuloksia.",
+    subheading: "Yritä uudelleen..."
+  },
+  SortDropdown: {
+    title: "Lajitteluperuste",
+    option: "Lajitteluperuste: {selectedOption}",
+    relevanceLabel: "Olennaisimmat",
+    positionLabel: "Sijainti"
+  },
+  CategoryFilters: {
+    results: "tulosta ilmaukselle {phrase}",
+    products: "{totalCount} tuotetta"
+  },
+  ProductCard: {
+    asLowAs: "Parhaimmillaan {discountPrice}",
+    startingAt: "Alkaen {productPrice}",
+    bundlePrice: "{fromBundlePrice} alkaen {toBundlePrice} asti",
+    from: "{productPrice} alkaen"
+  },
+  ProductContainers: {
+    minquery: "Hakusanasi {variables.phrase} ei ole saavuttanut {minQueryLength} merkin vähimmäismäärää.",
+    noresults: "Hakusi ei palauttanut tuloksia.",
+    pagePicker: "Näytä {pageSize} sivua kohti",
+    showAll: "kaikki"
+  },
+  SearchBar: {
+    placeholder: "Hae..."
+  }
+};
+const fr_FR = {
+  Filter: {
+    title: "Filtres",
+    showTitle: "Afficher les filtres",
+    hideTitle: "Masquer les filtres",
+    clearAll: "Tout effacer"
+  },
+  InputButtonGroup: {
+    title: "Catégories",
+    price: "Prix",
+    customPrice: "Prix personnalisé",
+    priceIncluded: "oui",
+    priceExcluded: "non",
+    priceExcludedMessage: "Exclure {title}",
+    priceRange: " et plus",
+    showmore: "Plus"
+  },
+  Loading: {
+    title: "Chargement"
+  },
+  NoResults: {
+    heading: "Votre recherche n’a renvoyé aucun résultat",
+    subheading: "Veuillez réessayer…"
+  },
+  SortDropdown: {
+    title: "Trier par",
+    option: "Trier par : {selectedOption}",
+    relevanceLabel: "Pertinence",
+    positionLabel: "Position"
+  },
+  CategoryFilters: {
+    results: "résultats trouvés pour {phrase}",
+    products: "{totalCount} produits"
+  },
+  ProductCard: {
+    asLowAs: "Prix descendant jusqu’à {discountPrice}",
+    startingAt: "À partir de {productPrice}",
+    bundlePrice: "De {fromBundlePrice} à {toBundlePrice}",
+    from: "De {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Votre terme de recherche « {variables.phrase} » est en dessous de la limite minimale de {minQueryLength} caractères.",
+    noresults: "Votre recherche n’a renvoyé aucun résultat.",
+    pagePicker: "Affichage : {pageSize} par page",
+    showAll: "tout"
+  },
+  SearchBar: {
+    placeholder: "Rechercher…"
+  }
+};
+const gl_ES = {
+  Filter: {
+    title: "Filtros",
+    showTitle: "Mostrar filtros",
+    hideTitle: "Ocultar filtros",
+    clearAll: "Borrar todo"
+  },
+  InputButtonGroup: {
+    title: "Categorías",
+    price: "Prezo",
+    customPrice: "Prezo personalizado",
+    priceIncluded: "si",
+    priceExcluded: "non",
+    priceExcludedMessage: "Non {title}",
+    priceRange: " e superior",
+    showmore: "Mostrar máis"
+  },
+  Loading: {
+    title: "Cargando"
+  },
+  NoResults: {
+    heading: "Non hai resultados para a súa busca.",
+    subheading: "Ténteo de novo..."
+  },
+  SortDropdown: {
+    title: "Ordenar por",
+    option: "Ordenar por: {selectedOption}",
+    relevanceLabel: "Máis relevante",
+    positionLabel: "Posición"
+  },
+  CategoryFilters: {
+    results: "resultados para {phrase}",
+    products: "{totalCount} produtos"
+  },
+  ProductCard: {
+    asLowAs: "A partir de só {discountPrice}",
+    startingAt: "A partir de {productPrice}",
+    bundlePrice: "Desde {fromBundlePrice} ata {toBundlePrice}",
+    from: "Desde {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "O seu termo de busca {variables.phrase} non alcanzou o mínimo de {minQueryLength} caracteres.",
+    noresults: "A súa busca non obtivo resultados.",
+    pagePicker: "Mostrar {pageSize} por páxina",
+    showAll: "todos"
+  },
+  SearchBar: {
+    placeholder: "Buscar..."
+  }
+};
+const hi_IN = {
+  Filter: {
+    title: "फिल्टर",
+    showTitle: "फ़िल्टर दिखाएं",
+    hideTitle: "फ़िल्टर छुपाएं",
+    clearAll: "सभी साफ करें"
+  },
+  InputButtonGroup: {
+    title: "श्रेणियाँ",
+    price: "कीमत",
+    customPrice: "कस्टम कीमत",
+    priceIncluded: "हां",
+    priceExcluded: "नहीं",
+    priceExcludedMessage: "नहीं {title}",
+    priceRange: " और ऊपर",
+    showmore: "और दिखाएं"
+  },
+  Loading: {
+    title: "लोड हो रहा है"
+  },
+  NoResults: {
+    heading: "आपकी खोज के लिए कोई परिणाम नहीं.",
+    subheading: "कृपया फिर कोशिश करें..."
+  },
+  SortDropdown: {
+    title: "इसके अनुसार क्रमबद्ध करें",
+    option: "इसके अनुसार क्रमबद्ध करें: {selectedOption}",
+    relevanceLabel: "सबसे अधिक प्रासंगिक",
+    positionLabel: "पद"
+  },
+  CategoryFilters: {
+    results: "{phrase} के लिए परिणाम",
+    products: "{totalCount} प्रोडक्ट्स"
+  },
+  ProductCard: {
+    asLowAs: "{discountPrice} जितना कम ",
+    startingAt: "{productPrice} से शुरू",
+    bundlePrice: "{fromBundlePrice} से {toBundlePrice} तक",
+    from: "{productPrice} से "
+  },
+  ProductContainers: {
+    minquery: "आपका खोज शब्द {variables.phrase} न्यूनतम {minQueryLength} वर्ण तक नहीं पहुंच पाया है।",
+    noresults: "आपकी खोज का कोई परिणाम नहीं निकला।",
+    pagePicker: "प्रति पृष्ठ {pageSize}दिखाओ",
+    showAll: "सब"
+  },
+  SearchBar: {
+    placeholder: "खोज..."
+  }
+};
+const hu_HU = {
+  Filter: {
+    title: "Szűrők",
+    showTitle: "Szűrők megjelenítése",
+    hideTitle: "Szűrők elrejtése",
+    clearAll: "Összes törlése"
+  },
+  InputButtonGroup: {
+    title: "Kategóriák",
+    price: "Ár",
+    customPrice: "Egyedi ár",
+    priceIncluded: "igen",
+    priceExcluded: "nem",
+    priceExcludedMessage: "Nem {title}",
+    priceRange: " és fölötte",
+    showmore: "További információk megjelenítése"
+  },
+  Loading: {
+    title: "Betöltés"
+  },
+  NoResults: {
+    heading: "Nincs találat a keresésre.",
+    subheading: "Kérjük, próbálja meg újra..."
+  },
+  SortDropdown: {
+    title: "Rendezési szempont",
+    option: "Rendezési szempont: {selectedOption}",
+    relevanceLabel: "Legrelevánsabb",
+    positionLabel: "Pozíció"
+  },
+  CategoryFilters: {
+    results: "eredmények a következőre: {phrase}",
+    products: "{totalCount} termék"
+  },
+  ProductCard: {
+    asLowAs: "Ennyire alacsony: {discountPrice}",
+    startingAt: "Kezdő ár: {productPrice}",
+    bundlePrice: "Ettől: {fromBundlePrice} Eddig: {toBundlePrice}",
+    from: "Ettől: {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "A keresett kifejezés: {variables.phrase} nem érte el a minimum {minQueryLength} karaktert.",
+    noresults: "A keresés nem hozott eredményt.",
+    pagePicker: "{pageSize} megjelenítése oldalanként",
+    showAll: "összes"
+  },
+  SearchBar: {
+    placeholder: "Keresés..."
+  }
+};
+const id_ID = {
+  Filter: {
+    title: "Filter",
+    showTitle: "Tampilkan filter",
+    hideTitle: "Sembunyikan filter",
+    clearAll: "Bersihkan semua"
+  },
+  InputButtonGroup: {
+    title: "Kategori",
+    price: "Harga",
+    customPrice: "Harga Kustom",
+    priceIncluded: "ya",
+    priceExcluded: "tidak",
+    priceExcludedMessage: "Bukan {title}",
+    priceRange: " ke atas",
+    showmore: "Tampilkan lainnya"
+  },
+  Loading: {
+    title: "Memuat"
+  },
+  NoResults: {
+    heading: "Tidak ada hasil untuk pencarian Anda.",
+    subheading: "Coba lagi..."
+  },
+  SortDropdown: {
+    title: "Urut berdasarkan",
+    option: "Urut berdasarkan: {selectedOption}",
+    relevanceLabel: "Paling Relevan",
+    positionLabel: "Posisi"
+  },
+  CategoryFilters: {
+    results: "hasil untuk {phrase}",
+    products: "{totalCount} produk"
+  },
+  ProductCard: {
+    asLowAs: "Paling rendah {discountPrice}",
+    startingAt: "Mulai dari {productPrice}",
+    bundlePrice: "Mulai {fromBundlePrice} hingga {toBundlePrice}",
+    from: "Mulai {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Istilah pencarian {variables.phrase} belum mencapai batas minimum {minQueryLength} karakter.",
+    noresults: "Pencarian Anda tidak memberikan hasil.",
+    pagePicker: "Menampilkan {pageSize} per halaman",
+    showAll: "semua"
+  },
+  SearchBar: {
+    placeholder: "Cari..."
+  }
+};
+const it_IT = {
+  Filter: {
+    title: "Filtri",
+    showTitle: "Mostra filtri",
+    hideTitle: "Nascondi filtri",
+    clearAll: "Cancella tutto"
+  },
+  InputButtonGroup: {
+    title: "Categorie",
+    price: "Prezzo",
+    customPrice: "Prezzo personalizzato",
+    priceIncluded: "sì",
+    priceExcluded: "no",
+    priceExcludedMessage: "Non {title}",
+    priceRange: " e superiore",
+    showmore: "Mostra altro"
+  },
+  Loading: {
+    title: "Caricamento"
+  },
+  NoResults: {
+    heading: "Nessun risultato per la ricerca.",
+    subheading: "Riprova..."
+  },
+  SortDropdown: {
+    title: "Ordina per",
+    option: "Ordina per: {selectedOption}",
+    relevanceLabel: "Più rilevante",
+    positionLabel: "Posizione"
+  },
+  CategoryFilters: {
+    results: "risultati per {phrase}",
+    products: "{totalCount} prodotti"
+  },
+  ProductCard: {
+    asLowAs: "A partire da {discountPrice}",
+    startingAt: "A partire da {productPrice}",
+    bundlePrice: "Da {fromBundlePrice} a {toBundlePrice}",
+    from: "Da {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Il termine di ricerca {variables.phrase} non ha raggiunto il minimo di {minQueryLength} caratteri.",
+    noresults: "La ricerca non ha prodotto risultati.",
+    pagePicker: "Mostra {pageSize} per pagina",
+    showAll: "tutto"
+  },
+  SearchBar: {
+    placeholder: "Cerca..."
+  }
+};
+const ja_JP = {
+  Filter: {
+    title: "フィルター",
+    showTitle: "フィルターを表示",
+    hideTitle: "フィルターを隠す",
+    clearAll: "すべて消去"
+  },
+  InputButtonGroup: {
+    title: "カテゴリ",
+    price: "価格",
+    customPrice: "カスタム価格",
+    priceIncluded: "はい",
+    priceExcluded: "いいえ",
+    priceExcludedMessage: "{title}ではない",
+    priceRange: " 以上",
+    showmore: "すべてを表示"
+  },
+  Loading: {
+    title: "読み込み中"
+  },
+  NoResults: {
+    heading: "検索結果はありません。",
+    subheading: "再試行してください"
+  },
+  SortDropdown: {
+    title: "並べ替え条件",
+    option: "{selectedOption}に並べ替え",
+    relevanceLabel: "最も関連性が高い",
+    positionLabel: "配置"
+  },
+  CategoryFilters: {
+    results: "{phrase}の検索結果",
+    products: "{totalCount}製品"
+  },
+  ProductCard: {
+    asLowAs: "割引料金 : {discountPrice}",
+    startingAt: "初年度価格 : {productPrice}",
+    bundlePrice: "{fromBundlePrice} から {toBundlePrice}",
+    from: "{productPrice} から"
+  },
+  ProductContainers: {
+    minquery: "ご入力の検索語{variables.phrase}は、最低文字数 {minQueryLength} 文字に達していません。",
+    noresults: "検索結果はありませんでした。",
+    pagePicker: "1 ページあたり {pageSize} を表示",
+    showAll: "すべて"
+  },
+  SearchBar: {
+    placeholder: "検索"
+  }
+};
+const ko_KR = {
+  Filter: {
+    title: "필터",
+    showTitle: "필터 표시",
+    hideTitle: "필터 숨기기",
+    clearAll: "모두 지우기"
+  },
+  InputButtonGroup: {
+    title: "범주",
+    price: "가격",
+    customPrice: "맞춤 가격",
+    priceIncluded: "예",
+    priceExcluded: "아니요",
+    priceExcludedMessage: "{title} 아님",
+    priceRange: " 이상",
+    showmore: "자세히 표시"
+  },
+  Loading: {
+    title: "로드 중"
+  },
+  NoResults: {
+    heading: "현재 검색에 대한 결과가 없습니다.",
+    subheading: "다시 시도해 주십시오."
+  },
+  SortDropdown: {
+    title: "정렬 기준",
+    option: "정렬 기준: {selectedOption}",
+    relevanceLabel: "관련성 가장 높음",
+    positionLabel: "위치"
+  },
+  CategoryFilters: {
+    results: "{phrase}에 대한 검색 결과",
+    products: "{totalCount}개 제품"
+  },
+  ProductCard: {
+    asLowAs: "최저 {discountPrice}",
+    startingAt: "최저가: {productPrice}",
+    bundlePrice: "{fromBundlePrice} ~ {toBundlePrice}",
+    from: "{productPrice}부터"
+  },
+  ProductContainers: {
+    minquery: "검색어 “{variables.phrase}”이(가) 최소 문자 길이인 {minQueryLength}자 미만입니다.",
+    noresults: "검색 결과가 없습니다.",
+    pagePicker: "페이지당 {pageSize}개 표시",
+    showAll: "모두"
+  },
+  SearchBar: {
+    placeholder: "검색..."
+  }
+};
+const lt_LT = {
+  Filter: {
+    title: "Filtrai",
+    showTitle: "Rodyti filtrus",
+    hideTitle: "Slėpti filtrus",
+    clearAll: "Išvalyti viską"
+  },
+  InputButtonGroup: {
+    title: "Kategorijos",
+    price: "Kaina",
+    customPrice: "Individualizuota kaina",
+    priceIncluded: "taip",
+    priceExcluded: "ne",
+    priceExcludedMessage: "Ne {title}",
+    priceRange: " ir aukščiau",
+    showmore: "Rodyti daugiau"
+  },
+  Loading: {
+    title: "Įkeliama"
+  },
+  NoResults: {
+    heading: "Nėra jūsų ieškos rezultatų.",
+    subheading: "Bandykite dar kartą..."
+  },
+  SortDropdown: {
+    title: "Rikiuoti pagal",
+    option: "Rikiuoti pagal: {selectedOption}",
+    relevanceLabel: "Svarbiausias",
+    positionLabel: "Padėtis"
+  },
+  CategoryFilters: {
+    results: "rezultatai {phrase}",
+    products: "Produktų: {totalCount}"
+  },
+  ProductCard: {
+    asLowAs: "Žema kaip {discountPrice}",
+    startingAt: "Pradedant nuo {productPrice}",
+    bundlePrice: "Nuo {fromBundlePrice} iki {toBundlePrice}",
+    from: "Nuo {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Jūsų ieškos sąlyga {variables.phrase} nesiekia minimalaus skaičiaus simbolių: {minQueryLength}.",
+    noresults: "Jūsų ieška nedavė jokių rezultatų.",
+    pagePicker: "Rodyti {pageSize} psl.",
+    showAll: "viskas"
+  },
+  SearchBar: {
+    placeholder: "Ieška..."
+  }
+};
+const lv_LV = {
+  Filter: {
+    title: "Filtri",
+    showTitle: "Rādīt filtrus",
+    hideTitle: "Slēpt filtrus",
+    clearAll: "Notīrīt visus"
+  },
+  InputButtonGroup: {
+    title: "Kategorijas",
+    price: "Cena",
+    customPrice: "Pielāgot cenu",
+    priceIncluded: "jā",
+    priceExcluded: "nē",
+    priceExcludedMessage: "Nav {title}",
+    priceRange: " un augstāk",
+    showmore: "Rādīt vairāk"
+  },
+  Loading: {
+    title: "Notiek ielāde"
+  },
+  NoResults: {
+    heading: "Jūsu meklēšanai nav rezultātu.",
+    subheading: "Mēģiniet vēlreiz…"
+  },
+  SortDropdown: {
+    title: "Kārtot pēc",
+    option: "Kārtot pēc: {selectedOption}",
+    relevanceLabel: "Visatbilstošākais",
+    positionLabel: "Pozīcija"
+  },
+  CategoryFilters: {
+    results: "{phrase} rezultāti",
+    products: "{totalCount} produkti"
+  },
+  ProductCard: {
+    asLowAs: "Tik zemu kā {discountPrice}",
+    startingAt: "Sākot no {productPrice}",
+    bundlePrice: "No {fromBundlePrice} uz{toBundlePrice}",
+    from: "No {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Jūsu meklēšanas vienums {variables.phrase} nav sasniedzis minimumu {minQueryLength} rakstzīmes.",
+    noresults: "Jūsu meklēšana nedeva nekādus rezultātus.",
+    pagePicker: "Rādīt {pageSize} vienā lapā",
+    showAll: "viss"
+  },
+  SearchBar: {
+    placeholder: "Meklēt…"
+  }
+};
+const nb_NO = {
+  Filter: {
+    title: "Filtre",
+    showTitle: "Vis filtre",
+    hideTitle: "Skjul filtre",
+    clearAll: "Fjern alle"
+  },
+  InputButtonGroup: {
+    title: "Kategorier",
+    price: "Pris",
+    customPrice: "Egendefinert pris",
+    priceIncluded: "ja",
+    priceExcluded: "nei",
+    priceExcludedMessage: "Ikke {title}",
+    priceRange: " og over",
+    showmore: "Vis mer"
+  },
+  Loading: {
+    title: "Laster inn"
+  },
+  NoResults: {
+    heading: "Finner ingen resultater for søket.",
+    subheading: "Prøv igjen."
+  },
+  SortDropdown: {
+    title: "Sorter etter",
+    option: "Sorter etter: {selectedOption}",
+    relevanceLabel: "Mest aktuelle",
+    positionLabel: "Plassering"
+  },
+  CategoryFilters: {
+    results: "resultater for {phrase}",
+    products: "{totalCount} produkter"
+  },
+  ProductCard: {
+    asLowAs: "Så lavt som {discountPrice}",
+    startingAt: "Fra {productPrice}",
+    bundlePrice: "Fra {fromBundlePrice} til {toBundlePrice}",
+    from: "Fra {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Søkeordet {variables.phrase} har ikke de påkrevde {minQueryLength} tegnene.",
+    noresults: "Søket ditt ga ingen resultater.",
+    pagePicker: "Vis {pageSize} per side",
+    showAll: "alle"
+  },
+  SearchBar: {
+    placeholder: "Søk …"
+  }
+};
+const nl_NL = {
+  Filter: {
+    title: "Filters",
+    showTitle: "Filters weergeven",
+    hideTitle: "Filters verbergen",
+    clearAll: "Alles wissen"
+  },
+  InputButtonGroup: {
+    title: "Categorieën",
+    price: "Prijs",
+    customPrice: "Aangepaste prijs",
+    priceIncluded: "ja",
+    priceExcluded: "nee",
+    priceExcludedMessage: "Niet {title}",
+    priceRange: " en meer",
+    showmore: "Meer tonen"
+  },
+  Loading: {
+    title: "Laden"
+  },
+  NoResults: {
+    heading: "Geen resultaten voor je zoekopdracht.",
+    subheading: "Probeer het opnieuw..."
+  },
+  SortDropdown: {
+    title: "Sorteren op",
+    option: "Sorteren op: {selectedOption}",
+    relevanceLabel: "Meest relevant",
+    positionLabel: "Positie"
+  },
+  CategoryFilters: {
+    results: "resultaten voor {phrase}",
+    products: "{totalCount} producten"
+  },
+  ProductCard: {
+    asLowAs: "Slechts {discountPrice}",
+    startingAt: "Vanaf {productPrice}",
+    bundlePrice: "Van {fromBundlePrice} tot {toBundlePrice}",
+    from: "Vanaf {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Je zoekterm {variables.phrase} bevat niet het minimumaantal van {minQueryLength} tekens.",
+    noresults: "Geen resultaten gevonden voor je zoekopdracht.",
+    pagePicker: "{pageSize} weergeven per pagina",
+    showAll: "alles"
+  },
+  SearchBar: {
+    placeholder: "Zoeken..."
+  }
+};
+const pt_BR = {
+  Filter: {
+    title: "Filtros",
+    showTitle: "Mostrar filtros",
+    hideTitle: "Ocultar filtros",
+    clearAll: "Limpar tudo"
+  },
+  InputButtonGroup: {
+    title: "Categorias",
+    price: "Preço",
+    customPrice: "Preço personalizado",
+    priceIncluded: "sim",
+    priceExcluded: "não",
+    priceExcludedMessage: "Não {title}",
+    priceRange: " e acima",
+    showmore: "Mostrar mais"
+  },
+  Loading: {
+    title: "Carregando"
+  },
+  NoResults: {
+    heading: "Nenhum resultado para sua busca.",
+    subheading: "Tente novamente..."
+  },
+  SortDropdown: {
+    title: "Classificar por",
+    option: "Classificar por: {selectedOption}",
+    relevanceLabel: "Mais relevantes",
+    positionLabel: "Posição"
+  },
+  CategoryFilters: {
+    results: "resultados para {phrase}",
+    products: "{totalCount} produtos"
+  },
+  ProductCard: {
+    asLowAs: "Por apenas {discountPrice}",
+    startingAt: "A partir de {productPrice}",
+    bundlePrice: "De {fromBundlePrice} por {toBundlePrice}",
+    from: "De {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Seu termo de pesquisa {variables.phrase} não atingiu o mínimo de {minQueryLength} caracteres.",
+    noresults: "Sua busca não retornou resultados.",
+    pagePicker: "Mostrar {pageSize} por página",
+    showAll: "tudo"
+  },
+  SearchBar: {
+    placeholder: "Pesquisar..."
+  }
+};
+const pt_PT = {
+  Filter: {
+    title: "Filtros",
+    showTitle: "Mostrar filtros",
+    hideTitle: "Ocultar filtros",
+    clearAll: "Limpar tudo"
+  },
+  InputButtonGroup: {
+    title: "Categorias",
+    price: "Preço",
+    customPrice: "Preço Personalizado",
+    priceIncluded: "sim",
+    priceExcluded: "não",
+    priceExcludedMessage: "Não {title}",
+    priceRange: " e acima",
+    showmore: "Mostrar mais"
+  },
+  Loading: {
+    title: "A carregar"
+  },
+  NoResults: {
+    heading: "Não existem resultados para a sua pesquisa.",
+    subheading: "Tente novamente..."
+  },
+  SortDropdown: {
+    title: "Ordenar por",
+    option: "Ordenar por: {selectedOption}",
+    relevanceLabel: "Mais Relevantes",
+    positionLabel: "Posição"
+  },
+  CategoryFilters: {
+    results: "resultados para {phrase}",
+    products: "{totalCount} produtos"
+  },
+  ProductCard: {
+    asLowAs: "A partir de {discountPrice}",
+    startingAt: "A partir de {productPrice}",
+    bundlePrice: "De {fromBundlePrice} a {toBundlePrice}",
+    from: "A partir de {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "O seu termo de pesquisa {variables.phrase} não atingiu o mínimo de {minQueryLength} carateres.",
+    noresults: "A sua pesquisa não devolveu resultados.",
+    pagePicker: "Mostrar {pageSize} por página",
+    showAll: "tudo"
+  },
+  SearchBar: {
+    placeholder: "Procurar..."
+  }
+};
+const ro_RO = {
+  Filter: {
+    title: "Filtre",
+    showTitle: "Afișați filtrele",
+    hideTitle: "Ascundeți filtrele",
+    clearAll: "Ștergeți tot"
+  },
+  InputButtonGroup: {
+    title: "Categorii",
+    price: "Preț",
+    customPrice: "Preț personalizat",
+    priceIncluded: "da",
+    priceExcluded: "nu",
+    priceExcludedMessage: "Fără {title}",
+    priceRange: " și mai mult",
+    showmore: "Afișați mai multe"
+  },
+  Loading: {
+    title: "Se încarcă"
+  },
+  NoResults: {
+    heading: "Niciun rezultat pentru căutarea dvs.",
+    subheading: "Încercați din nou..."
+  },
+  SortDropdown: {
+    title: "Sortați după",
+    option: "Sortați după: {selectedOption}",
+    relevanceLabel: "Cele mai relevante",
+    positionLabel: "Poziție"
+  },
+  CategoryFilters: {
+    results: "rezultate pentru {phrase}",
+    products: "{totalCount} produse"
+  },
+  ProductCard: {
+    asLowAs: "Preț redus până la {discountPrice}",
+    startingAt: "Începând de la {productPrice}",
+    bundlePrice: "De la {fromBundlePrice} la {toBundlePrice}",
+    from: "De la {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Termenul căutat {variables.phrase} nu a atins numărul minim de {minQueryLength} caractere.",
+    noresults: "Nu există rezultate pentru căutarea dvs.",
+    pagePicker: "Afișați {pageSize} per pagină",
+    showAll: "toate"
+  },
+  SearchBar: {
+    placeholder: "Căutare..."
+  }
+};
+const ru_RU = {
+  Filter: {
+    title: "Фильтры",
+    showTitle: "Показать фильтры",
+    hideTitle: "Скрыть фильтры",
+    clearAll: "Очистить все"
+  },
+  InputButtonGroup: {
+    title: "Категории",
+    price: "Цена",
+    customPrice: "Индивидуальная цена",
+    priceIncluded: "да",
+    priceExcluded: "нет",
+    priceExcludedMessage: "Нет {title}",
+    priceRange: " и выше",
+    showmore: "Показать еще"
+  },
+  Loading: {
+    title: "Загрузка"
+  },
+  NoResults: {
+    heading: "Нет результатов по вашему поисковому запросу.",
+    subheading: "Повторите попытку..."
+  },
+  SortDropdown: {
+    title: "Сортировка по",
+    option: "Сортировать по: {selectedOption}",
+    relevanceLabel: "Самые подходящие",
+    positionLabel: "Положение"
+  },
+  CategoryFilters: {
+    results: "Результаты по запросу «{phrase}»",
+    products: "Продукты: {totalCount}"
+  },
+  ProductCard: {
+    asLowAs: "Всего за {discountPrice}",
+    startingAt: "От {productPrice}",
+    bundlePrice: "От {fromBundlePrice} до {toBundlePrice}",
+    from: "От {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Поисковый запрос «{variables.phrase}» содержит меньше {minQueryLength} символов.",
+    noresults: "Нет результатов по вашему запросу.",
+    pagePicker: "Показывать {pageSize} на странице",
+    showAll: "все"
+  },
+  SearchBar: {
+    placeholder: "Поиск..."
+  }
+};
+const sv_SE = {
+  Filter: {
+    title: "Filter",
+    showTitle: "Visa filter",
+    hideTitle: "Dölj filter",
+    clearAll: "Rensa allt"
+  },
+  InputButtonGroup: {
+    title: "Kategorier",
+    price: "Pris",
+    customPrice: "Anpassat pris",
+    priceIncluded: "ja",
+    priceExcluded: "nej",
+    priceExcludedMessage: "Inte {title}",
+    priceRange: " eller mer",
+    showmore: "Visa mer"
+  },
+  Loading: {
+    title: "Läser in"
+  },
+  NoResults: {
+    heading: "Inga sökresultat.",
+    subheading: "Försök igen …"
+  },
+  SortDropdown: {
+    title: "Sortera på",
+    option: "Sortera på: {selectedOption}",
+    relevanceLabel: "Mest relevant",
+    positionLabel: "Position"
+  },
+  CategoryFilters: {
+    results: "resultat för {phrase}",
+    products: "{totalCount} produkter"
+  },
+  ProductCard: {
+    asLowAs: "Så lite som {discountPrice}",
+    startingAt: "Från {productPrice}",
+    bundlePrice: "Från {fromBundlePrice} till {toBundlePrice}",
+    from: "Från {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Din sökterm {variables.phrase} har inte nått upp till minimiantalet tecken, {minQueryLength}.",
+    noresults: "Sökningen gav inget resultat.",
+    pagePicker: "Visa {pageSize} per sida",
+    showAll: "alla"
+  },
+  SearchBar: {
+    placeholder: "Sök …"
+  }
+};
+const th_TH = {
+  Filter: {
+    title: "ตัวกรอง",
+    showTitle: "แสดงตัวกรอง",
+    hideTitle: "ซ่อนตัวกรอง",
+    clearAll: "ล้างทั้งหมด"
+  },
+  InputButtonGroup: {
+    title: "หมวดหมู่",
+    price: "ราคา",
+    customPrice: "ปรับแต่งราคา",
+    priceIncluded: "ใช่",
+    priceExcluded: "ไม่",
+    priceExcludedMessage: "ไม่ใช่ {title}",
+    priceRange: " และสูงกว่า",
+    showmore: "แสดงมากขึ้น"
+  },
+  Loading: {
+    title: "กำลังโหลด"
+  },
+  NoResults: {
+    heading: "ไม่มีผลลัพธ์สำหรับการค้นหาของคุณ",
+    subheading: "โปรดลองอีกครั้ง..."
+  },
+  SortDropdown: {
+    title: "เรียงตาม",
+    option: "เรียงตาม: {selectedOption}",
+    relevanceLabel: "เกี่ยวข้องมากที่สุด",
+    positionLabel: "ตำแหน่ง"
+  },
+  CategoryFilters: {
+    results: "ผลลัพธ์สำหรับ {phrase}",
+    products: "{totalCount} ผลิตภัณฑ์"
+  },
+  ProductCard: {
+    asLowAs: "ต่ำสุดที่ {discountPrice}",
+    startingAt: "เริ่มต้นที่ {productPrice}",
+    bundlePrice: "ตั้งแต่ {fromBundlePrice} ถึง {toBundlePrice}",
+    from: "ตั้งแต่ {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "คำว่า {variables.phrase} ที่คุณใช้ค้นหายังมีจำนวนอักขระไม่ถึงจำนวนขั้นต่ำ {minQueryLength} อักขระ",
+    noresults: "การค้นหาของคุณไม่มีผลลัพธ์",
+    pagePicker: "แสดง {pageSize} ต่อหน้า",
+    showAll: "ทั้งหมด"
+  },
+  SearchBar: {
+    placeholder: "ค้นหา..."
+  }
+};
+const tr_TR = {
+  Filter: {
+    title: "Filtreler",
+    showTitle: "Filtreleri göster",
+    hideTitle: "Filtreleri gizle",
+    clearAll: "Tümünü temizle"
+  },
+  InputButtonGroup: {
+    title: "Kategoriler",
+    price: "Fiyat",
+    customPrice: "Özel Fiyat",
+    priceIncluded: "evet",
+    priceExcluded: "hayır",
+    priceExcludedMessage: "Hariç: {title}",
+    priceRange: " ve üzeri",
+    showmore: "Diğerlerini göster"
+  },
+  Loading: {
+    title: "Yükleniyor"
+  },
+  NoResults: {
+    heading: "Aramanız hiç sonuç döndürmedi",
+    subheading: "Lütfen tekrar deneyin..."
+  },
+  SortDropdown: {
+    title: "Sırala",
+    option: "Sıralama ölçütü: {selectedOption}",
+    relevanceLabel: "En Çok İlişkili",
+    positionLabel: "Konum"
+  },
+  CategoryFilters: {
+    results: "{phrase} için sonuçlar",
+    products: "{totalCount} ürün"
+  },
+  ProductCard: {
+    asLowAs: "En düşük: {discountPrice}",
+    startingAt: "Başlangıç fiyatı: {productPrice}",
+    bundlePrice: "{fromBundlePrice} - {toBundlePrice} arası",
+    from: "Başlangıç: {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "Arama teriminiz ({variables.phrase}) minimum {minQueryLength} karakter sınırlamasından daha kısa.",
+    noresults: "Aramanız hiç sonuç döndürmedi.",
+    pagePicker: "Sayfa başına {pageSize} göster",
+    showAll: "tümü"
+  },
+  SearchBar: {
+    placeholder: "Ara..."
+  }
+};
+const zh_Hans_CN = {
+  Filter: {
+    title: "筛选条件",
+    showTitle: "显示筛选条件",
+    hideTitle: "隐藏筛选条件",
+    clearAll: "全部清除"
+  },
+  InputButtonGroup: {
+    title: "类别",
+    price: "价格",
+    customPrice: "自定义价格",
+    priceIncluded: "是",
+    priceExcluded: "否",
+    priceExcludedMessage: "不是 {title}",
+    priceRange: " 及以上",
+    showmore: "显示更多"
+  },
+  Loading: {
+    title: "正在加载"
+  },
+  NoResults: {
+    heading: "无搜索结果。",
+    subheading: "请重试..."
+  },
+  SortDropdown: {
+    title: "排序依据",
+    option: "排序依据：{selectedOption}",
+    relevanceLabel: "最相关",
+    positionLabel: "位置"
+  },
+  CategoryFilters: {
+    results: "{phrase} 的结果",
+    products: "{totalCount} 个产品"
+  },
+  ProductCard: {
+    asLowAs: "低至 {discountPrice}",
+    startingAt: "起价为 {productPrice}",
+    bundlePrice: "从 {fromBundlePrice} 到 {toBundlePrice}",
+    from: "从 {productPrice} 起"
+  },
+  ProductContainers: {
+    minquery: "您的搜索词 {variables.phrase} 尚未达到最少 {minQueryLength} 个字符这一要求。",
+    noresults: "您的搜索未返回任何结果。",
+    pagePicker: "每页显示 {pageSize} 项",
+    showAll: "全部"
+  },
+  SearchBar: {
+    placeholder: "搜索..."
+  }
+};
+const zh_Hant_TW = {
+  Filter: {
+    title: "篩選器",
+    showTitle: "顯示篩選器",
+    hideTitle: "隱藏篩選器",
+    clearAll: "全部清除"
+  },
+  InputButtonGroup: {
+    title: "類別",
+    price: "價格",
+    customPrice: "自訂價格",
+    priceIncluded: "是",
+    priceExcluded: "否",
+    priceExcludedMessage: "不是 {title}",
+    priceRange: " 以上",
+    showmore: "顯示更多"
+  },
+  Loading: {
+    title: "載入中"
+  },
+  NoResults: {
+    heading: "沒有符合搜尋的結果。",
+    subheading: "請再試一次…"
+  },
+  SortDropdown: {
+    title: "排序依據",
+    option: "排序方式：{selectedOption}",
+    relevanceLabel: "最相關",
+    positionLabel: "位置"
+  },
+  CategoryFilters: {
+    results: "{phrase} 的結果",
+    products: "{totalCount} 個產品"
+  },
+  ProductCard: {
+    asLowAs: "低至 {discountPrice}",
+    startingAt: "起價為 {productPrice}",
+    bundlePrice: "從 {fromBundlePrice} 到 {toBundlePrice}",
+    from: "起價為 {productPrice}"
+  },
+  ProductContainers: {
+    minquery: "您的搜尋字詞 {variables.phrase} 未達到最少 {minQueryLength} 個字元。",
+    noresults: "您的搜尋未傳回任何結果。",
+    pagePicker: "顯示每頁 {pageSize}",
+    showAll: "全部"
+  },
+  SearchBar: {
+    placeholder: "搜尋…"
+  }
+};
+var _jsxFileName$A = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/context/translation.tsx";
+const languages = {
+  default: en_US,
+  bg_BG,
+  ca_ES,
+  cs_CZ,
+  da_DK,
+  de_DE,
+  el_GR,
+  en_GB,
+  en_US,
+  es_ES,
+  et_EE,
+  eu_ES,
+  fa_IR,
+  fi_FI,
+  fr_FR,
+  gl_ES,
+  hi_IN,
+  hu_HU,
+  id_ID,
+  it_IT,
+  ja_JP,
+  ko_KR,
+  lt_LT,
+  lv_LV,
+  nb_NO,
+  nl_NL,
+  pt_BR,
+  pt_PT,
+  ro_RO,
+  ru_RU,
+  sv_SE,
+  th_TH,
+  tr_TR,
+  zh_Hans_CN,
+  zh_Hant_TW
+};
+const TranslationContext = createContext$1(languages.default);
+const useTranslation = () => {
+  const translation = useContext$1(TranslationContext);
+  return translation;
+};
+const getCurrLanguage = (languageDetected) => {
+  const langKeys = Object.keys(languages);
+  if (langKeys.includes(languageDetected)) {
+    return languageDetected;
+  }
+  return "default";
+};
+const Translation = ({
+  children
+}) => {
+  var _a;
+  const storeCtx = useStore();
+  const currLanguage = getCurrLanguage(((_a = storeCtx == null ? void 0 : storeCtx.config) == null ? void 0 : _a.locale) ?? "");
+  return u(TranslationContext.Provider, {
+    value: languages[currLanguage],
+    children
+  }, void 0, false, {
+    fileName: _jsxFileName$A,
+    lineNumber: 111,
+    columnNumber: 12
+  }, void 0);
+};
+var _jsxFileName$z = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/context/products.tsx";
+const ProductsContext = createContext({
+  variables: {
+    phrase: ""
+  },
+  loading: false,
+  items: [],
+  setItems: () => {
+  },
+  currentPage: 1,
+  setCurrentPage: () => {
+  },
+  pageSize: DEFAULT_PAGE_SIZE,
+  setPageSize: () => {
+  },
+  totalCount: 0,
+  setTotalCount: () => {
+  },
+  totalPages: 0,
+  setTotalPages: () => {
+  },
+  facets: [],
+  setFacets: () => {
+  },
+  categoryName: "",
+  setCategoryName: () => {
+  },
+  currencySymbol: "",
+  setCurrencySymbol: () => {
+  },
+  currencyRate: "",
+  setCurrencyRate: () => {
+  },
+  minQueryLength: DEFAULT_MIN_QUERY_LENGTH,
+  minQueryLengthReached: false,
+  setMinQueryLengthReached: () => {
+  },
+  pageSizeOptions: [],
+  setRoute: void 0,
+  refineProduct: () => {
+  },
+  pageLoading: false,
+  setPageLoading: () => {
+  },
+  categoryPath: void 0,
+  viewType: "",
+  setViewType: () => {
+  },
+  listViewType: "",
+  setListViewType: () => {
+  },
+  resolveCartId: () => Promise.resolve(""),
+  refreshCart: () => {
+  },
+  addToCart: () => Promise.resolve()
+});
+const ProductsContextProvider = ({
+  children
+}) => {
+  var _a, _b, _c, _d, _e, _f;
+  const urlValue = getValueFromUrl("p");
+  const pageDefault = urlValue ? Number(urlValue) : 1;
+  const searchCtx = useSearch();
+  const storeCtx = useStore();
+  const attributeMetadataCtx = useAttributeMetadata();
+  const pageSizeValue = getValueFromUrl("page_size");
+  const defaultPageSizeOption = Number((_b = (_a = storeCtx == null ? void 0 : storeCtx.config) == null ? void 0 : _a.perPageConfig) == null ? void 0 : _b.defaultPageSizeOption) || DEFAULT_PAGE_SIZE;
+  const pageSizeDefault = pageSizeValue ? Number(pageSizeValue) : defaultPageSizeOption;
+  const translation = useTranslation();
+  const showAllLabel = translation.ProductContainers.showAll;
+  const demoContext = JSON.parse(window.localStorage.getItem("_demo:context"));
+  let selectedBrand;
+  if (!(demoContext == null ? void 0 : demoContext.id)) {
+    console.log("setting context");
+    selectedBrand = JSON.parse(window.localStorage.getItem("_demo:data"))["Aurora"];
+    window.localStorage.setItem("_demo:context", JSON.stringify(selectedBrand));
+  } else {
+    selectedBrand = JSON.parse(window.localStorage.getItem("_demo:context"));
+  }
+  const [headers, setHeaders] = t(useState({
+    "Content-Type": "application/json",
+    "AC-Environment-Id": "c09ecfb1-333a-4db3-9669-ce07ec0e3a00",
+    "AC-Scope-Locale": "en-US",
+    "X-Api-Key": "search_gql",
+    // variable
+    "AC-Channel-Id": selectedBrand.id,
+    // "AC-Policy-Model": selectedBrand.models[0],
+    "AC-Price-Book-Id": selectedBrand.value.toLowerCase()
+  }), "headers");
+  const [loading, setLoading] = t(useState(true), "loading");
+  const [pageLoading, setPageLoading] = t(useState(true), "pageLoading");
+  const [items, setItems] = t(useState([]), "items");
+  const [currentPage, setCurrentPage] = t(useState(pageDefault), "currentPage");
+  const [pageSize, setPageSize] = t(useState(pageSizeDefault), "pageSize");
+  const [totalCount, setTotalCount] = t(useState(0), "totalCount");
+  const [totalPages, setTotalPages] = t(useState(0), "totalPages");
+  const [facets, setFacets] = t(useState([]), "facets");
+  const [categoryName, setCategoryName] = t(useState(((_c = storeCtx == null ? void 0 : storeCtx.config) == null ? void 0 : _c.categoryName) ?? ""), "categoryName");
+  const [pageSizeOptions, setPageSizeOptions] = t(useState([]), "pageSizeOptions");
+  const [currencySymbol, setCurrencySymbol] = t(useState(((_d = storeCtx == null ? void 0 : storeCtx.config) == null ? void 0 : _d.currencySymbol) ?? ""), "currencySymbol");
+  const [currencyRate, setCurrencyRate] = t(useState(((_e = storeCtx == null ? void 0 : storeCtx.config) == null ? void 0 : _e.currencyRate) ?? ""), "currencyRate");
+  const [minQueryLengthReached, setMinQueryLengthReached] = t(useState(false), "minQueryLengthReached");
+  const minQueryLength = t(useMemo(() => {
+    var _a2;
+    return ((_a2 = storeCtx == null ? void 0 : storeCtx.config) == null ? void 0 : _a2.minQueryLength) || DEFAULT_MIN_QUERY_LENGTH;
+  }, [storeCtx == null ? void 0 : storeCtx.config.minQueryLength]), "minQueryLength");
+  const categoryPath = (_f = storeCtx.config) == null ? void 0 : _f.currentCategoryUrlPath;
+  const viewTypeFromUrl = getValueFromUrl("view_type");
+  const [viewType, setViewType] = t(useState(viewTypeFromUrl ? viewTypeFromUrl : "gridView"), "viewType");
+  const [listViewType, setListViewType] = t(useState("default"), "listViewType");
+  const variables = t(useMemo(() => {
+    return {
+      phrase: searchCtx.phrase,
+      filter: searchCtx.filters,
+      sort: searchCtx.sort,
+      context: storeCtx.context,
+      pageSize,
+      displayOutOfStock: storeCtx.config.displayOutOfStock,
+      currentPage
+    };
+  }, [searchCtx.phrase, searchCtx.filters, searchCtx.sort, storeCtx.context, storeCtx.config.displayOutOfStock, pageSize, currentPage]), "variables");
+  const handleRefineProductSearch = async (optionIds, sku) => {
+    const data = await refineProductSearch({
+      ...storeCtx,
+      optionIds,
+      sku
+    });
+    return data;
+  };
+  const context = {
+    variables,
+    loading,
+    items,
+    setItems,
+    currentPage,
+    setCurrentPage,
+    pageSize,
+    setPageSize,
+    totalCount,
+    setTotalCount,
+    totalPages,
+    setTotalPages,
+    facets,
+    setFacets,
+    categoryName,
+    setCategoryName,
+    currencySymbol,
+    setCurrencySymbol,
+    currencyRate,
+    setCurrencyRate,
+    minQueryLength,
+    minQueryLengthReached,
+    setMinQueryLengthReached,
+    pageSizeOptions,
+    setRoute: storeCtx.route,
+    refineProduct: handleRefineProductSearch,
+    pageLoading,
+    setPageLoading,
+    categoryPath,
+    viewType,
+    setViewType,
+    listViewType,
+    setListViewType,
+    cartId: storeCtx.config.resolveCartId,
+    refreshCart: storeCtx.config.refreshCart,
+    resolveCartId: storeCtx.config.resolveCartId,
+    addToCart: storeCtx.config.addToCart
+  };
+  const searchProducts = async (_headers = {}) => {
+    var _a2, _b2, _c2, _d2, _e2, _f2, _g, _h, _i, _j;
+    try {
+      setLoading(true);
+      moveToTop();
+      if (checkMinQueryLength()) {
+        const filters = [...variables.filter];
+        handleCategorySearch(categoryPath, filters);
+        const data = await getProductSearch({
+          ...variables,
+          ...storeCtx,
+          apiUrl: storeCtx.apiUrl,
+          filter: filters,
+          categorySearch: !!categoryPath,
+          headers: _headers
+        });
+        setItems(((_a2 = data == null ? void 0 : data.productSearch) == null ? void 0 : _a2.items) || []);
+        setFacets(((_b2 = data == null ? void 0 : data.productSearch) == null ? void 0 : _b2.facets) || []);
+        setTotalCount(((_c2 = data == null ? void 0 : data.productSearch) == null ? void 0 : _c2.total_count) || 0);
+        setTotalPages(((_e2 = (_d2 = data == null ? void 0 : data.productSearch) == null ? void 0 : _d2.page_info) == null ? void 0 : _e2.total_pages) || 1);
+        handleCategoryNames(((_f2 = data == null ? void 0 : data.productSearch) == null ? void 0 : _f2.facets) || []);
+        getPageSizeOptions((_g = data == null ? void 0 : data.productSearch) == null ? void 0 : _g.total_count);
+        paginationCheck((_h = data == null ? void 0 : data.productSearch) == null ? void 0 : _h.total_count, (_j = (_i = data == null ? void 0 : data.productSearch) == null ? void 0 : _i.page_info) == null ? void 0 : _j.total_pages);
+      }
+      setLoading(false);
+      setPageLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      setPageLoading(false);
+    }
+  };
+  const checkMinQueryLength = () => {
+    var _a2;
+    if (!((_a2 = storeCtx.config) == null ? void 0 : _a2.currentCategoryUrlPath) && searchCtx.phrase.trim().length < (Number(storeCtx.config.minQueryLength) || DEFAULT_MIN_QUERY_LENGTH)) {
+      setItems([]);
+      setFacets([]);
+      setTotalCount(0);
+      setTotalPages(1);
+      setMinQueryLengthReached(false);
+      return false;
+    }
+    setMinQueryLengthReached(true);
+    return true;
+  };
+  const getPageSizeOptions = (totalCount2) => {
+    var _a2, _b2, _c2;
+    const optionsArray = [];
+    const pageSizeString = ((_b2 = (_a2 = storeCtx == null ? void 0 : storeCtx.config) == null ? void 0 : _a2.perPageConfig) == null ? void 0 : _b2.pageSizeOptions) || DEFAULT_PAGE_SIZE_OPTIONS;
+    const pageSizeArray = pageSizeString.split(",");
+    pageSizeArray.forEach((option) => {
+      optionsArray.push({
+        label: option,
+        value: parseInt(option, 10)
+      });
+    });
+    if (((_c2 = storeCtx == null ? void 0 : storeCtx.config) == null ? void 0 : _c2.allowAllProducts) == "1") {
+      optionsArray.push({
+        label: showAllLabel,
+        value: totalCount2 !== null ? totalCount2 > 500 ? 500 : totalCount2 : 0
+      });
+    }
+    setPageSizeOptions(optionsArray);
+  };
+  const paginationCheck = (totalCount2, totalPages2) => {
+    if (totalCount2 && totalCount2 > 0 && totalPages2 === 1) {
+      setCurrentPage(1);
+      handleUrlPagination(1);
+    }
+  };
+  const handleCategorySearch = (categoryPath2, filters) => {
+    if (categoryPath2) {
+      const categoryFilter = {
+        attribute: "categoryPath",
+        eq: categoryPath2
+      };
+      filters.push(categoryFilter);
+      if (variables.sort.length < 1 || variables.sort === SEARCH_SORT_DEFAULT) {
+        variables.sort = CATEGORY_SORT_DEFAULT;
+      }
+    }
+  };
+  const handleCategoryNames = (facets2) => {
+    facets2.map((facet) => {
+      var _a2;
+      const bucketType = (_a2 = facet == null ? void 0 : facet.buckets[0]) == null ? void 0 : _a2.__typename;
+      if (bucketType === "CategoryView") {
+        const names = facet.buckets.map((bucket) => {
+          if (bucket.__typename === "CategoryView") return {
+            name: bucket.name,
+            value: bucket.title,
+            attribute: facet.attribute
+          };
+        });
+        searchCtx.setCategoryNames(names);
+      }
+    });
+  };
+  useEffect(() => {
+    if (attributeMetadataCtx.filterableInSearch) {
+      searchProducts(headers);
+    }
+  }, [searchCtx.filters]);
+  useEffect(() => {
+    if (attributeMetadataCtx.filterableInSearch) {
+      const filtersFromUrl = getFiltersFromUrl(attributeMetadataCtx.filterableInSearch);
+      searchCtx.setFilters(filtersFromUrl);
+    }
+  }, [attributeMetadataCtx.filterableInSearch]);
+  useEffect(() => {
+    searchProducts(headers);
+  }, [searchCtx.phrase, searchCtx.sort, currentPage, pageSize]);
+  return u(ProductsContext.Provider, {
+    value: context,
+    children
+  }, void 0, false, {
+    fileName: _jsxFileName$z,
+    lineNumber: 416,
+    columnNumber: 12
+  }, void 0);
+};
+const useProducts = () => {
+  const productsCtx = useContext(ProductsContext);
+  return productsCtx;
+};
+var _jsxFileName$y = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/context/displayChange.tsx";
+const DefaultScreenSizeObject = {
+  mobile: false,
+  tablet: false,
+  desktop: false,
+  columns: PRODUCT_COLUMNS.desktop
+};
+const useSensor = () => {
+  const {
+    screenSize
+  } = useContext$1(ResizeChangeContext);
+  const [result, setResult] = t(useState(DefaultScreenSizeObject), "result");
+  useEffect(() => {
+    const size = screenSize ? screenSize : DefaultScreenSizeObject;
+    setResult(size);
+  }, [screenSize]);
+  return {
+    screenSize: result
+  };
+};
+const ResizeChangeContext = createContext$1({});
+const getColumn = (screenSize) => {
+  if (screenSize.desktop) {
+    return PRODUCT_COLUMNS.desktop;
+  }
+  if (screenSize.tablet) {
+    return PRODUCT_COLUMNS.tablet;
+  }
+  if (screenSize.mobile) {
+    return PRODUCT_COLUMNS.mobile;
+  }
+  return PRODUCT_COLUMNS.desktop;
+};
+const Resize = ({
+  children
+}) => {
+  const detectDevice = () => {
+    const result = DefaultScreenSizeObject;
+    result.mobile = window.matchMedia("screen and (max-width: 767px)").matches;
+    result.tablet = window.matchMedia("screen and (min-width: 768px) and (max-width: 960px)").matches;
+    result.desktop = window.matchMedia("screen and (min-width: 961px)").matches;
+    result.columns = getColumn(result);
+    return result;
+  };
+  const [screenSize, setScreenSize] = t(useState(detectDevice()), "screenSize");
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  });
+  const handleResize = () => {
+    setScreenSize({
+      ...screenSize,
+      ...detectDevice()
+    });
+  };
+  return u(ResizeChangeContext.Provider, {
+    value: {
+      screenSize
+    },
+    children
+  }, void 0, false, {
+    fileName: _jsxFileName$y,
+    lineNumber: 85,
+    columnNumber: 12
+  }, void 0);
+};
+const updateSearchInputCtx = (searchUnitId, searchRequestId, phrase, filters, pageSize, currentPage, sort) => {
+  const mse = window.magentoStorefrontEvents;
+  if (!mse) {
+    return;
+  }
+  const searchInputCtx = mse.context.getSearchInput() ?? {
+    units: []
+  };
+  const searchInputUnit = {
+    searchUnitId,
+    searchRequestId,
+    queryTypes: ["products", "suggestions"],
+    phrase,
+    pageSize,
+    currentPage,
+    filter: filters,
+    sort
+  };
+  const searchInputUnitIndex = searchInputCtx.units.findIndex((unit) => unit.searchUnitId === searchUnitId);
+  if (searchInputUnitIndex < 0) {
+    searchInputCtx.units.push(searchInputUnit);
+  } else {
+    searchInputCtx.units[searchInputUnitIndex] = searchInputUnit;
+  }
+  mse.context.setSearchInput(searchInputCtx);
+};
+const updateSearchResultsCtx = (searchUnitId, searchRequestId, results) => {
+  var _a, _b;
+  const mse = window.magentoStorefrontEvents;
+  if (!mse) {
+    return;
+  }
+  const searchResultsCtx = mse.context.getSearchResults() ?? {
+    units: []
+  };
+  const searchResultUnitIndex = searchResultsCtx.units.findIndex((unit) => unit.searchUnitId === searchUnitId);
+  const searchResultUnit = {
+    searchUnitId,
+    searchRequestId,
+    products: createProducts(results.items),
+    categories: [],
+    suggestions: createSuggestions(results.suggestions),
+    page: ((_a = results == null ? void 0 : results.page_info) == null ? void 0 : _a.current_page) || 1,
+    perPage: ((_b = results == null ? void 0 : results.page_info) == null ? void 0 : _b.page_size) || 20,
+    facets: createFacets(results.facets)
+  };
+  if (searchResultUnitIndex < 0) {
+    searchResultsCtx.units.push(searchResultUnit);
+  } else {
+    searchResultsCtx.units[searchResultUnitIndex] = searchResultUnit;
+  }
+  mse.context.setSearchResults(searchResultsCtx);
+};
+const createProducts = (items) => {
+  if (!items) {
+    return [];
+  }
+  const products = items.map((item, index) => {
+    var _a, _b, _c, _d, _e, _f;
+    return {
+      name: (_a = item == null ? void 0 : item.product) == null ? void 0 : _a.name,
+      sku: (_b = item == null ? void 0 : item.product) == null ? void 0 : _b.sku,
+      url: ((_c = item == null ? void 0 : item.product) == null ? void 0 : _c.canonical_url) ?? "",
+      imageUrl: ((_e = (_d = item == null ? void 0 : item.productView) == null ? void 0 : _d.images) == null ? void 0 : _e.length) ? ((_f = item == null ? void 0 : item.productView) == null ? void 0 : _f.images[0].url) ?? "" : "",
+      // price:
+      //     item?.productView?.price?.final?.amount?.value ??
+      //     item?.product?.price_range?.minimum_price?.final_price?.value,
+      price: item.productView.price.final.amount.value,
+      rank: index
+    };
+  });
+  return products;
+};
+const createSuggestions = (items) => {
+  if (!items) {
+    return [];
+  }
+  const suggestions = items.map((suggestion, index) => ({
+    suggestion,
+    rank: index
+  }));
+  return suggestions;
+};
+const createFacets = (items) => {
+  if (!items) {
+    return [];
+  }
+  const facets = items.map((item) => ({
+    attribute: item == null ? void 0 : item.attribute,
+    title: item == null ? void 0 : item.title,
+    type: (item == null ? void 0 : item.type) || "PINNED",
+    buckets: item == null ? void 0 : item.buckets.map((bucket) => bucket)
+  }));
+  return facets;
+};
+async function getGraphQL(query = "", variables = {}, store = "", baseUrl = "") {
+  const graphqlEndpoint = baseUrl ? `${baseUrl}/graphql` : `${window.origin}/graphql`;
+  const response = await fetch(graphqlEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Store: store
+    },
+    body: JSON.stringify({
+      query,
+      variables
+    })
+  }).then((res) => res.json());
+  return response;
+}
+const ADD_TO_CART = `
   mutation addProductsToCart(
     $cartId: String!
     $cartItems: [CartItemInput!]!
@@ -343,16 +3383,3730 @@ import{jsx as a,jsxs as m,Fragment as Z}from"@dropins/tools/preact-jsx-runtime.j
           }
       }
   }
-`,Vt=qe({}),ka=()=>Ie(Vt),Sa=({children:e})=>{const[t,r]=y({cartId:""}),{refreshCart:n,resolveCartId:s}=J(),{storeViewCode:o,config:i}=te(),c=async()=>{var p;let u="";if(s)u=await s()??"";else{const v=await ht(Lr,{},o,i==null?void 0:i.baseUrl);u=((p=v==null?void 0:v.data.customerCart)==null?void 0:p.id)??""}return r({...t,cartId:u}),u},l={cart:t,initializeCustomerCart:c,addToCartGraphQL:async u=>{let p=t.cartId;return p||(p=await c()),await ht(Ca,{cartId:p,cartItems:[{quantity:1,sku:u}]},o,i==null?void 0:i.baseUrl)},refreshCart:n};return a(Vt.Provider,{value:l,children:e})},_a="data:image/svg+xml,%3csvg%20className='w-6%20h-6%20mr-1'%20xmlns='http://www.w3.org/2000/svg'%20fill='none'%20viewBox='0%200%2024%2024'%20stroke-width='1.5'%20stroke='black'%3e%3cpath%20stroke-linecap='round'%20stroke-linejoin='round'%20d='M10.5%206h9.75M10.5%206a1.5%201.5%200%2011-3%200m3%200a1.5%201.5%200%2010-3%200M3.75%206H7.5m3%2012h9.75m-9.75%200a1.5%201.5%200%2001-3%200m3%200a1.5%201.5%200%2000-3%200m-3.75%200H7.5m9-6h3.75m-3.75%200a1.5%201.5%200%2001-3%200m3%200a1.5%201.5%200%2000-3%200m-9.75%200h9.75'/%3e%3c/svg%3e",La="data:image/svg+xml,%3csvg%20width='23'%20height='22'%20viewBox='0%200%2023%2022'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M17.9002%2018.2899H18.6502V16.7899H17.9002V18.2899ZM6.13016%2017.5399L5.38475%2017.6228C5.42698%2018.0026%205.74801%2018.2899%206.13016%2018.2899V17.5399ZM4.34016%201.43994L5.08556%201.35707C5.04334%200.977265%204.7223%200.689941%204.34016%200.689941V1.43994ZM1.66016%200.689941H0.910156V2.18994H1.66016V0.689941ZM21.3402%206.80996L22.0856%206.89324C22.1077%206.69506%2022.05%206.49622%2021.9253%206.34067C21.8005%206.18512%2021.6189%206.08566%2021.4206%206.06428L21.3402%206.80996ZM20.5402%2013.97V14.72C20.9222%2014.72%2021.2432%2014.4329%2021.2856%2014.0532L20.5402%2013.97ZM6.30029%2019.0499C6.30029%2019.4641%205.96451%2019.7999%205.55029%2019.7999V21.2999C6.79293%2021.2999%207.80029%2020.2926%207.80029%2019.0499H6.30029ZM5.55029%2019.7999C5.13608%2019.7999%204.80029%2019.4641%204.80029%2019.0499H3.30029C3.30029%2020.2926%204.30765%2021.2999%205.55029%2021.2999V19.7999ZM4.80029%2019.0499C4.80029%2018.6357%205.13608%2018.2999%205.55029%2018.2999V16.7999C4.30765%2016.7999%203.30029%2017.8073%203.30029%2019.0499H4.80029ZM5.55029%2018.2999C5.96451%2018.2999%206.30029%2018.6357%206.30029%2019.0499H7.80029C7.80029%2017.8073%206.79293%2016.7999%205.55029%2016.7999V18.2999ZM19.3003%2019.0499C19.3003%2019.4641%2018.9645%2019.7999%2018.5503%2019.7999V21.2999C19.7929%2021.2999%2020.8003%2020.2926%2020.8003%2019.0499H19.3003ZM18.5503%2019.7999C18.1361%2019.7999%2017.8003%2019.4641%2017.8003%2019.0499H16.3003C16.3003%2020.2926%2017.3077%2021.2999%2018.5503%2021.2999V19.7999ZM17.8003%2019.0499C17.8003%2018.6357%2018.1361%2018.2999%2018.5503%2018.2999V16.7999C17.3077%2016.7999%2016.3003%2017.8073%2016.3003%2019.0499H17.8003ZM18.5503%2018.2999C18.9645%2018.2999%2019.3003%2018.6357%2019.3003%2019.0499H20.8003C20.8003%2017.8073%2019.7929%2016.7999%2018.5503%2016.7999V18.2999ZM17.9002%2016.7899H6.13016V18.2899H17.9002V16.7899ZM6.87556%2017.4571L5.08556%201.35707L3.59475%201.52282L5.38475%2017.6228L6.87556%2017.4571ZM4.34016%200.689941H1.66016V2.18994H4.34016V0.689941ZM4.65983%205.76564L21.2598%207.55564L21.4206%206.06428L4.82064%204.27428L4.65983%205.76564ZM20.5949%206.72668L19.7949%2013.8867L21.2856%2014.0532L22.0856%206.89324L20.5949%206.72668ZM20.5402%2013.22H5.74023V14.72H20.5402V13.22Z'%20fill='white'/%3e%3c/svg%3e",Na="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='16'%20fill='currentColor'%20class='bi%20bi-check-circle-fill'%20viewBox='0%200%2016%2016'%3e%3cpath%20d='M16%208A8%208%200%201%201%200%208a8%208%200%200%201%2016%200zm-3.97-3.03a.75.75%200%200%200-1.08.022L7.477%209.417%205.384%207.323a.75.75%200%200%200-1.06%201.06L6.97%2011.03a.75.75%200%200%200%201.079-.02l3.992-4.99a.75.75%200%200%200-.01-1.05z'/%3e%3c/svg%3e",Ue="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%208.122%205.121'%20stroke='currentColor'%3e%3cpath%20id='chevron'%20d='M199.75,367.5l3,3,3-3'%20transform='translate(-198.689%20-366.435)'%20fill='none'%20/%3e%3c/svg%3e",Aa="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='16'%20fill='currentColor'%20class='bi%20bi-exclamation-circle-fill'%20viewBox='0%200%2016%2016'%3e%3cpath%20d='M16%208A8%208%200%201%201%200%208a8%208%200%200%201%2016%200zM8%204a.905.905%200%200%200-.9.995l.35%203.507a.552.552%200%200%200%201.1%200l.35-3.507A.905.905%200%200%200%208%204zm.002%206a1%201%200%201%200%200%202%201%201%200%200%200%200-2z'/%3e%3c/svg%3e",Ia="data:image/svg+xml,%3csvg%20width='18'%20height='18'%20viewBox='0%200%2018%2018'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M3.75%201.25H2.25C1.69772%201.25%201.25%201.69772%201.25%202.25V3.75C1.25%204.30228%201.69772%204.75%202.25%204.75H3.75C4.30228%204.75%204.75%204.30228%204.75%203.75V2.25C4.75%201.69772%204.30228%201.25%203.75%201.25Z'%20fill='%23222222'/%3e%3cpath%20d='M9.75%201.25H8.25C7.69772%201.25%207.25%201.69772%207.25%202.25V3.75C7.25%204.30228%207.69772%204.75%208.25%204.75H9.75C10.3023%204.75%2010.75%204.30228%2010.75%203.75V2.25C10.75%201.69772%2010.3023%201.25%209.75%201.25Z'%20fill='%23222222'/%3e%3cpath%20d='M15.75%201.25H14.25C13.6977%201.25%2013.25%201.69772%2013.25%202.25V3.75C13.25%204.30228%2013.6977%204.75%2014.25%204.75H15.75C16.3023%204.75%2016.75%204.30228%2016.75%203.75V2.25C16.75%201.69772%2016.3023%201.25%2015.75%201.25Z'%20fill='%23222222'/%3e%3cpath%20d='M3.75%207.25H2.25C1.69772%207.25%201.25%207.69772%201.25%208.25V9.75C1.25%2010.3023%201.69772%2010.75%202.25%2010.75H3.75C4.30228%2010.75%204.75%2010.3023%204.75%209.75V8.25C4.75%207.69772%204.30228%207.25%203.75%207.25Z'%20fill='%23222222'/%3e%3cpath%20d='M9.75%207.25H8.25C7.69772%207.25%207.25%207.69772%207.25%208.25V9.75C7.25%2010.3023%207.69772%2010.75%208.25%2010.75H9.75C10.3023%2010.75%2010.75%2010.3023%2010.75%209.75V8.25C10.75%207.69772%2010.3023%207.25%209.75%207.25Z'%20fill='%23222222'/%3e%3cpath%20d='M15.75%207.25H14.25C13.6977%207.25%2013.25%207.69772%2013.25%208.25V9.75C13.25%2010.3023%2013.6977%2010.75%2014.25%2010.75H15.75C16.3023%2010.75%2016.75%2010.3023%2016.75%209.75V8.25C16.75%207.69772%2016.3023%207.25%2015.75%207.25Z'%20fill='%23222222'/%3e%3cpath%20d='M3.75%2013.25H2.25C1.69772%2013.25%201.25%2013.6977%201.25%2014.25V15.75C1.25%2016.3023%201.69772%2016.75%202.25%2016.75H3.75C4.30228%2016.75%204.75%2016.3023%204.75%2015.75V14.25C4.75%2013.6977%204.30228%2013.25%203.75%2013.25Z'%20fill='%23222222'/%3e%3cpath%20d='M9.75%2013.25H8.25C7.69772%2013.25%207.25%2013.6977%207.25%2014.25V15.75C7.25%2016.3023%207.69772%2016.75%208.25%2016.75H9.75C10.3023%2016.75%2010.75%2016.3023%2010.75%2015.75V14.25C10.75%2013.6977%2010.3023%2013.25%209.75%2013.25Z'%20fill='%23222222'/%3e%3cpath%20d='M15.75%2013.25H14.25C13.6977%2013.25%2013.25%2013.6977%2013.25%2014.25V15.75C13.25%2016.3023%2013.6977%2016.75%2014.25%2016.75H15.75C16.3023%2016.75%2016.75%2016.3023%2016.75%2015.75V14.25C16.75%2013.6977%2016.3023%2013.25%2015.75%2013.25Z'%20fill='%23222222'/%3e%3c/svg%3e",Fa="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='16'%20fill='currentColor'%20class='bi%20bi-info-circle-fill'%20viewBox='0%200%2016%2016'%3e%3cpath%20d='M8%2016A8%208%200%201%200%208%200a8%208%200%200%200%200%2016zm.93-9.412-1%204.705c-.07.34.029.533.304.533.194%200%20.487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703%200-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381%202.29-.287zM8%205.5a1%201%200%201%201%200-2%201%201%200%200%201%200%202z'/%3e%3c/svg%3e",Ta="data:image/svg+xml,%3csvg%20width='18'%20height='18'%20viewBox='0%200%2018%2018'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M14.5%204H3.5C3.22386%204%203%204.22386%203%204.5V5.5C3%205.77614%203.22386%206%203.5%206H14.5C14.7761%206%2015%205.77614%2015%205.5V4.5C15%204.22386%2014.7761%204%2014.5%204Z'%20fill='%23222222'/%3e%3cpath%20d='M14.5%208H3.5C3.22386%208%203%208.22386%203%208.5V9.5C3%209.77614%203.22386%2010%203.5%2010H14.5C14.7761%2010%2015%209.77614%2015%209.5V8.5C15%208.22386%2014.7761%208%2014.5%208Z'%20fill='%23222222'/%3e%3cpath%20d='M14.5%2012H3.5C3.22386%2012%203%2012.2239%203%2012.5V13.5C3%2013.7761%203.22386%2014%203.5%2014H14.5C14.7761%2014%2015%2013.7761%2015%2013.5V12.5C15%2012.2239%2014.7761%2012%2014.5%2012Z'%20fill='%23222222'/%3e%3c/svg%3e",Ba="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3e%3ccircle%20className='opacity-50'%20cx='12'%20cy='12'%20r='10'%20fill='white'%20stroke='white'%20stroke-width='4'%3e%3c/circle%3e%3cpath%20d='M4%2012a8%208%200%20018-8V0C5.373%200%200%205.373%200%2012h4zm2%205.291A7.962%207.962%200%20014%2012H0c0%203.042%201.135%205.824%203%207.938l3-2.647z'%3e%3c/path%3e%3c/svg%3e",gt="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2060%2074'%3e%3cpath%20d='M26,85H70a8.009,8.009,0,0,0,8-8V29.941a7.947,7.947,0,0,0-2.343-5.657L64.716,13.343A7.946,7.946,0,0,0,59.059,11H26a8.009,8.009,0,0,0-8,8V77a8.009,8.009,0,0,0,8,8ZM20,19a6.007,6.007,0,0,1,6-6H59.059A5.96,5.96,0,0,1,63.3,14.757L74.242,25.7A5.96,5.96,0,0,1,76,29.941V77a6.007,6.007,0,0,1-6,6H26a6.007,6.007,0,0,1-6-6Zm6.614,51.06h0L68,69.98a.75.75,0,0,0,.545-1.263L57.67,57.129a1.99,1.99,0,0,0-2.808-.028L51.6,60.467l-.024.026-7.087-7.543a1.73,1.73,0,0,0-1.229-.535,1.765,1.765,0,0,0-1.249.5L26.084,68.778a.75.75,0,0,0,.529,1.281Zm26.061-8.548,3.252-3.354a.333.333,0,0,1,.332-.123.463.463,0,0,1,.324.126L66.27,68.484l-7.177.014-6.5-6.916a.735.735,0,0,0,.078-.071Zm-9.611-7.526a.235.235,0,0,1,.168-.069.212.212,0,0,1,.168.068L57.039,68.5l-28.606.055Zm20.05-.43h.079a5.087,5.087,0,0,0,3.583-1.47,5.146,5.146,0,1,0-7.279-.109,5.089,5.089,0,0,0,3.617,1.579Zm-2.456-7.839a3.6,3.6,0,0,1,2.534-1.042h.056a3.7,3.7,0,0,1,2.478,6.34,3.51,3.51,0,0,1-2.589,1.041,3.6,3.6,0,0,1-2.557-1.118,3.715,3.715,0,0,1,.079-5.221Z'%20transform='translate(-18%20-11)'%20fill='%238e8e8e'/%3e%3c/svg%3e",Ht="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2020%2020'%3e%3cpath%20fillRule='evenodd'%20d='M10%203a1%201%200%20011%201v5h5a1%201%200%20110%202h-5v5a1%201%200%2011-2%200v-5H4a1%201%200%20110-2h5V4a1%201%200%20011-1z'%20clipRule='evenodd'%20/%3e%3c/svg%3e",za="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016.158%2016'%20stroke='currentColor'%3e%3cg%20id='icon-mini-sort'%20transform='translate(-4%20-8)'%3e%3crect%20id='Placement_area'%20data-name='Placement%20area'%20width='16'%20height='16'%20transform='translate(4%208)'%20opacity='0.004'%20/%3e%3cg%20id='icon'%20transform='translate(-290.537%20-358.082)'%3e%3cpath%20id='Path_38562'%20data-name='Path%2038562'%20d='M309.634,376.594l-1.5,1.5-1.5-1.5'%20stroke-linecap='round'%20stroke-linejoin='round'%20stroke-width='1.5'%20/%3e%3cline%20id='Line_510'%20data-name='Line%20510'%20x2='6.833'%20transform='translate(295.537%20373.59)'%20stroke-linecap='round'%20stroke-linejoin='round'%20stroke-width='1.5'%20/%3e%3cline%20id='Line_511'%20data-name='Line%20511'%20x2='8.121'%20transform='translate(295.537%20369.726)'%20stroke-linecap='round'%20stroke-linejoin='round'%20stroke-width='1.5'%20/%3e%3cline%20id='Line_511-2'%20data-name='Line%20511'%20y2='9.017'%20transform='translate(308.13%20369.082)'%20stroke-linecap='round'%20stroke-linejoin='round'%20stroke-width='1.5'%20/%3e%3cline%20id='Line_512'%20data-name='Line%20512'%20x2='5.545'%20transform='translate(295.537%20377.455)'%20stroke-linecap='round'%20stroke-linejoin='round'%20stroke-width='1.5'%20/%3e%3c/g%3e%3c/g%3e%3c/svg%3e",Ma="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='16'%20fill='currentColor'%20class='bi%20bi-exclamation-triangle-fill'%20viewBox='0%200%2016%2016'%3e%3cpath%20d='M8.982%201.566a1.13%201.13%200%200%200-1.96%200L.165%2013.233c-.457.778.091%201.767.98%201.767h13.713c.889%200%201.438-.99.98-1.767L8.982%201.566zM8%205c.535%200%20.954.462.9.995l-.35%203.507a.552.552%200%200%201-1.1%200L7.1%205.995A.905.905%200%200%201%208%205zm.002%206a1%201%200%201%201%200%202%201%201%200%200%201%200-2z'/%3e%3c/svg%3e",Ea="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='16'%20fill='currentColor'%20class='bi%20bi-x'%20viewBox='0%200%2016%2016'%3e%3cpath%20d='M4.646%204.646a.5.5%200%200%201%20.708%200L8%207.293l2.646-2.647a.5.5%200%200%201%20.708.708L8.707%208l2.647%202.646a.5.5%200%200%201-.708.708L8%208.707l-2.646%202.647a.5.5%200%200%201-.708-.708L7.293%208%204.646%205.354a.5.5%200%200%201%200-.708z'/%3e%3c/svg%3e",it=({displayFilter:e,type:t,title:r})=>{const n=le();return t=="mobile"?a("div",{className:"ds-sdk-filter-button",children:m("button",{className:"flex items-center bg-gray-100 ring-black ring-opacity-5 rounded-md p-sm  outline outline-gray-200 hover:outline-gray-800 h-[32px]",onClick:e,children:[a(_a,{className:"w-md"}),n.Filter.title]})}):a("div",{className:"ds-sdk-filter-button-desktop",children:a("button",{className:"flex items-center bg-gray-100 ring-black ring-opacity-5 rounded-md p-sm text-sm h-[32px]",onClick:e,children:r})})},Ra=({label:e})=>{const t=window.matchMedia("only screen and (max-width: 768px)").matches;return a("div",{className:`ds-sdk-loading flex h-screen justify-center items-center ${t?"loading-spinner-on-mobile":""}`,children:m("div",{className:"ds-sdk-loading__spinner bg-gray-100 rounded-full p-xs flex w-fit my-lg outline-gray-200",children:[a(Ba,{className:"inline-block mr-xs ml-xs w-md animate-spin fill-primary"}),a("span",{className:"ds-sdk-loading__spinner-label p-xs",children:e})]})})},ft=()=>a(Z,{children:a("div",{className:"ds-plp-facets ds-plp-facets--loading",children:a("div",{className:"ds-plp-facets__button shimmer-animation-button"})})}),Oa=()=>m(Z,{children:[a("div",{className:"ds-sdk-input ds-sdk-input--loading",children:m("div",{className:"ds-sdk-input__content",children:[a("div",{className:"ds-sdk-input__header",children:a("div",{className:"ds-sdk-input__title shimmer-animation-facet"})}),m("div",{className:"ds-sdk-input__list",children:[a("div",{className:"ds-sdk-input__item shimmer-animation-facet"}),a("div",{className:"ds-sdk-input__item shimmer-animation-facet"}),a("div",{className:"ds-sdk-input__item shimmer-animation-facet"}),a("div",{className:"ds-sdk-input__item shimmer-animation-facet"})]})]})}),a("div",{className:"ds-sdk-input__border border-t mt-md border-gray-200"})]}),Ut=()=>m("div",{className:"ds-sdk-product-item ds-sdk-product-item--shimmer",children:[a("div",{className:"ds-sdk-product-item__banner shimmer-animation-card"}),m("div",{className:"ds-sdk-product-item__content",children:[a("div",{className:"ds-sdk-product-item__header",children:a("div",{className:"ds-sdk-product-item__title shimmer-animation-card"})}),a("div",{className:"ds-sdk-product-item__list shimmer-animation-card"}),a("div",{className:"ds-sdk-product-item__info shimmer-animation-card"})]})]}),$a=()=>{const e=Array.from({length:8}),t=Array.from({length:4}),{screenSize:r}=Ge(),n=r.columns;return a("div",{className:"ds-widgets bg-body py-2",children:m("div",{className:"flex",children:[m("div",{className:"sm:flex ds-widgets-_actions relative max-w-[21rem] w-full h-full px-2 flex-col overflow-y-auto",children:[a("div",{className:"ds-widgets_actions_header flex justify-between items-center mb-md"}),a("div",{className:"flex pb-4 w-full h-full",children:a("div",{className:"ds-sdk-filter-button-desktop",children:a("button",{className:"flex items-center bg-gray-100 ring-black ring-opacity-5 rounded-md p-sm text-sm h-[32px]",children:a(ft,{})})})}),a("div",{className:"ds-plp-facets flex flex-col",children:a("form",{className:"ds-plp-facets__list border-t border-gray-200",children:t.map((s,o)=>a(Oa,{},o))})})]}),m("div",{className:"ds-widgets_results flex flex-col items-center pt-16 w-full h-full",children:[a("div",{className:"flex flex-col max-w-5xl lg:max-w-7xl ml-auto w-full h-full",children:a("div",{className:"flex justify-end mb-[1px]",children:a(ft,{})})}),a("div",{className:"ds-sdk-product-list__grid mt-md grid-cols-1 gap-y-8 gap-x-md sm:grid-cols-2 md:grid-cols-3 xl:gap-x-4 pl-8",style:{display:"grid",gridTemplateColumns:` repeat(${n}, minmax(0, 1fr))`},children:e.map((s,o)=>a(Ut,{},o))})]})]})})},Da=({attribute:e})=>{const t=ue();return{onChange:(n,s)=>{var c;const o=(c=t==null?void 0:t.filters)==null?void 0:c.find(d=>d.attribute===e);if(!o){const d={attribute:e,range:{from:n,to:s}};t.createFilter(d);return}const i={...o,range:{from:n,to:s}};t.updateFilter(i)}}},Va=({filterData:e})=>{var P,L,S,x,B,w;const t=J(),r=ue(),n=e.buckets[0].from,s=e.buckets[e.buckets.length-1].to,o=(S=(L=(P=t.variables.filter)==null?void 0:P.find(C=>C.attribute==="price"))==null?void 0:L.range)==null?void 0:S.to,i=(w=(B=(x=t.variables.filter)==null?void 0:x.find(C=>C.attribute==="price"))==null?void 0:B.range)==null?void 0:w.from,[c,d]=be(i||n),[l,u]=be(o||s),{onChange:p}=Da(e),v=`fromSlider_${e.attribute}`,g=`toSlider_${e.attribute}`,f=`fromInput_${e.attribute}`,b=`toInput_${e.attribute}`;Ve(()=>{var C,M;(((C=r==null?void 0:r.filters)==null?void 0:C.length)===0||!((M=r==null?void 0:r.filters)!=null&&M.find(k=>k.attribute===e.attribute)))&&(d(n),u(s))},[r]),Ve(()=>{const C=(z,N,T,$)=>{const[E,H]=O(N,T);D(N,T,"#C6C6C6","#383838",$),E>H?(z.value=H,N.value=H):z.value=E},M=(z,N,T,$)=>{const[E,H]=O(N,T);D(N,T,"#C6C6C6","#383838",$),E<=H?(z.value=H,T.value=H):T.value=E},k=(z,N,T)=>{const[$,E]=O(z,N);D(z,N,"#C6C6C6","#383838",N),$>E?(d(E),z.value=E,T.value=E):T.value=$},I=(z,N,T)=>{const[$,E]=O(z,N);D(z,N,"#C6C6C6","#383838",N),$<=E?(N.value=E,T.value=E):(u($),T.value=$,N.value=$)},O=(z,N)=>{const T=parseInt(z.value,10),$=parseInt(N.value,10);return[T,$]},D=(z,N,T,$,E)=>{const H=N.max-N.min,se=z.value-N.min,pe=N.value-N.min;E.style.background=`linear-gradient(
+`;
+var _jsxFileName$x = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/context/cart.tsx";
+const CartContext = createContext({});
+const useCart = () => {
+  return useContext(CartContext);
+};
+const CartProvider = ({
+  children
+}) => {
+  const [cart, setCart] = t(useState({
+    cartId: ""
+  }), "cart");
+  const {
+    refreshCart,
+    resolveCartId
+  } = useProducts();
+  const {
+    storeViewCode,
+    config
+  } = useStore();
+  const initializeCustomerCart = async () => {
+    var _a;
+    let cartId = "";
+    if (!resolveCartId) {
+      const customerResponse = await getGraphQL(GET_CUSTOMER_CART, {}, storeViewCode, config == null ? void 0 : config.baseUrl);
+      cartId = ((_a = customerResponse == null ? void 0 : customerResponse.data.customerCart) == null ? void 0 : _a.id) ?? "";
+    } else {
+      cartId = await resolveCartId() ?? "";
+    }
+    setCart({
+      ...cart,
+      cartId
+    });
+    return cartId;
+  };
+  const addToCartGraphQL = async (sku) => {
+    let cartId = cart.cartId;
+    if (!cartId) {
+      cartId = await initializeCustomerCart();
+    }
+    const cartItems = [{
+      quantity: 1,
+      sku
+    }];
+    const variables = {
+      cartId,
+      cartItems
+    };
+    const response = await getGraphQL(ADD_TO_CART, variables, storeViewCode, config == null ? void 0 : config.baseUrl);
+    return response;
+  };
+  const cartContext = {
+    cart,
+    initializeCustomerCart,
+    addToCartGraphQL,
+    refreshCart
+  };
+  return u(CartContext.Provider, {
+    value: cartContext,
+    children
+  }, void 0, false, {
+    fileName: _jsxFileName$x,
+    lineNumber: 82,
+    columnNumber: 12
+  }, void 0);
+};
+const SvgAdjustments = (props) => /* @__PURE__ */ React.createElement("svg", { className: "w-6 h-6 mr-1", xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "black", ...props }, /* @__PURE__ */ React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" }));
+const SvgCart = (props) => /* @__PURE__ */ React.createElement("svg", { width: 23, height: 22, viewBox: "0 0 23 22", fill: "none", xmlns: "http://www.w3.org/2000/svg", ...props }, /* @__PURE__ */ React.createElement("path", { d: "M17.9002 18.2899H18.6502V16.7899H17.9002V18.2899ZM6.13016 17.5399L5.38475 17.6228C5.42698 18.0026 5.74801 18.2899 6.13016 18.2899V17.5399ZM4.34016 1.43994L5.08556 1.35707C5.04334 0.977265 4.7223 0.689941 4.34016 0.689941V1.43994ZM1.66016 0.689941H0.910156V2.18994H1.66016V0.689941ZM21.3402 6.80996L22.0856 6.89324C22.1077 6.69506 22.05 6.49622 21.9253 6.34067C21.8005 6.18512 21.6189 6.08566 21.4206 6.06428L21.3402 6.80996ZM20.5402 13.97V14.72C20.9222 14.72 21.2432 14.4329 21.2856 14.0532L20.5402 13.97ZM6.30029 19.0499C6.30029 19.4641 5.96451 19.7999 5.55029 19.7999V21.2999C6.79293 21.2999 7.80029 20.2926 7.80029 19.0499H6.30029ZM5.55029 19.7999C5.13608 19.7999 4.80029 19.4641 4.80029 19.0499H3.30029C3.30029 20.2926 4.30765 21.2999 5.55029 21.2999V19.7999ZM4.80029 19.0499C4.80029 18.6357 5.13608 18.2999 5.55029 18.2999V16.7999C4.30765 16.7999 3.30029 17.8073 3.30029 19.0499H4.80029ZM5.55029 18.2999C5.96451 18.2999 6.30029 18.6357 6.30029 19.0499H7.80029C7.80029 17.8073 6.79293 16.7999 5.55029 16.7999V18.2999ZM19.3003 19.0499C19.3003 19.4641 18.9645 19.7999 18.5503 19.7999V21.2999C19.7929 21.2999 20.8003 20.2926 20.8003 19.0499H19.3003ZM18.5503 19.7999C18.1361 19.7999 17.8003 19.4641 17.8003 19.0499H16.3003C16.3003 20.2926 17.3077 21.2999 18.5503 21.2999V19.7999ZM17.8003 19.0499C17.8003 18.6357 18.1361 18.2999 18.5503 18.2999V16.7999C17.3077 16.7999 16.3003 17.8073 16.3003 19.0499H17.8003ZM18.5503 18.2999C18.9645 18.2999 19.3003 18.6357 19.3003 19.0499H20.8003C20.8003 17.8073 19.7929 16.7999 18.5503 16.7999V18.2999ZM17.9002 16.7899H6.13016V18.2899H17.9002V16.7899ZM6.87556 17.4571L5.08556 1.35707L3.59475 1.52282L5.38475 17.6228L6.87556 17.4571ZM4.34016 0.689941H1.66016V2.18994H4.34016V0.689941ZM4.65983 5.76564L21.2598 7.55564L21.4206 6.06428L4.82064 4.27428L4.65983 5.76564ZM20.5949 6.72668L19.7949 13.8867L21.2856 14.0532L22.0856 6.89324L20.5949 6.72668ZM20.5402 13.22H5.74023V14.72H20.5402V13.22Z", fill: "white" }));
+const SvgCheckmark = (props) => /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: 16, height: 16, fill: "currentColor", className: "bi bi-check-circle-fill", viewBox: "0 0 16 16", ...props }, /* @__PURE__ */ React.createElement("path", { d: "M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" }));
+const SvgChevron = (props) => /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 8.122 5.121", stroke: "currentColor", ...props }, /* @__PURE__ */ React.createElement("path", { id: "chevron", d: "M199.75,367.5l3,3,3-3", transform: "translate(-198.689 -366.435)", fill: "none" }));
+const SvgError = (props) => /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: 16, height: 16, fill: "currentColor", className: "bi bi-exclamation-circle-fill", viewBox: "0 0 16 16", ...props }, /* @__PURE__ */ React.createElement("path", { d: "M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" }));
+const SvgGridView = (props) => /* @__PURE__ */ React.createElement("svg", { width: 18, height: 18, viewBox: "0 0 18 18", fill: "none", xmlns: "http://www.w3.org/2000/svg", ...props }, /* @__PURE__ */ React.createElement("path", { d: "M3.75 1.25H2.25C1.69772 1.25 1.25 1.69772 1.25 2.25V3.75C1.25 4.30228 1.69772 4.75 2.25 4.75H3.75C4.30228 4.75 4.75 4.30228 4.75 3.75V2.25C4.75 1.69772 4.30228 1.25 3.75 1.25Z", fill: "#222222" }), /* @__PURE__ */ React.createElement("path", { d: "M9.75 1.25H8.25C7.69772 1.25 7.25 1.69772 7.25 2.25V3.75C7.25 4.30228 7.69772 4.75 8.25 4.75H9.75C10.3023 4.75 10.75 4.30228 10.75 3.75V2.25C10.75 1.69772 10.3023 1.25 9.75 1.25Z", fill: "#222222" }), /* @__PURE__ */ React.createElement("path", { d: "M15.75 1.25H14.25C13.6977 1.25 13.25 1.69772 13.25 2.25V3.75C13.25 4.30228 13.6977 4.75 14.25 4.75H15.75C16.3023 4.75 16.75 4.30228 16.75 3.75V2.25C16.75 1.69772 16.3023 1.25 15.75 1.25Z", fill: "#222222" }), /* @__PURE__ */ React.createElement("path", { d: "M3.75 7.25H2.25C1.69772 7.25 1.25 7.69772 1.25 8.25V9.75C1.25 10.3023 1.69772 10.75 2.25 10.75H3.75C4.30228 10.75 4.75 10.3023 4.75 9.75V8.25C4.75 7.69772 4.30228 7.25 3.75 7.25Z", fill: "#222222" }), /* @__PURE__ */ React.createElement("path", { d: "M9.75 7.25H8.25C7.69772 7.25 7.25 7.69772 7.25 8.25V9.75C7.25 10.3023 7.69772 10.75 8.25 10.75H9.75C10.3023 10.75 10.75 10.3023 10.75 9.75V8.25C10.75 7.69772 10.3023 7.25 9.75 7.25Z", fill: "#222222" }), /* @__PURE__ */ React.createElement("path", { d: "M15.75 7.25H14.25C13.6977 7.25 13.25 7.69772 13.25 8.25V9.75C13.25 10.3023 13.6977 10.75 14.25 10.75H15.75C16.3023 10.75 16.75 10.3023 16.75 9.75V8.25C16.75 7.69772 16.3023 7.25 15.75 7.25Z", fill: "#222222" }), /* @__PURE__ */ React.createElement("path", { d: "M3.75 13.25H2.25C1.69772 13.25 1.25 13.6977 1.25 14.25V15.75C1.25 16.3023 1.69772 16.75 2.25 16.75H3.75C4.30228 16.75 4.75 16.3023 4.75 15.75V14.25C4.75 13.6977 4.30228 13.25 3.75 13.25Z", fill: "#222222" }), /* @__PURE__ */ React.createElement("path", { d: "M9.75 13.25H8.25C7.69772 13.25 7.25 13.6977 7.25 14.25V15.75C7.25 16.3023 7.69772 16.75 8.25 16.75H9.75C10.3023 16.75 10.75 16.3023 10.75 15.75V14.25C10.75 13.6977 10.3023 13.25 9.75 13.25Z", fill: "#222222" }), /* @__PURE__ */ React.createElement("path", { d: "M15.75 13.25H14.25C13.6977 13.25 13.25 13.6977 13.25 14.25V15.75C13.25 16.3023 13.6977 16.75 14.25 16.75H15.75C16.3023 16.75 16.75 16.3023 16.75 15.75V14.25C16.75 13.6977 16.3023 13.25 15.75 13.25Z", fill: "#222222" }));
+const SvgInfo = (props) => /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: 16, height: 16, fill: "currentColor", className: "bi bi-info-circle-fill", viewBox: "0 0 16 16", ...props }, /* @__PURE__ */ React.createElement("path", { d: "M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" }));
+const SvgListView = (props) => /* @__PURE__ */ React.createElement("svg", { width: 18, height: 18, viewBox: "0 0 18 18", fill: "none", xmlns: "http://www.w3.org/2000/svg", ...props }, /* @__PURE__ */ React.createElement("path", { d: "M14.5 4H3.5C3.22386 4 3 4.22386 3 4.5V5.5C3 5.77614 3.22386 6 3.5 6H14.5C14.7761 6 15 5.77614 15 5.5V4.5C15 4.22386 14.7761 4 14.5 4Z", fill: "#222222" }), /* @__PURE__ */ React.createElement("path", { d: "M14.5 8H3.5C3.22386 8 3 8.22386 3 8.5V9.5C3 9.77614 3.22386 10 3.5 10H14.5C14.7761 10 15 9.77614 15 9.5V8.5C15 8.22386 14.7761 8 14.5 8Z", fill: "#222222" }), /* @__PURE__ */ React.createElement("path", { d: "M14.5 12H3.5C3.22386 12 3 12.2239 3 12.5V13.5C3 13.7761 3.22386 14 3.5 14H14.5C14.7761 14 15 13.7761 15 13.5V12.5C15 12.2239 14.7761 12 14.5 12Z", fill: "#222222" }));
+const SvgLoading = (props) => /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", ...props }, /* @__PURE__ */ React.createElement("circle", { className: "opacity-50", cx: 12, cy: 12, r: 10, fill: "white", stroke: "white", strokeWidth: 4 }), /* @__PURE__ */ React.createElement("path", { d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" }));
+const SvgNoImage = (props) => /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 60 74", ...props }, /* @__PURE__ */ React.createElement("path", { d: "M26,85H70a8.009,8.009,0,0,0,8-8V29.941a7.947,7.947,0,0,0-2.343-5.657L64.716,13.343A7.946,7.946,0,0,0,59.059,11H26a8.009,8.009,0,0,0-8,8V77a8.009,8.009,0,0,0,8,8ZM20,19a6.007,6.007,0,0,1,6-6H59.059A5.96,5.96,0,0,1,63.3,14.757L74.242,25.7A5.96,5.96,0,0,1,76,29.941V77a6.007,6.007,0,0,1-6,6H26a6.007,6.007,0,0,1-6-6Zm6.614,51.06h0L68,69.98a.75.75,0,0,0,.545-1.263L57.67,57.129a1.99,1.99,0,0,0-2.808-.028L51.6,60.467l-.024.026-7.087-7.543a1.73,1.73,0,0,0-1.229-.535,1.765,1.765,0,0,0-1.249.5L26.084,68.778a.75.75,0,0,0,.529,1.281Zm26.061-8.548,3.252-3.354a.333.333,0,0,1,.332-.123.463.463,0,0,1,.324.126L66.27,68.484l-7.177.014-6.5-6.916a.735.735,0,0,0,.078-.071Zm-9.611-7.526a.235.235,0,0,1,.168-.069.212.212,0,0,1,.168.068L57.039,68.5l-28.606.055Zm20.05-.43h.079a5.087,5.087,0,0,0,3.583-1.47,5.146,5.146,0,1,0-7.279-.109,5.089,5.089,0,0,0,3.617,1.579Zm-2.456-7.839a3.6,3.6,0,0,1,2.534-1.042h.056a3.7,3.7,0,0,1,2.478,6.34,3.51,3.51,0,0,1-2.589,1.041,3.6,3.6,0,0,1-2.557-1.118,3.715,3.715,0,0,1,.079-5.221Z", transform: "translate(-18 -11)", fill: "#8e8e8e" }));
+const SvgPlus = (props) => /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", ...props }, /* @__PURE__ */ React.createElement("path", { fillRule: "evenodd", d: "M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z", clipRule: "evenodd" }));
+const SvgSort = (props) => /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 16.158 16", stroke: "currentColor", ...props }, /* @__PURE__ */ React.createElement("g", { id: "icon-mini-sort", transform: "translate(-4 -8)" }, /* @__PURE__ */ React.createElement("rect", { id: "Placement_area", "data-name": "Placement area", width: 16, height: 16, transform: "translate(4 8)", opacity: 4e-3 }), /* @__PURE__ */ React.createElement("g", { id: "icon", transform: "translate(-290.537 -358.082)" }, /* @__PURE__ */ React.createElement("path", { id: "Path_38562", "data-name": "Path 38562", d: "M309.634,376.594l-1.5,1.5-1.5-1.5", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.5 }), /* @__PURE__ */ React.createElement("line", { id: "Line_510", "data-name": "Line 510", x2: 6.833, transform: "translate(295.537 373.59)", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.5 }), /* @__PURE__ */ React.createElement("line", { id: "Line_511", "data-name": "Line 511", x2: 8.121, transform: "translate(295.537 369.726)", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.5 }), /* @__PURE__ */ React.createElement("line", { id: "Line_511-2", "data-name": "Line 511", y2: 9.017, transform: "translate(308.13 369.082)", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.5 }), /* @__PURE__ */ React.createElement("line", { id: "Line_512", "data-name": "Line 512", x2: 5.545, transform: "translate(295.537 377.455)", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.5 }))));
+const SvgWarning = (props) => /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: 16, height: 16, fill: "currentColor", className: "bi bi-exclamation-triangle-fill", viewBox: "0 0 16 16", ...props }, /* @__PURE__ */ React.createElement("path", { d: "M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" }));
+const SvgX = (props) => /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: 16, height: 16, fill: "currentColor", className: "bi bi-x", viewBox: "0 0 16 16", ...props }, /* @__PURE__ */ React.createElement("path", { d: "M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" }));
+var _jsxFileName$w = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/FilterButton/FilterButton.tsx";
+const FilterButton = ({
+  displayFilter,
+  type,
+  title
+}) => {
+  const translation = useTranslation();
+  return type == "mobile" ? u("div", {
+    className: "ds-sdk-filter-button",
+    children: u("button", {
+      className: "flex items-center bg-gray-100 ring-black ring-opacity-5 rounded-md p-sm  outline outline-gray-200 hover:outline-gray-800 h-[32px]",
+      onClick: displayFilter,
+      children: [u(SvgAdjustments, {
+        className: "w-md"
+      }, void 0, false, {
+        fileName: _jsxFileName$w,
+        lineNumber: 34,
+        columnNumber: 17
+      }, void 0), translation.Filter.title]
+    }, void 0, true, {
+      fileName: _jsxFileName$w,
+      lineNumber: 30,
+      columnNumber: 13
+    }, void 0)
+  }, void 0, false, {
+    fileName: _jsxFileName$w,
+    lineNumber: 29,
+    columnNumber: 9
+  }, void 0) : u("div", {
+    className: "ds-sdk-filter-button-desktop",
+    children: u("button", {
+      className: "flex items-center bg-gray-100 ring-black ring-opacity-5 rounded-md p-sm text-sm h-[32px]",
+      onClick: displayFilter,
+      children: title
+    }, void 0, false, {
+      fileName: _jsxFileName$w,
+      lineNumber: 40,
+      columnNumber: 13
+    }, void 0)
+  }, void 0, false, {
+    fileName: _jsxFileName$w,
+    lineNumber: 39,
+    columnNumber: 9
+  }, void 0);
+};
+var _jsxFileName$v = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/Loading/Loading.tsx";
+const Loading = ({
+  label
+}) => {
+  const isMobile = window.matchMedia("only screen and (max-width: 768px)").matches;
+  return u("div", {
+    className: `ds-sdk-loading flex h-screen justify-center items-center ${isMobile ? "loading-spinner-on-mobile" : ""}`,
+    children: u("div", {
+      className: "ds-sdk-loading__spinner bg-gray-100 rounded-full p-xs flex w-fit my-lg outline-gray-200",
+      children: [u(SvgLoading, {
+        className: "inline-block mr-xs ml-xs w-md animate-spin fill-primary"
+      }, void 0, false, {
+        fileName: _jsxFileName$v,
+        lineNumber: 27,
+        columnNumber: 17
+      }, void 0), u("span", {
+        className: "ds-sdk-loading__spinner-label p-xs",
+        children: label
+      }, void 0, false, {
+        fileName: _jsxFileName$v,
+        lineNumber: 28,
+        columnNumber: 17
+      }, void 0)]
+    }, void 0, true, {
+      fileName: _jsxFileName$v,
+      lineNumber: 26,
+      columnNumber: 13
+    }, void 0)
+  }, void 0, false, {
+    fileName: _jsxFileName$v,
+    lineNumber: 21,
+    columnNumber: 9
+  }, void 0);
+};
+var _jsxFileName$u = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/ButtonShimmer/ButtonShimmer.tsx";
+const ButtonShimmer = () => {
+  return u(Fragment, {
+    children: u("div", {
+      className: "ds-plp-facets ds-plp-facets--loading",
+      children: u("div", {
+        className: "ds-plp-facets__button shimmer-animation-button"
+      }, void 0, false, {
+        fileName: _jsxFileName$u,
+        lineNumber: 18,
+        columnNumber: 17
+      }, void 0)
+    }, void 0, false, {
+      fileName: _jsxFileName$u,
+      lineNumber: 17,
+      columnNumber: 13
+    }, void 0)
+  }, void 0);
+};
+var _jsxFileName$t = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/FacetsShimmer/FacetsShimmer.tsx";
+const FacetsShimmer = () => {
+  return u(Fragment, {
+    children: [u("div", {
+      className: "ds-sdk-input ds-sdk-input--loading",
+      children: u("div", {
+        className: "ds-sdk-input__content",
+        children: [u("div", {
+          className: "ds-sdk-input__header",
+          children: u("div", {
+            className: "ds-sdk-input__title shimmer-animation-facet"
+          }, void 0, false, {
+            fileName: _jsxFileName$t,
+            lineNumber: 20,
+            columnNumber: 25
+          }, void 0)
+        }, void 0, false, {
+          fileName: _jsxFileName$t,
+          lineNumber: 19,
+          columnNumber: 21
+        }, void 0), u("div", {
+          className: "ds-sdk-input__list",
+          children: [u("div", {
+            className: "ds-sdk-input__item shimmer-animation-facet"
+          }, void 0, false, {
+            fileName: _jsxFileName$t,
+            lineNumber: 23,
+            columnNumber: 25
+          }, void 0), u("div", {
+            className: "ds-sdk-input__item shimmer-animation-facet"
+          }, void 0, false, {
+            fileName: _jsxFileName$t,
+            lineNumber: 24,
+            columnNumber: 25
+          }, void 0), u("div", {
+            className: "ds-sdk-input__item shimmer-animation-facet"
+          }, void 0, false, {
+            fileName: _jsxFileName$t,
+            lineNumber: 25,
+            columnNumber: 25
+          }, void 0), u("div", {
+            className: "ds-sdk-input__item shimmer-animation-facet"
+          }, void 0, false, {
+            fileName: _jsxFileName$t,
+            lineNumber: 26,
+            columnNumber: 25
+          }, void 0)]
+        }, void 0, true, {
+          fileName: _jsxFileName$t,
+          lineNumber: 22,
+          columnNumber: 21
+        }, void 0)]
+      }, void 0, true, {
+        fileName: _jsxFileName$t,
+        lineNumber: 18,
+        columnNumber: 17
+      }, void 0)
+    }, void 0, false, {
+      fileName: _jsxFileName$t,
+      lineNumber: 17,
+      columnNumber: 13
+    }, void 0), u("div", {
+      className: "ds-sdk-input__border border-t mt-md border-gray-200"
+    }, void 0, false, {
+      fileName: _jsxFileName$t,
+      lineNumber: 30,
+      columnNumber: 13
+    }, void 0)]
+  }, void 0);
+};
+var _jsxFileName$s = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/ProductCardShimmer/ProductCardShimmer.tsx";
+const ProductCardShimmer = () => {
+  return u("div", {
+    className: "ds-sdk-product-item ds-sdk-product-item--shimmer",
+    children: [u("div", {
+      className: "ds-sdk-product-item__banner shimmer-animation-card"
+    }, void 0, false, {
+      fileName: _jsxFileName$s,
+      lineNumber: 17,
+      columnNumber: 13
+    }, void 0), u("div", {
+      className: "ds-sdk-product-item__content",
+      children: [u("div", {
+        className: "ds-sdk-product-item__header",
+        children: u("div", {
+          className: "ds-sdk-product-item__title shimmer-animation-card"
+        }, void 0, false, {
+          fileName: _jsxFileName$s,
+          lineNumber: 20,
+          columnNumber: 21
+        }, void 0)
+      }, void 0, false, {
+        fileName: _jsxFileName$s,
+        lineNumber: 19,
+        columnNumber: 17
+      }, void 0), u("div", {
+        className: "ds-sdk-product-item__list shimmer-animation-card"
+      }, void 0, false, {
+        fileName: _jsxFileName$s,
+        lineNumber: 22,
+        columnNumber: 17
+      }, void 0), u("div", {
+        className: "ds-sdk-product-item__info shimmer-animation-card"
+      }, void 0, false, {
+        fileName: _jsxFileName$s,
+        lineNumber: 23,
+        columnNumber: 17
+      }, void 0)]
+    }, void 0, true, {
+      fileName: _jsxFileName$s,
+      lineNumber: 18,
+      columnNumber: 13
+    }, void 0)]
+  }, void 0, true, {
+    fileName: _jsxFileName$s,
+    lineNumber: 16,
+    columnNumber: 9
+  }, void 0);
+};
+var _jsxFileName$r = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/Shimmer/Shimmer.tsx";
+const Shimmer = () => {
+  const productCardArray = Array.from({
+    length: 8
+  });
+  const facetsArray = Array.from({
+    length: 4
+  });
+  const {
+    screenSize
+  } = useSensor();
+  const numberOfColumns = screenSize.columns;
+  return u("div", {
+    className: "ds-widgets bg-body py-2",
+    children: u("div", {
+      className: "flex",
+      children: [u("div", {
+        className: "sm:flex ds-widgets-_actions relative max-w-[21rem] w-full h-full px-2 flex-col overflow-y-auto",
+        children: [u("div", {
+          className: "ds-widgets_actions_header flex justify-between items-center mb-md"
+        }, void 0, false, {
+          fileName: _jsxFileName$r,
+          lineNumber: 28,
+          columnNumber: 21
+        }, void 0), u("div", {
+          className: "flex pb-4 w-full h-full",
+          children: u("div", {
+            className: "ds-sdk-filter-button-desktop",
+            children: u("button", {
+              className: "flex items-center bg-gray-100 ring-black ring-opacity-5 rounded-md p-sm text-sm h-[32px]",
+              children: u(ButtonShimmer, {}, void 0, false, {
+                fileName: _jsxFileName$r,
+                lineNumber: 32,
+                columnNumber: 33
+              }, void 0)
+            }, void 0, false, {
+              fileName: _jsxFileName$r,
+              lineNumber: 31,
+              columnNumber: 29
+            }, void 0)
+          }, void 0, false, {
+            fileName: _jsxFileName$r,
+            lineNumber: 30,
+            columnNumber: 25
+          }, void 0)
+        }, void 0, false, {
+          fileName: _jsxFileName$r,
+          lineNumber: 29,
+          columnNumber: 21
+        }, void 0), u("div", {
+          className: "ds-plp-facets flex flex-col",
+          children: u("form", {
+            className: "ds-plp-facets__list border-t border-gray-200",
+            children: facetsArray.map((_, index) => u(FacetsShimmer, {}, index, false, {
+              fileName: _jsxFileName$r,
+              lineNumber: 39,
+              columnNumber: 33
+            }, void 0))
+          }, void 0, false, {
+            fileName: _jsxFileName$r,
+            lineNumber: 37,
+            columnNumber: 25
+          }, void 0)
+        }, void 0, false, {
+          fileName: _jsxFileName$r,
+          lineNumber: 36,
+          columnNumber: 21
+        }, void 0)]
+      }, void 0, true, {
+        fileName: _jsxFileName$r,
+        lineNumber: 27,
+        columnNumber: 17
+      }, void 0), u("div", {
+        className: "ds-widgets_results flex flex-col items-center pt-16 w-full h-full",
+        children: [u("div", {
+          className: "flex flex-col max-w-5xl lg:max-w-7xl ml-auto w-full h-full",
+          children: u("div", {
+            className: "flex justify-end mb-[1px]",
+            children: u(ButtonShimmer, {}, void 0, false, {
+              fileName: _jsxFileName$r,
+              lineNumber: 47,
+              columnNumber: 29
+            }, void 0)
+          }, void 0, false, {
+            fileName: _jsxFileName$r,
+            lineNumber: 46,
+            columnNumber: 25
+          }, void 0)
+        }, void 0, false, {
+          fileName: _jsxFileName$r,
+          lineNumber: 45,
+          columnNumber: 21
+        }, void 0), u("div", {
+          className: "ds-sdk-product-list__grid mt-md grid-cols-1 gap-y-8 gap-x-md sm:grid-cols-2 md:grid-cols-3 xl:gap-x-4 pl-8",
+          style: {
+            display: "grid",
+            gridTemplateColumns: ` repeat(${numberOfColumns}, minmax(0, 1fr))`
+          },
+          children: productCardArray.map((_, index) => u(ProductCardShimmer, {}, index, false, {
+            fileName: _jsxFileName$r,
+            lineNumber: 58,
+            columnNumber: 29
+          }, void 0))
+        }, void 0, false, {
+          fileName: _jsxFileName$r,
+          lineNumber: 50,
+          columnNumber: 21
+        }, void 0)]
+      }, void 0, true, {
+        fileName: _jsxFileName$r,
+        lineNumber: 44,
+        columnNumber: 17
+      }, void 0)]
+    }, void 0, true, {
+      fileName: _jsxFileName$r,
+      lineNumber: 26,
+      columnNumber: 13
+    }, void 0)
+  }, void 0, false, {
+    fileName: _jsxFileName$r,
+    lineNumber: 25,
+    columnNumber: 9
+  }, void 0);
+};
+const useSliderFacet = ({
+  attribute
+}) => {
+  const searchCtx = useSearch();
+  const onChange = (from, to) => {
+    var _a;
+    const filter = (_a = searchCtx == null ? void 0 : searchCtx.filters) == null ? void 0 : _a.find((e) => e.attribute === attribute);
+    if (!filter) {
+      const newFilter2 = {
+        attribute,
+        range: {
+          from,
+          to
+        }
+      };
+      searchCtx.createFilter(newFilter2);
+      return;
+    }
+    const newFilter = {
+      ...filter,
+      range: {
+        from,
+        to
+      }
+    };
+    searchCtx.updateFilter(newFilter);
+  };
+  return {
+    onChange
+  };
+};
+var _jsxFileName$q = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/SliderDoubleControl/SliderDoubleControl.tsx";
+const SliderDoubleControl = ({
+  filterData
+}) => {
+  var _a, _b, _c, _d, _e, _f;
+  const productsCtx = useProducts();
+  const searchCtx = useSearch();
+  const min = filterData.buckets[0].from;
+  const max = filterData.buckets[filterData.buckets.length - 1].to;
+  const preSelectedToPrice = (_c = (_b = (_a = productsCtx.variables.filter) == null ? void 0 : _a.find((obj) => obj.attribute === "price")) == null ? void 0 : _b.range) == null ? void 0 : _c.to;
+  const preSelectedFromPrice = (_f = (_e = (_d = productsCtx.variables.filter) == null ? void 0 : _d.find((obj) => obj.attribute === "price")) == null ? void 0 : _e.range) == null ? void 0 : _f.from;
+  const [minVal, setMinVal] = t(useState$1(preSelectedFromPrice ? preSelectedFromPrice : min), "minVal");
+  const [maxVal, setMaxVal] = t(useState$1(preSelectedToPrice ? preSelectedToPrice : max), "maxVal");
+  const {
+    onChange
+  } = useSliderFacet(filterData);
+  const fromSliderId = `fromSlider_${filterData.attribute}`;
+  const toSliderId = `toSlider_${filterData.attribute}`;
+  const fromInputId = `fromInput_${filterData.attribute}`;
+  const toInputId = `toInput_${filterData.attribute}`;
+  useEffect$1(() => {
+    var _a2, _b2;
+    if (((_a2 = searchCtx == null ? void 0 : searchCtx.filters) == null ? void 0 : _a2.length) === 0 || !((_b2 = searchCtx == null ? void 0 : searchCtx.filters) == null ? void 0 : _b2.find((obj) => obj.attribute === filterData.attribute))) {
+      setMinVal(min);
+      setMaxVal(max);
+    }
+  }, [searchCtx]);
+  useEffect$1(() => {
+    const controlFromInput = (fromSlider2, fromInput2, toInput2, controlSlider) => {
+      const [from, to] = getParsed(fromInput2, toInput2);
+      fillSlider(fromInput2, toInput2, "#C6C6C6", "#383838", controlSlider);
+      if (from > to) {
+        fromSlider2.value = to;
+        fromInput2.value = to;
+      } else {
+        fromSlider2.value = from;
+      }
+    };
+    const controlToInput = (toSlider2, fromInput2, toInput2, controlSlider) => {
+      const [from, to] = getParsed(fromInput2, toInput2);
+      fillSlider(fromInput2, toInput2, "#C6C6C6", "#383838", controlSlider);
+      if (from <= to) {
+        toSlider2.value = to;
+        toInput2.value = to;
+      } else {
+        toInput2.value = from;
+      }
+    };
+    const controlFromSlider = (fromSlider2, toSlider2, fromInput2) => {
+      const [from, to] = getParsed(fromSlider2, toSlider2);
+      fillSlider(fromSlider2, toSlider2, "#C6C6C6", "#383838", toSlider2);
+      if (from > to) {
+        setMinVal(to);
+        fromSlider2.value = to;
+        fromInput2.value = to;
+      } else {
+        fromInput2.value = from;
+      }
+    };
+    const controlToSlider = (fromSlider2, toSlider2, toInput2) => {
+      const [from, to] = getParsed(fromSlider2, toSlider2);
+      fillSlider(fromSlider2, toSlider2, "#C6C6C6", "#383838", toSlider2);
+      if (from <= to) {
+        toSlider2.value = to;
+        toInput2.value = to;
+      } else {
+        setMaxVal(from);
+        toInput2.value = from;
+        toSlider2.value = from;
+      }
+    };
+    const getParsed = (currentFrom, currentTo) => {
+      const from = parseInt(currentFrom.value, 10);
+      const to = parseInt(currentTo.value, 10);
+      return [from, to];
+    };
+    const fillSlider = (from, to, sliderColor, rangeColor, controlSlider) => {
+      const rangeDistance = to.max - to.min;
+      const fromPosition = from.value - to.min;
+      const toPosition = to.value - to.min;
+      controlSlider.style.background = `linear-gradient(
         to right,
-        ${T} 0%,
-        ${T} ${se/H*100}%,
-        ${$} ${se/H*100}%,
-        ${$} ${pe/H*100}%,
-        ${T} ${pe/H*100}%,
-        ${T} 100%)`},Q=document.querySelector(`#${v}`),j=document.querySelector(`#${g}`),re=document.querySelector(`#${f}`),ae=document.querySelector(`#${b}`);D(Q,j,"#C6C6C6","#383838",j),Q.oninput=()=>k(Q,j,re),j.oninput=()=>I(Q,j,ae),re.oninput=()=>C(Q,re,ae,j),ae.oninput=()=>M(j,re,ae,j)},[c,l]);const h=C=>{const M=t.currencyRate?t.currencyRate:"1";return`${t.currencySymbol?t.currencySymbol:"$"}${C&&parseFloat(M)*parseInt(C.toFixed(0),10)?(parseFloat(M)*parseInt(C.toFixed(0),10)).toFixed(2):0}`};return m("div",{className:"ds-sdk-input pt-md",children:[a("label",{className:"ds-sdk-input__label text-base font-normal text-gray-900",children:e.title}),m("div",{class:"ds-sdk-slider range_container",children:[m("div",{class:"sliders_control",children:[a("input",{className:"ds-sdk-slider__from fromSlider",id:v,type:"range",value:c,min:n,max:s,onInput:({target:C})=>{C instanceof HTMLInputElement&&d(Math.round(Number(C.value)))},onMouseUp:()=>{p(c,l)},onTouchEnd:()=>{p(c,l)},onKeyUp:()=>{p(c,l)}}),a("input",{className:"ds-sdk-slider__to toSlider",id:g,type:"range",value:l,min:n,max:s,onInput:({target:C})=>{C instanceof HTMLInputElement&&u(Math.round(Number(C.value)))},onMouseUp:()=>{p(c,l)},onTouchEnd:()=>{p(c,l)},onKeyUp:()=>{p(c,l)}})]}),m("div",{class:"form_control",children:[m("div",{class:"form_control_container",children:[a("div",{class:"form_control_container__time",children:"Min"}),a("input",{class:"form_control_container__time__input",type:"number",id:f,value:c,min:n,max:s,onInput:({target:C})=>{C instanceof HTMLInputElement&&d(Math.round(Number(C.value)))},onMouseUp:()=>{p(c,l)},onTouchEnd:()=>{p(c,l)},onKeyUp:()=>{p(c,l)}})]}),m("div",{class:"form_control_container",children:[a("div",{class:"form_control_container__time",children:"Max"}),a("input",{class:"form_control_container__time__input",type:"number",id:b,value:l,min:n,max:s,onInput:({target:C})=>{C instanceof HTMLInputElement&&u(Math.round(Number(C.value)))},onMouseUp:()=>{p(c,l)},onTouchEnd:()=>{p(c,l)},onKeyUp:()=>{p(c,l)}})]})]})]}),a("div",{className:`price-range-display__${e.attribute} pb-3`,children:m("span",{className:"ml-sm block-display text-sm font-light text-gray-700",children:["Between ",a("span",{className:"min-price text-gray-900 font-semibold",children:h(c)})," and"," ",a("span",{className:"max-price text-gray-900 font-semibold",children:h(l)})]})}),a("div",{className:"ds-sdk-input__border border-t mt-md border-gray-200"})]})},Ha=({attribute:e,buckets:t})=>{var c;const r={};t.forEach(d=>r[d.title]={from:d.from,to:d.to});const n=ue(),s=(c=n==null?void 0:n.filters)==null?void 0:c.find(d=>d.attribute===e);return{isSelected:d=>{var u,p;return s?r[d].from===((u=s.range)==null?void 0:u.from)&&r[d].to===((p=s.range)==null?void 0:p.to):!1},onChange:d=>{if(!s){const u={attribute:e,range:{from:r[d].from,to:r[d].to}};n.createFilter(u);return}const l={...s,range:{from:r[d].from,to:r[d].to}};n.updateFilter(l)}}},Ua=({type:e,checked:t,onChange:r,name:n,label:s,attribute:o,value:i,count:c})=>m("div",{className:"ds-sdk-labelled-input flex items-center",children:[a("input",{id:n,name:e==="checkbox"?`checkbox-group-${o}`:`radio-group-${o}`,type:e,className:"ds-sdk-labelled-input__input focus:ring-0 h-md w-md border-0 cursor-pointer accent-gray-600 min-w-[16px]",checked:t,"aria-checked":t,onInput:r,value:i}),m("label",{htmlFor:n,className:"ds-sdk-labelled-input__label ml-sm block-display text-sm font-light text-gray-700 cursor-pointer",children:[s,c&&a("span",{className:"text-[12px] font-light text-gray-700 ml-1",children:`(${c})`})]})]}),Ke=5,jt=({title:e,attribute:t,buckets:r,isSelected:n,onChange:s,type:o,inputGroupTitleSlot:i})=>{const c=le(),d=J(),[l,u]=be(r.length<Ke),p=l?r.length:Ke,v=(f,b)=>{var h;s({value:f,selected:(h=b==null?void 0:b.target)==null?void 0:h.checked})},g=(f,b)=>{if(b.__typename==="RangeBucket"){const h=d.currencyRate?d.currencyRate:"1",P=d.currencySymbol?d.currencySymbol:"$";return`${P}${b!=null&&b.from&&parseFloat(h)*parseInt(b.from.toFixed(0),10)?(parseFloat(h)*parseInt(b.from.toFixed(0),10)).toFixed(2):0}${b!=null&&b.to&&parseFloat(h)*parseInt(b.to.toFixed(0),10)?` - ${P}${(parseFloat(h)*parseInt(b.to.toFixed(0),10)).toFixed(2)}`:c.InputButtonGroup.priceRange}`}else{if(b.__typename==="CategoryView")return d.categoryPath?b.name??b.title:b.title;if(b.title===nr)return f;if(b.title===ir)return c.InputButtonGroup.priceExcludedMessage.replace("{title}",`${f}`)}return b.title};return m("div",{className:"ds-sdk-input pt-md",children:[i?i(e):a("label",{className:"ds-sdk-input__label text-base font-normal text-gray-900",children:e}),a("fieldset",{className:"ds-sdk-input__options mt-md",children:m("div",{className:"space-y-4",children:[r.slice(0,p).map(f=>{if(!f.title)return null;const b=n(f.title),h=f.__typename==="RangeBucket";return a(Ua,{name:`${f.title}-${t}`,attribute:t,label:g(e,f),checked:!!b,value:f.title,count:h?null:f.count,onChange:P=>v(f.title,P),type:o},g(e,f))}),!l&&r.length>Ke&&m("div",{className:"ds-sdk-input__fieldset__show-more flex items-center text-gray-700 cursor-pointer",onClick:()=>u(!0),children:[a(Ht,{className:"h-md w-md fill-gray-500"}),a("button",{type:"button",className:"ml-sm font-light cursor-pointer border-none bg-transparent hover:border-none	hover:bg-transparent focus:border-none focus:bg-transparent active:border-none active:bg-transparent active:shadow-none text-sm",children:c.InputButtonGroup.showmore})]})]})}),a("div",{className:"ds-sdk-input__border border-t mt-md border-gray-200"})]})},ja=({filterData:e})=>{const{isSelected:t,onChange:r}=Ha(e);return a(jt,{title:e.title,attribute:e.attribute,buckets:e.buckets,type:"radio",isSelected:t,onChange:n=>{r(n.value)}})},qa=e=>{var o;const t=ue(),r=(o=t==null?void 0:t.filters)==null?void 0:o.find(i=>i.attribute===e.attribute);return{isSelected:i=>{var d;return r?(d=r.in)==null?void 0:d.includes(i):!1},onChange:(i,c)=>{var p,v,g,f;if(!r){const b={attribute:e.attribute,in:[i]};t.createFilter(b);return}const d={...r},l=r.in?r.in:[];d.in=c?[...l,i]:(p=r.in)==null?void 0:p.filter(b=>b!==i);const u=(v=r.in)==null?void 0:v.filter(b=>{var h;return!((h=d.in)!=null&&h.includes(b))});if((g=d.in)!=null&&g.length){u!=null&&u.length&&t.removeFilter(e.attribute,u[0]),t.updateFilter(d);return}if(!((f=d.in)!=null&&f.length)){t.removeFilter(e.attribute);return}}}},bt=({filterData:e})=>{const{isSelected:t,onChange:r}=qa(e);return a(jt,{title:e.title,attribute:e.attribute,buckets:e.buckets,type:"checkbox",isSelected:t,onChange:n=>r(n.value,n.selected)})},qt=({searchFacets:e})=>{const{config:{priceSlider:t}}=te();return a("div",{className:"ds-plp-facets flex flex-col",children:a("form",{className:"ds-plp-facets__list border-t border-gray-200",children:e==null?void 0:e.map(r=>{var s;switch((s=r==null?void 0:r.buckets[0])==null?void 0:s.__typename){case"ScalarBucket":return a(bt,{filterData:r},r.attribute);case"RangeBucket":return t?a(Va,{filterData:r}):a(ja,{filterData:r},r.attribute);case"CategoryView":return a(bt,{filterData:r},r.attribute);default:return null}})})})},Ga=a(Ht,{className:"h-[12px] w-[12px] rotate-45 inline-block ml-sm cursor-pointer  fill-gray-700"}),vt=({label:e,onClick:t,CTA:r=Ga,type:n})=>n==="transparent"?m("div",{className:"ds-sdk-pill inline-flex justify-content items-center rounded-full w-fit min-h-[32px] px-4 py-1",children:[a("span",{className:"ds-sdk-pill__label font-normal text-sm",children:e}),a("span",{className:"ds-sdk-pill__cta",onClick:t,children:r})]},e):m("div",{className:"ds-sdk-pill inline-flex justify-content items-center bg-gray-100 rounded-full w-fit outline outline-gray-200 min-h-[32px] px-4 py-1",children:[a("span",{className:"ds-sdk-pill__label font-normal text-sm",children:e}),a("span",{className:"ds-sdk-pill__cta",onClick:t,children:r})]},e),Qa=(e,t,r)=>{var c;const n=e.range,s=t||"1",o=r||"$";return`${o}${n!=null&&n.from&&parseFloat(s)*parseInt(n.from.toFixed(0),10)?(parseFloat(s)*parseInt((c=n.from)==null?void 0:c.toFixed(0),10)).toFixed(2):0}${n!=null&&n.to&&parseFloat(s)*parseInt(n.to.toFixed(0),10)?` - ${o}${(parseFloat(s)*parseInt(n.to.toFixed(0),10)).toFixed(2)}`:" and above"}`},wt=(e,t,r,n)=>{var o;if(n&&r){const i=r.find(c=>c.attribute===e.attribute&&c.value===t);if(i!=null&&i.name)return i.name}const s=(o=e.attribute)==null?void 0:o.split("_");return t==="yes"?s.join(" "):t==="no"?`not ${s.join(" ")}`:t},yt=({})=>{var n;const e=ue(),t=J(),r=le();return a("div",{className:"w-full h-full",children:((n=e.filters)==null?void 0:n.length)>0&&m("div",{className:"ds-plp-facets__pills pb-6 sm:pb-6 flex flex-wrap mt-8 justify-start",children:[e.filters.map(s=>{var o;return m("div",{children:[(o=s.in)==null?void 0:o.map(i=>a(vt,{label:wt(s,i,e.categoryNames,t.categoryPath),type:"transparent",onClick:()=>e.updateFilterOptions(s,i)},wt(s,i,e.categoryNames,t.categoryPath))),s.range&&a(vt,{label:Qa(s,t.currencyRate,t.currencySymbol),type:"transparent",onClick:()=>{e.removeFilter(s.attribute)}})]},s.attribute)}),a("div",{className:"py-1",children:a("button",{className:`ds-plp-facets__header__clear-all border-none bg-transparent hover:border-none	hover:bg-transparent
-              focus:border-none focus:bg-transparent active:border-none active:bg-transparent active:shadow-none text-sm px-4`,onClick:()=>e.clearFilters(),children:r.Filter.clearAll})})]})})},Za=({loading:e,pageLoading:t,totalCount:r,facets:n,categoryName:s,phrase:o,setShowFilters:i,filterCount:c})=>{const d=le();let l=s||"";o&&(l=d.CategoryFilters.results.replace("{phrase}",`"${o}"`));const p=d.CategoryFilters.products.replace("{totalCount}",`${r}`);return m("div",{class:"sm:flex ds-widgets-_actions relative max-w-[21rem] w-full h-full px-2 flex-col overflow-y-auto",children:[m("div",{className:"ds-widgets_actions_header flex justify-between items-center mb-md",children:[l&&m("span",{children:[" ",l]}),!e&&a("span",{className:"text-primary text-sm",children:p})]}),!t&&n.length>0&&m(Z,{children:[a("div",{className:"flex pb-4 w-full h-full",children:a(it,{displayFilter:()=>i(!1),type:"desktop",title:`${d.Filter.hideTitle}${c>0?` (${c})`:""}`})}),a(qt,{searchFacets:n})]})]})},je=({title:e,type:t,description:r,url:n,onClick:s})=>a("div",{className:"mx-auto max-w-8xl",children:(()=>{switch(t){case"error":return a("div",{className:"rounded-md bg-red-50 p-4",children:m("div",{className:"flex items-center",children:[a("div",{className:"flex-shrink-0 p-1",children:a(Aa,{className:"h-5 w-5 text-red-400","aria-hidden":"true"})}),m("div",{className:"ml-3",children:[a("h3",{className:"text-sm font-medium text-red-800",children:e}),r.length>0&&a("div",{className:"mt-2 text-sm text-red-700",children:a("p",{children:r})})]})]})});case"warning":return a("div",{className:"rounded-md bg-yellow-50 p-4",children:m("div",{className:"flex items-center",children:[a("div",{className:"flex-shrink-0 p-1",children:a(Ma,{className:"h-5 w-5 text-yellow-400","aria-hidden":"true"})}),m("div",{className:"ml-3",children:[a("h3",{className:"text-sm font-medium text-yellow-800",children:e}),r.length>0&&a("div",{className:"mt-2 text-sm text-yellow-700",children:a("p",{children:r})})]})]})});case"info":return a("div",{className:"rounded-md bg-blue-50 p-4",children:m("div",{className:"flex items-center",children:[a("div",{className:"flex-shrink-0 p-1",children:a(Fa,{className:"h-5 w-5 text-blue-400","aria-hidden":"true"})}),m("div",{className:"ml-3 flex-1 md:flex md:justify-between",children:[m("div",{children:[a("h3",{className:"text-sm font-medium text-blue-800",children:e}),r.length>0&&a("div",{className:"mt-2 text-sm text-blue-700",children:a("p",{children:r})})]}),a("div",{className:"mt-4 text-sm md:ml-6",children:m("a",{href:n,className:"whitespace-nowrap font-medium text-blue-700 hover:text-blue-600",children:["Details",a("span",{"aria-hidden":"true",children:"→"})]})})]})]})});case"success":return a("div",{className:"rounded-md bg-green-50 p-4",children:m("div",{className:"flex items-center",children:[a("div",{className:"flex-shrink-0 p-1",children:a(Na,{className:"h-5 w-5 text-green-400","aria-hidden":"true"})}),m("div",{className:"ml-3",children:[a("h3",{className:"text-sm font-medium text-green-800",children:e}),r.length>0&&a("div",{className:"mt-2 text-sm text-green-700",children:a("p",{children:r})})]}),a("div",{className:"ml-auto",children:a("div",{className:"md:ml-6",children:m("button",{type:"button",className:"inline-flex rounded-md bg-green-50 p-1.5 text-green-500 ring-off hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-green-50",children:[a("span",{className:"sr-only",children:"Dismiss"}),a(Ea,{className:"h-5 w-5","aria-hidden":"true",onClick:s})]})})})]})})}})()}),Ne="...",De=(e,t)=>{const r=t-e+1;return Array.from({length:r},(n,s)=>e+s)},Ka=({currentPage:e,totalPages:t,siblingCount:r=1})=>Qt(()=>{const o=t,i=r+5,c=Math.max(e-r,1),d=Math.min(e+r,t),l=c>2,u=d<t-2;if(t<=i)return De(1,t);if(!l&&u){const p=3+2*r;return[...De(1,p),Ne,t]}if(l&&!u){const p=3+2*r,v=De(t-p+1,t);return[1,Ne,...v]}if(l&&u){const p=De(c,d);return[1,Ne,...p,Ne,o]}},[e,t,r]),Ja=({onPageChange:e,totalPages:t,currentPage:r})=>{const n=J(),s=Ka({currentPage:r,totalPages:t});G(()=>{const{currentPage:c,totalPages:d}=n;return c>d&&e(d),()=>{}},[n,e]);const o=()=>{r>1&&e(r-1)},i=()=>{r<t&&e(r+1)};return m("ul",{className:"ds-plp-pagination flex justify-center items-center mt-2 mb-6 list-none",children:[a(Ue,{className:`h-sm w-sm transform rotate-90 ${r===1?"stroke-gray-400 cursor-not-allowed":"stroke-gray-600 cursor-pointer"}`,onClick:o}),s==null?void 0:s.map(c=>c===Ne?a("li",{className:"ds-plp-pagination__dots text-gray-500 mx-sm my-auto",children:"..."},c):a("li",{className:`ds-plp-pagination__item flex items-center cursor-pointer text-center text-gray-500 my-auto mx-sm ${r===c?"ds-plp-pagination__item--current text-black font-medium underline underline-offset-4 decoration-black":""}`,onClick:()=>e(c),children:c},c)),a(Ue,{className:`h-sm w-sm transform -rotate-90 ${r===t?"stroke-gray-400 cursor-not-allowed":"stroke-gray-600 cursor-pointer"}`,onClick:i})]})},Xa=({options:e,activeIndex:t,setActiveIndex:r,select:n})=>{const s=e.length,o=i=>{switch(i.preventDefault(),i.key){case"Up":case"ArrowUp":i.preventDefault(),r(t<=0?s-1:t-1);return;case"Down":case"ArrowDown":i.preventDefault(),r(t+1===s?0:t+1);return;case"Enter":case" ":i.preventDefault(),n(e[t].value);return;case"Esc":case"Escape":i.preventDefault(),n(null);return;case"PageUp":case"Home":i.preventDefault(),r(0);return;case"PageDown":case"End":i.preventDefault(),r(e.length-1);return}};return document.addEventListener("keydown",o),()=>{document.removeEventListener("keydown",o)}},Ya=({setIsDropdownOpen:e})=>{const t=r=>{switch(r.key){case"Up":case"ArrowUp":case"Down":case"ArrowDown":case" ":case"Enter":r.preventDefault(),e(!0)}};return document.addEventListener("keydown",t),()=>{document.removeEventListener("keydown",t)}},Pt=()=>{const e=navigator.userAgent.indexOf("Chrome")>-1;return navigator.userAgent.indexOf("Safari")>-1&&!e},Gt=({options:e,value:t,onChange:r})=>{const[n,s]=y(!1),o=Ae(null),[i,c]=y(0),[d,l]=y(!1),u=v=>{v&&r&&r(v),p(!1),l(!1)},p=v=>{if(v){const g=e==null?void 0:e.findIndex(f=>f.value===t);c(g<0?0:g),o.current&&Pt()&&requestAnimationFrame(()=>{var f;(f=o==null?void 0:o.current)==null||f.focus()})}else o.current&&Pt()&&requestAnimationFrame(()=>{var g,f;(f=(g=o==null?void 0:o.current)==null?void 0:g.previousSibling)==null||f.focus()});s(v)};return G(()=>{if(n)return Xa({activeIndex:i,setActiveIndex:c,options:e,select:u});if(d)return Ya({setIsDropdownOpen:p})},[n,i,d]),{isDropdownOpen:n,setIsDropdownOpen:p,activeIndex:i,setActiveIndex:c,select:u,setIsFocus:l,listRef:o}},Wa=({value:e,pageSizeOptions:t,onChange:r})=>{const n=Ae(null),s=Ae(null),o=t.find(g=>g.value===e),{isDropdownOpen:i,setIsDropdownOpen:c,activeIndex:d,setActiveIndex:l,select:u,setIsFocus:p,listRef:v}=Gt({options:t,value:e,onChange:r});return G(()=>{const g=s.current,f=()=>{p(!1),c(!1)},b=()=>{var h;((h=g==null?void 0:g.parentElement)==null?void 0:h.querySelector(":hover"))!==g&&(p(!1),c(!1))};return g==null||g.addEventListener("blur",f),g==null||g.addEventListener("focusin",b),g==null||g.addEventListener("focusout",b),()=>{g==null||g.removeEventListener("blur",f),g==null||g.removeEventListener("focusin",b),g==null||g.removeEventListener("focusout",b)}},[s]),a(Z,{children:m("div",{ref:s,className:"ds-sdk-per-page-picker ml-2 mr-2 relative inline-block text-left bg-gray-100 rounded-md outline outline-1 outline-gray-200 hover:outline-gray-600 h-[32px]",children:[m("button",{className:"group flex justify-center items-center font-normal text-sm text-gray-700 rounded-md hover:cursor-pointer border-none bg-transparent hover:border-none hover:bg-transparent focus:border-none focus:bg-transparent active:border-none active:bg-transparent active:shadow-none h-full w-full px-sm",ref:n,onClick:()=>c(!i),onFocus:()=>p(!1),onBlur:()=>p(!1),children:[o?`${o.label}`:"24",a(Ue,{className:`flex-shrink-0 m-auto ml-sm h-md w-md stroke-1 stroke-gray-600 ${i?"":"rotate-180"}`})]}),i&&a("ul",{ref:v,className:"ds-sdk-per-page-picker__items origin-top-right absolute hover:cursor-pointer right-0 w-full rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none mt-2 z-20",children:t.map((g,f)=>a("li",{"aria-selected":g.value===(o==null?void 0:o.value),onMouseOver:()=>l(f),className:`py-xs hover:bg-gray-100 hover:text-gray-900 ${f===d?"bg-gray-100 text-gray-900":""}}`,children:a("a",{className:`ds-sdk-per-page-picker__items--item block-display px-md py-sm text-sm mb-0
+        ${sliderColor} 0%,
+        ${sliderColor} ${fromPosition / rangeDistance * 100}%,
+        ${rangeColor} ${fromPosition / rangeDistance * 100}%,
+        ${rangeColor} ${toPosition / rangeDistance * 100}%,
+        ${sliderColor} ${toPosition / rangeDistance * 100}%,
+        ${sliderColor} 100%)`;
+    };
+    const fromSlider = document.querySelector(`#${fromSliderId}`);
+    const toSlider = document.querySelector(`#${toSliderId}`);
+    const fromInput = document.querySelector(`#${fromInputId}`);
+    const toInput = document.querySelector(`#${toInputId}`);
+    fillSlider(fromSlider, toSlider, "#C6C6C6", "#383838", toSlider);
+    fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider, fromInput);
+    toSlider.oninput = () => controlToSlider(fromSlider, toSlider, toInput);
+    fromInput.oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
+    toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);
+  }, [minVal, maxVal]);
+  const formatLabel = (price) => {
+    const currencyRate = productsCtx.currencyRate ? productsCtx.currencyRate : "1";
+    const currencySymbol = productsCtx.currencySymbol ? productsCtx.currencySymbol : "$";
+    const label = `${currencySymbol}${price && parseFloat(currencyRate) * parseInt(price.toFixed(0), 10) ? (parseFloat(currencyRate) * parseInt(price.toFixed(0), 10)).toFixed(2) : 0}`;
+    return label;
+  };
+  return u("div", {
+    className: "ds-sdk-input pt-md",
+    children: [u("label", {
+      className: "ds-sdk-input__label text-base font-normal text-gray-900",
+      children: filterData.title
+    }, void 0, false, {
+      fileName: _jsxFileName$q,
+      lineNumber: 156,
+      columnNumber: 13
+    }, void 0), u("div", {
+      class: "ds-sdk-slider range_container",
+      children: [u("div", {
+        class: "sliders_control",
+        children: [u("input", {
+          className: "ds-sdk-slider__from fromSlider",
+          id: fromSliderId,
+          type: "range",
+          value: minVal,
+          min,
+          max,
+          onInput: ({
+            target
+          }) => {
+            if (target instanceof HTMLInputElement) {
+              setMinVal(Math.round(Number(target.value)));
+            }
+          },
+          onMouseUp: () => {
+            onChange(minVal, maxVal);
+          },
+          onTouchEnd: () => {
+            onChange(minVal, maxVal);
+          },
+          onKeyUp: () => {
+            onChange(minVal, maxVal);
+          }
+        }, void 0, false, {
+          fileName: _jsxFileName$q,
+          lineNumber: 160,
+          columnNumber: 21
+        }, void 0), u("input", {
+          className: "ds-sdk-slider__to toSlider",
+          id: toSliderId,
+          type: "range",
+          value: maxVal,
+          min,
+          max,
+          onInput: ({
+            target
+          }) => {
+            if (target instanceof HTMLInputElement) {
+              setMaxVal(Math.round(Number(target.value)));
+            }
+          },
+          onMouseUp: () => {
+            onChange(minVal, maxVal);
+          },
+          onTouchEnd: () => {
+            onChange(minVal, maxVal);
+          },
+          onKeyUp: () => {
+            onChange(minVal, maxVal);
+          }
+        }, void 0, false, {
+          fileName: _jsxFileName$q,
+          lineNumber: 182,
+          columnNumber: 21
+        }, void 0)]
+      }, void 0, true, {
+        fileName: _jsxFileName$q,
+        lineNumber: 159,
+        columnNumber: 17
+      }, void 0), u("div", {
+        class: "form_control",
+        children: [u("div", {
+          class: "form_control_container",
+          children: [u("div", {
+            class: "form_control_container__time",
+            children: "Min"
+          }, void 0, false, {
+            fileName: _jsxFileName$q,
+            lineNumber: 207,
+            columnNumber: 25
+          }, void 0), u("input", {
+            class: "form_control_container__time__input",
+            type: "number",
+            id: fromInputId,
+            value: minVal,
+            min,
+            max,
+            onInput: ({
+              target
+            }) => {
+              if (target instanceof HTMLInputElement) {
+                setMinVal(Math.round(Number(target.value)));
+              }
+            },
+            onMouseUp: () => {
+              onChange(minVal, maxVal);
+            },
+            onTouchEnd: () => {
+              onChange(minVal, maxVal);
+            },
+            onKeyUp: () => {
+              onChange(minVal, maxVal);
+            }
+          }, void 0, false, {
+            fileName: _jsxFileName$q,
+            lineNumber: 208,
+            columnNumber: 25
+          }, void 0)]
+        }, void 0, true, {
+          fileName: _jsxFileName$q,
+          lineNumber: 206,
+          columnNumber: 21
+        }, void 0), u("div", {
+          class: "form_control_container",
+          children: [u("div", {
+            class: "form_control_container__time",
+            children: "Max"
+          }, void 0, false, {
+            fileName: _jsxFileName$q,
+            lineNumber: 232,
+            columnNumber: 25
+          }, void 0), u("input", {
+            class: "form_control_container__time__input",
+            type: "number",
+            id: toInputId,
+            value: maxVal,
+            min,
+            max,
+            onInput: ({
+              target
+            }) => {
+              if (target instanceof HTMLInputElement) {
+                setMaxVal(Math.round(Number(target.value)));
+              }
+            },
+            onMouseUp: () => {
+              onChange(minVal, maxVal);
+            },
+            onTouchEnd: () => {
+              onChange(minVal, maxVal);
+            },
+            onKeyUp: () => {
+              onChange(minVal, maxVal);
+            }
+          }, void 0, false, {
+            fileName: _jsxFileName$q,
+            lineNumber: 233,
+            columnNumber: 25
+          }, void 0)]
+        }, void 0, true, {
+          fileName: _jsxFileName$q,
+          lineNumber: 231,
+          columnNumber: 21
+        }, void 0)]
+      }, void 0, true, {
+        fileName: _jsxFileName$q,
+        lineNumber: 205,
+        columnNumber: 17
+      }, void 0)]
+    }, void 0, true, {
+      fileName: _jsxFileName$q,
+      lineNumber: 158,
+      columnNumber: 13
+    }, void 0), u("div", {
+      className: `price-range-display__${filterData.attribute} pb-3`,
+      children: u("span", {
+        className: "ml-sm block-display text-sm font-light text-gray-700",
+        children: ["Between ", u("span", {
+          className: "min-price text-gray-900 font-semibold",
+          children: formatLabel(minVal)
+        }, void 0, false, {
+          fileName: _jsxFileName$q,
+          lineNumber: 261,
+          columnNumber: 29
+        }, void 0), " and", " ", u("span", {
+          className: "max-price text-gray-900 font-semibold",
+          children: formatLabel(maxVal)
+        }, void 0, false, {
+          fileName: _jsxFileName$q,
+          lineNumber: 262,
+          columnNumber: 21
+        }, void 0)]
+      }, void 0, true, {
+        fileName: _jsxFileName$q,
+        lineNumber: 260,
+        columnNumber: 17
+      }, void 0)
+    }, void 0, false, {
+      fileName: _jsxFileName$q,
+      lineNumber: 259,
+      columnNumber: 13
+    }, void 0), u("div", {
+      className: "ds-sdk-input__border border-t mt-md border-gray-200"
+    }, void 0, false, {
+      fileName: _jsxFileName$q,
+      lineNumber: 265,
+      columnNumber: 13
+    }, void 0)]
+  }, void 0, true, {
+    fileName: _jsxFileName$q,
+    lineNumber: 155,
+    columnNumber: 9
+  }, void 0);
+};
+const useRangeFacet = ({
+  attribute,
+  buckets
+}) => {
+  var _a;
+  const processedBuckets = {};
+  buckets.forEach((bucket) => processedBuckets[bucket.title] = {
+    from: bucket.from,
+    to: bucket.to
+  });
+  const searchCtx = useSearch();
+  const filter = (_a = searchCtx == null ? void 0 : searchCtx.filters) == null ? void 0 : _a.find((e) => e.attribute === attribute);
+  const isSelected = (title) => {
+    var _a2, _b;
+    const selected = filter ? processedBuckets[title].from === ((_a2 = filter.range) == null ? void 0 : _a2.from) && processedBuckets[title].to === ((_b = filter.range) == null ? void 0 : _b.to) : false;
+    return selected;
+  };
+  const onChange = (value) => {
+    if (!filter) {
+      const newFilter2 = {
+        attribute,
+        range: {
+          from: processedBuckets[value].from,
+          to: processedBuckets[value].to
+        }
+      };
+      searchCtx.createFilter(newFilter2);
+      return;
+    }
+    const newFilter = {
+      ...filter,
+      range: {
+        from: processedBuckets[value].from,
+        to: processedBuckets[value].to
+      }
+    };
+    searchCtx.updateFilter(newFilter);
+  };
+  return {
+    isSelected,
+    onChange
+  };
+};
+var _jsxFileName$p = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/LabelledInput/LabelledInput.tsx";
+const LabelledInput = ({
+  type,
+  checked,
+  onChange,
+  name,
+  label,
+  attribute,
+  value,
+  count
+}) => {
+  return u("div", {
+    className: "ds-sdk-labelled-input flex items-center",
+    children: [u("input", {
+      id: name,
+      name: type === "checkbox" ? `checkbox-group-${attribute}` : `radio-group-${attribute}`,
+      type,
+      className: "ds-sdk-labelled-input__input focus:ring-0 h-md w-md border-0 cursor-pointer accent-gray-600 min-w-[16px]",
+      checked,
+      "aria-checked": checked,
+      onInput: onChange,
+      value
+    }, void 0, false, {
+      fileName: _jsxFileName$p,
+      lineNumber: 37,
+      columnNumber: 13
+    }, void 0), u("label", {
+      htmlFor: name,
+      className: "ds-sdk-labelled-input__label ml-sm block-display text-sm font-light text-gray-700 cursor-pointer",
+      children: [label, count && u("span", {
+        className: "text-[12px] font-light text-gray-700 ml-1",
+        children: `(${count})`
+      }, void 0, false, {
+        fileName: _jsxFileName$p,
+        lineNumber: 52,
+        columnNumber: 27
+      }, void 0)]
+    }, void 0, true, {
+      fileName: _jsxFileName$p,
+      lineNumber: 47,
+      columnNumber: 13
+    }, void 0)]
+  }, void 0, true, {
+    fileName: _jsxFileName$p,
+    lineNumber: 36,
+    columnNumber: 9
+  }, void 0);
+};
+var _jsxFileName$o = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/InputButtonGroup/InputButtonGroup.tsx";
+const numberOfOptionsShown = 5;
+const InputButtonGroup = ({
+  title,
+  attribute,
+  buckets,
+  isSelected,
+  onChange,
+  type,
+  inputGroupTitleSlot
+}) => {
+  const translation = useTranslation();
+  const productsCtx = useProducts();
+  const [showMore, setShowMore] = t(useState$1(buckets.length < numberOfOptionsShown), "showMore");
+  const numberOfOptions = showMore ? buckets.length : numberOfOptionsShown;
+  const onInputChange = (title2, e) => {
+    var _a;
+    onChange({
+      value: title2,
+      selected: (_a = e == null ? void 0 : e.target) == null ? void 0 : _a.checked
+    });
+  };
+  const formatLabel = (title2, bucket) => {
+    if (bucket.__typename === "RangeBucket") {
+      const currencyRate = productsCtx.currencyRate ? productsCtx.currencyRate : "1";
+      const currencySymbol = productsCtx.currencySymbol ? productsCtx.currencySymbol : "$";
+      const label = `${currencySymbol}${(bucket == null ? void 0 : bucket.from) && parseFloat(currencyRate) * parseInt(bucket.from.toFixed(0), 10) ? (parseFloat(currencyRate) * parseInt(bucket.from.toFixed(0), 10)).toFixed(2) : 0}${(bucket == null ? void 0 : bucket.to) && parseFloat(currencyRate) * parseInt(bucket.to.toFixed(0), 10) ? ` - ${currencySymbol}${(parseFloat(currencyRate) * parseInt(bucket.to.toFixed(0), 10)).toFixed(2)}` : translation.InputButtonGroup.priceRange}`;
+      return label;
+    } else if (bucket.__typename === "CategoryView") {
+      return productsCtx.categoryPath ? bucket.name ?? bucket.title : bucket.title;
+    } else if (bucket.title === BOOLEAN_YES) {
+      return title2;
+    } else if (bucket.title === BOOLEAN_NO) {
+      const excludedMessageTranslation = translation.InputButtonGroup.priceExcludedMessage;
+      const excludedMessage = excludedMessageTranslation.replace("{title}", `${title2}`);
+      return excludedMessage;
+    }
+    return bucket.title;
+  };
+  return u("div", {
+    className: "ds-sdk-input pt-md",
+    children: [inputGroupTitleSlot ? inputGroupTitleSlot(title) : u("label", {
+      className: "ds-sdk-input__label text-base font-normal text-gray-900",
+      children: title
+    }, void 0, false, {
+      fileName: _jsxFileName$o,
+      lineNumber: 102,
+      columnNumber: 17
+    }, void 0), u("fieldset", {
+      className: "ds-sdk-input__options mt-md",
+      children: u("div", {
+        className: "space-y-4",
+        children: [buckets.slice(0, numberOfOptions).map((option) => {
+          if (!option.title) {
+            return null;
+          }
+          const checked = isSelected(option.title);
+          const noShowPriceBucketCount = option.__typename === "RangeBucket";
+          return u(LabelledInput, {
+            name: `${option.title}-${attribute}`,
+            attribute,
+            label: formatLabel(title, option),
+            checked: !!checked,
+            value: option.title,
+            count: noShowPriceBucketCount ? null : option.count,
+            onChange: (e) => onInputChange(option.title, e),
+            type
+          }, formatLabel(title, option), false, {
+            fileName: _jsxFileName$o,
+            lineNumber: 113,
+            columnNumber: 29
+          }, void 0);
+        }), !showMore && buckets.length > numberOfOptionsShown && u("div", {
+          className: "ds-sdk-input__fieldset__show-more flex items-center text-gray-700 cursor-pointer",
+          onClick: () => setShowMore(true),
+          children: [u(SvgPlus, {
+            className: "h-md w-md fill-gray-500"
+          }, void 0, false, {
+            fileName: _jsxFileName$o,
+            lineNumber: 131,
+            columnNumber: 29
+          }, void 0), u("button", {
+            type: "button",
+            className: "ml-sm font-light cursor-pointer border-none bg-transparent hover:border-none	hover:bg-transparent focus:border-none focus:bg-transparent active:border-none active:bg-transparent active:shadow-none text-sm",
+            children: translation.InputButtonGroup.showmore
+          }, void 0, false, {
+            fileName: _jsxFileName$o,
+            lineNumber: 132,
+            columnNumber: 29
+          }, void 0)]
+        }, void 0, true, {
+          fileName: _jsxFileName$o,
+          lineNumber: 127,
+          columnNumber: 25
+        }, void 0)]
+      }, void 0, true, {
+        fileName: _jsxFileName$o,
+        lineNumber: 105,
+        columnNumber: 17
+      }, void 0)
+    }, void 0, false, {
+      fileName: _jsxFileName$o,
+      lineNumber: 104,
+      columnNumber: 13
+    }, void 0), u("div", {
+      className: "ds-sdk-input__border border-t mt-md border-gray-200"
+    }, void 0, false, {
+      fileName: _jsxFileName$o,
+      lineNumber: 142,
+      columnNumber: 13
+    }, void 0)]
+  }, void 0, true, {
+    fileName: _jsxFileName$o,
+    lineNumber: 98,
+    columnNumber: 9
+  }, void 0);
+};
+var _jsxFileName$n = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/Facets/Range/RangeFacet.tsx";
+const RangeFacet = ({
+  filterData
+}) => {
+  const {
+    isSelected,
+    onChange
+  } = useRangeFacet(filterData);
+  return u(InputButtonGroup, {
+    title: filterData.title,
+    attribute: filterData.attribute,
+    buckets: filterData.buckets,
+    type: "radio",
+    isSelected,
+    onChange: (e) => {
+      onChange(e.value);
+    }
+  }, void 0, false, {
+    fileName: _jsxFileName$n,
+    lineNumber: 24,
+    columnNumber: 9
+  }, void 0);
+};
+const useScalarFacet = (facet) => {
+  var _a;
+  const searchCtx = useSearch();
+  const filter = (_a = searchCtx == null ? void 0 : searchCtx.filters) == null ? void 0 : _a.find((e) => e.attribute === facet.attribute);
+  const isSelected = (attribute) => {
+    var _a2;
+    const selected = filter ? (_a2 = filter.in) == null ? void 0 : _a2.includes(attribute) : false;
+    return selected;
+  };
+  const onChange = (value, selected) => {
+    var _a2, _b, _c, _d;
+    if (!filter) {
+      const newFilter2 = {
+        attribute: facet.attribute,
+        in: [value]
+      };
+      searchCtx.createFilter(newFilter2);
+      return;
+    }
+    const newFilter = {
+      ...filter
+    };
+    const currentFilterIn = filter.in ? filter.in : [];
+    newFilter.in = selected ? [...currentFilterIn, value] : (_a2 = filter.in) == null ? void 0 : _a2.filter((e) => e !== value);
+    const filterUnselected = (_b = filter.in) == null ? void 0 : _b.filter((x) => {
+      var _a3;
+      return !((_a3 = newFilter.in) == null ? void 0 : _a3.includes(x));
+    });
+    if ((_c = newFilter.in) == null ? void 0 : _c.length) {
+      if (filterUnselected == null ? void 0 : filterUnselected.length) {
+        searchCtx.removeFilter(facet.attribute, filterUnselected[0]);
+      }
+      searchCtx.updateFilter(newFilter);
+      return;
+    }
+    if (!((_d = newFilter.in) == null ? void 0 : _d.length)) {
+      searchCtx.removeFilter(facet.attribute);
+      return;
+    }
+  };
+  return {
+    isSelected,
+    onChange
+  };
+};
+var _jsxFileName$m = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/Facets/Scalar/ScalarFacet.tsx";
+const ScalarFacet = ({
+  filterData
+}) => {
+  const {
+    isSelected,
+    onChange
+  } = useScalarFacet(filterData);
+  return u(InputButtonGroup, {
+    title: filterData.title,
+    attribute: filterData.attribute,
+    buckets: filterData.buckets,
+    type: "checkbox",
+    isSelected,
+    onChange: (args) => onChange(args.value, args.selected)
+  }, void 0, false, {
+    fileName: _jsxFileName$m,
+    lineNumber: 24,
+    columnNumber: 9
+  }, void 0);
+};
+var _jsxFileName$l = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/Facets/Facets.tsx";
+const Facets = ({
+  searchFacets
+}) => {
+  const {
+    config: {
+      priceSlider
+    }
+  } = useStore();
+  return u("div", {
+    className: "ds-plp-facets flex flex-col",
+    children: u("form", {
+      className: "ds-plp-facets__list border-t border-gray-200",
+      children: searchFacets == null ? void 0 : searchFacets.map((facet) => {
+        var _a;
+        const bucketType = (_a = facet == null ? void 0 : facet.buckets[0]) == null ? void 0 : _a.__typename;
+        switch (bucketType) {
+          case "ScalarBucket":
+            return u(ScalarFacet, {
+              filterData: facet
+            }, facet.attribute, false, {
+              fileName: _jsxFileName$l,
+              lineNumber: 33,
+              columnNumber: 36
+            }, void 0);
+          case "RangeBucket":
+            return priceSlider ? u(SliderDoubleControl, {
+              filterData: facet
+            }, void 0, false, {
+              fileName: _jsxFileName$l,
+              lineNumber: 36,
+              columnNumber: 33
+            }, void 0) : u(RangeFacet, {
+              filterData: facet
+            }, facet.attribute, false, {
+              fileName: _jsxFileName$l,
+              lineNumber: 38,
+              columnNumber: 33
+            }, void 0);
+          case "CategoryView":
+            return u(ScalarFacet, {
+              filterData: facet
+            }, facet.attribute, false, {
+              fileName: _jsxFileName$l,
+              lineNumber: 41,
+              columnNumber: 36
+            }, void 0);
+          default:
+            return null;
+        }
+      })
+    }, void 0, false, {
+      fileName: _jsxFileName$l,
+      lineNumber: 28,
+      columnNumber: 13
+    }, void 0)
+  }, void 0, false, {
+    fileName: _jsxFileName$l,
+    lineNumber: 27,
+    columnNumber: 9
+  }, void 0);
+};
+var _jsxFileName$k = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/Pill/Pill.tsx";
+const defaultIcon = u(SvgPlus, {
+  className: "h-[12px] w-[12px] rotate-45 inline-block ml-sm cursor-pointer  fill-gray-700"
+}, void 0, false, {
+  fileName: _jsxFileName$k,
+  lineNumber: 22,
+  columnNumber: 5
+}, void 0);
+const Pill = ({
+  label,
+  onClick,
+  CTA = defaultIcon,
+  type
+}) => {
+  return type === "transparent" ? u("div", {
+    className: "ds-sdk-pill inline-flex justify-content items-center rounded-full w-fit min-h-[32px] px-4 py-1",
+    children: [u("span", {
+      className: "ds-sdk-pill__label font-normal text-sm",
+      children: label
+    }, void 0, false, {
+      fileName: _jsxFileName$k,
+      lineNumber: 32,
+      columnNumber: 13
+    }, void 0), u("span", {
+      className: "ds-sdk-pill__cta",
+      onClick,
+      children: CTA
+    }, void 0, false, {
+      fileName: _jsxFileName$k,
+      lineNumber: 33,
+      columnNumber: 13
+    }, void 0)]
+  }, label, true, {
+    fileName: _jsxFileName$k,
+    lineNumber: 28,
+    columnNumber: 9
+  }, void 0) : u("div", {
+    className: "ds-sdk-pill inline-flex justify-content items-center bg-gray-100 rounded-full w-fit outline outline-gray-200 min-h-[32px] px-4 py-1",
+    children: [u("span", {
+      className: "ds-sdk-pill__label font-normal text-sm",
+      children: label
+    }, void 0, false, {
+      fileName: _jsxFileName$k,
+      lineNumber: 42,
+      columnNumber: 13
+    }, void 0), u("span", {
+      className: "ds-sdk-pill__cta",
+      onClick,
+      children: CTA
+    }, void 0, false, {
+      fileName: _jsxFileName$k,
+      lineNumber: 43,
+      columnNumber: 13
+    }, void 0)]
+  }, label, true, {
+    fileName: _jsxFileName$k,
+    lineNumber: 38,
+    columnNumber: 9
+  }, void 0);
+};
+const formatRangeLabel = (filter, currencyRate, currencySymbol) => {
+  var _a, _b;
+  const range = filter.range;
+  const rate = currencyRate ? currencyRate : "1";
+  const symbol = currencySymbol ? currencySymbol : "$";
+  const label = `${symbol}${(range == null ? void 0 : range.from) && parseFloat(rate) * parseInt(range.from.toFixed(0), 10) ? (_b = parseFloat(rate) * parseInt((_a = range.from) == null ? void 0 : _a.toFixed(0), 10)) == null ? void 0 : _b.toFixed(2) : 0}${(range == null ? void 0 : range.to) && parseFloat(rate) * parseInt(range.to.toFixed(0), 10) ? ` - ${symbol}${(parseFloat(rate) * parseInt(range.to.toFixed(0), 10)).toFixed(2)}` : " and above"}`;
+  return label;
+};
+const formatBinaryLabel = (filter, option, categoryNames, categoryPath) => {
+  var _a;
+  if (categoryPath && categoryNames) {
+    const category = categoryNames.find((facet) => facet.attribute === filter.attribute && facet.value === option);
+    if (category == null ? void 0 : category.name) {
+      return category.name;
+    }
+  }
+  const title = (_a = filter.attribute) == null ? void 0 : _a.split("_");
+  if (option === "yes") {
+    return title.join(" ");
+  } else if (option === "no") {
+    return `not ${title.join(" ")}`;
+  }
+  return option;
+};
+var _jsxFileName$j = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/Facets/SelectedFilters.tsx";
+const SelectedFilters = ({}) => {
+  var _a;
+  const searchCtx = useSearch();
+  const productsCtx = useProducts();
+  const translation = useTranslation();
+  return u("div", {
+    className: "w-full h-full",
+    children: ((_a = searchCtx.filters) == null ? void 0 : _a.length) > 0 && u("div", {
+      className: "ds-plp-facets__pills pb-6 sm:pb-6 flex flex-wrap mt-8 justify-start",
+      children: [searchCtx.filters.map((filter) => {
+        var _a2;
+        return u("div", {
+          children: [(_a2 = filter.in) == null ? void 0 : _a2.map((option) => u(Pill, {
+            label: formatBinaryLabel(filter, option, searchCtx.categoryNames, productsCtx.categoryPath),
+            type: "transparent",
+            onClick: () => searchCtx.updateFilterOptions(filter, option)
+          }, formatBinaryLabel(filter, option, searchCtx.categoryNames, productsCtx.categoryPath), false, {
+            fileName: _jsxFileName$j,
+            lineNumber: 28,
+            columnNumber: 33
+          }, void 0)), filter.range && u(Pill, {
+            label: formatRangeLabel(filter, productsCtx.currencyRate, productsCtx.currencySymbol),
+            type: "transparent",
+            onClick: () => {
+              searchCtx.removeFilter(filter.attribute);
+            }
+          }, void 0, false, {
+            fileName: _jsxFileName$j,
+            lineNumber: 46,
+            columnNumber: 33
+          }, void 0)]
+        }, filter.attribute, true, {
+          fileName: _jsxFileName$j,
+          lineNumber: 26,
+          columnNumber: 25
+        }, void 0);
+      }), u("div", {
+        className: "py-1",
+        children: u("button", {
+          className: "ds-plp-facets__header__clear-all border-none bg-transparent hover:border-none	hover:bg-transparent focus:border-none focus:bg-transparent active:border-none active:bg-transparent active:shadow-none text-sm px-4",
+          onClick: () => searchCtx.clearFilters(),
+          children: translation.Filter.clearAll
+        }, void 0, false, {
+          fileName: _jsxFileName$j,
+          lineNumber: 61,
+          columnNumber: 25
+        }, void 0)
+      }, void 0, false, {
+        fileName: _jsxFileName$j,
+        lineNumber: 60,
+        columnNumber: 21
+      }, void 0)]
+    }, void 0, true, {
+      fileName: _jsxFileName$j,
+      lineNumber: 24,
+      columnNumber: 17
+    }, void 0)
+  }, void 0, false, {
+    fileName: _jsxFileName$j,
+    lineNumber: 22,
+    columnNumber: 9
+  }, void 0);
+};
+var _jsxFileName$i = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/CategoryFilters/CategoryFilters.tsx";
+const CategoryFilters = ({
+  loading,
+  pageLoading,
+  totalCount,
+  facets,
+  categoryName,
+  phrase,
+  setShowFilters,
+  filterCount
+}) => {
+  const translation = useTranslation();
+  let title = categoryName || "";
+  if (phrase) {
+    const text = translation.CategoryFilters.results;
+    title = text.replace("{phrase}", `"${phrase}"`);
+  }
+  const resultsTranslation = translation.CategoryFilters.products;
+  const results = resultsTranslation.replace("{totalCount}", `${totalCount}`);
+  return u("div", {
+    class: "sm:flex ds-widgets-_actions relative max-w-[21rem] w-full h-full px-2 flex-col overflow-y-auto",
+    children: [u("div", {
+      className: "ds-widgets_actions_header flex justify-between items-center mb-md",
+      children: [title && u("span", {
+        children: [" ", title]
+      }, void 0, true, {
+        fileName: _jsxFileName$i,
+        lineNumber: 51,
+        columnNumber: 27
+      }, void 0), !loading && u("span", {
+        className: "text-primary text-sm",
+        children: results
+      }, void 0, false, {
+        fileName: _jsxFileName$i,
+        lineNumber: 52,
+        columnNumber: 30
+      }, void 0)]
+    }, void 0, true, {
+      fileName: _jsxFileName$i,
+      lineNumber: 50,
+      columnNumber: 13
+    }, void 0), !pageLoading && facets.length > 0 && u(Fragment, {
+      children: [u("div", {
+        className: "flex pb-4 w-full h-full",
+        children: u(FilterButton, {
+          displayFilter: () => setShowFilters(false),
+          type: "desktop",
+          title: `${translation.Filter.hideTitle}${filterCount > 0 ? ` (${filterCount})` : ""}`
+        }, void 0, false, {
+          fileName: _jsxFileName$i,
+          lineNumber: 58,
+          columnNumber: 25
+        }, void 0)
+      }, void 0, false, {
+        fileName: _jsxFileName$i,
+        lineNumber: 57,
+        columnNumber: 21
+      }, void 0), u(Facets, {
+        searchFacets: facets
+      }, void 0, false, {
+        fileName: _jsxFileName$i,
+        lineNumber: 64,
+        columnNumber: 21
+      }, void 0)]
+    }, void 0, true)]
+  }, void 0, true, {
+    fileName: _jsxFileName$i,
+    lineNumber: 49,
+    columnNumber: 9
+  }, void 0);
+};
+var _jsxFileName$h = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/Alert/Alert.tsx";
+const Alert = ({
+  title,
+  type,
+  description,
+  url,
+  onClick
+}) => {
+  return u("div", {
+    className: "mx-auto max-w-8xl",
+    children: (() => {
+      switch (type) {
+        case "error":
+          return u("div", {
+            className: "rounded-md bg-red-50 p-4",
+            children: u("div", {
+              className: "flex items-center",
+              children: [u("div", {
+                className: "flex-shrink-0 p-1",
+                children: u(SvgError, {
+                  className: "h-5 w-5 text-red-400",
+                  "aria-hidden": "true"
+                }, void 0, false, {
+                  fileName: _jsxFileName$h,
+                  lineNumber: 33,
+                  columnNumber: 41
+                }, void 0)
+              }, void 0, false, {
+                fileName: _jsxFileName$h,
+                lineNumber: 32,
+                columnNumber: 37
+              }, void 0), u("div", {
+                className: "ml-3",
+                children: [u("h3", {
+                  className: "text-sm font-medium text-red-800",
+                  children: title
+                }, void 0, false, {
+                  fileName: _jsxFileName$h,
+                  lineNumber: 36,
+                  columnNumber: 41
+                }, void 0), description.length > 0 && u("div", {
+                  className: "mt-2 text-sm text-red-700",
+                  children: u("p", {
+                    children: description
+                  }, void 0, false, {
+                    fileName: _jsxFileName$h,
+                    lineNumber: 39,
+                    columnNumber: 49
+                  }, void 0)
+                }, void 0, false, {
+                  fileName: _jsxFileName$h,
+                  lineNumber: 38,
+                  columnNumber: 45
+                }, void 0)]
+              }, void 0, true, {
+                fileName: _jsxFileName$h,
+                lineNumber: 35,
+                columnNumber: 37
+              }, void 0)]
+            }, void 0, true, {
+              fileName: _jsxFileName$h,
+              lineNumber: 31,
+              columnNumber: 33
+            }, void 0)
+          }, void 0, false, {
+            fileName: _jsxFileName$h,
+            lineNumber: 30,
+            columnNumber: 29
+          }, void 0);
+        case "warning":
+          return u("div", {
+            className: "rounded-md bg-yellow-50 p-4",
+            children: u("div", {
+              className: "flex items-center",
+              children: [u("div", {
+                className: "flex-shrink-0 p-1",
+                children: u(SvgWarning, {
+                  className: "h-5 w-5 text-yellow-400",
+                  "aria-hidden": "true"
+                }, void 0, false, {
+                  fileName: _jsxFileName$h,
+                  lineNumber: 51,
+                  columnNumber: 41
+                }, void 0)
+              }, void 0, false, {
+                fileName: _jsxFileName$h,
+                lineNumber: 50,
+                columnNumber: 37
+              }, void 0), u("div", {
+                className: "ml-3",
+                children: [u("h3", {
+                  className: "text-sm font-medium text-yellow-800",
+                  children: title
+                }, void 0, false, {
+                  fileName: _jsxFileName$h,
+                  lineNumber: 54,
+                  columnNumber: 41
+                }, void 0), description.length > 0 && u("div", {
+                  className: "mt-2 text-sm text-yellow-700",
+                  children: u("p", {
+                    children: description
+                  }, void 0, false, {
+                    fileName: _jsxFileName$h,
+                    lineNumber: 57,
+                    columnNumber: 49
+                  }, void 0)
+                }, void 0, false, {
+                  fileName: _jsxFileName$h,
+                  lineNumber: 56,
+                  columnNumber: 45
+                }, void 0)]
+              }, void 0, true, {
+                fileName: _jsxFileName$h,
+                lineNumber: 53,
+                columnNumber: 37
+              }, void 0)]
+            }, void 0, true, {
+              fileName: _jsxFileName$h,
+              lineNumber: 49,
+              columnNumber: 33
+            }, void 0)
+          }, void 0, false, {
+            fileName: _jsxFileName$h,
+            lineNumber: 48,
+            columnNumber: 29
+          }, void 0);
+        case "info":
+          return u("div", {
+            className: "rounded-md bg-blue-50 p-4",
+            children: u("div", {
+              className: "flex items-center",
+              children: [u("div", {
+                className: "flex-shrink-0 p-1",
+                children: u(SvgInfo, {
+                  className: "h-5 w-5 text-blue-400",
+                  "aria-hidden": "true"
+                }, void 0, false, {
+                  fileName: _jsxFileName$h,
+                  lineNumber: 69,
+                  columnNumber: 41
+                }, void 0)
+              }, void 0, false, {
+                fileName: _jsxFileName$h,
+                lineNumber: 68,
+                columnNumber: 37
+              }, void 0), u("div", {
+                className: "ml-3 flex-1 md:flex md:justify-between",
+                children: [u("div", {
+                  children: [u("h3", {
+                    className: "text-sm font-medium text-blue-800",
+                    children: title
+                  }, void 0, false, {
+                    fileName: _jsxFileName$h,
+                    lineNumber: 73,
+                    columnNumber: 45
+                  }, void 0), description.length > 0 && u("div", {
+                    className: "mt-2 text-sm text-blue-700",
+                    children: u("p", {
+                      children: description
+                    }, void 0, false, {
+                      fileName: _jsxFileName$h,
+                      lineNumber: 76,
+                      columnNumber: 53
+                    }, void 0)
+                  }, void 0, false, {
+                    fileName: _jsxFileName$h,
+                    lineNumber: 75,
+                    columnNumber: 49
+                  }, void 0)]
+                }, void 0, true, {
+                  fileName: _jsxFileName$h,
+                  lineNumber: 72,
+                  columnNumber: 41
+                }, void 0), u("div", {
+                  className: "mt-4 text-sm md:ml-6",
+                  children: u("a", {
+                    href: url,
+                    className: "whitespace-nowrap font-medium text-blue-700 hover:text-blue-600",
+                    children: ["Details", u("span", {
+                      "aria-hidden": "true",
+                      children: "→"
+                    }, void 0, false, {
+                      fileName: _jsxFileName$h,
+                      lineNumber: 86,
+                      columnNumber: 49
+                    }, void 0)]
+                  }, void 0, true, {
+                    fileName: _jsxFileName$h,
+                    lineNumber: 81,
+                    columnNumber: 45
+                  }, void 0)
+                }, void 0, false, {
+                  fileName: _jsxFileName$h,
+                  lineNumber: 80,
+                  columnNumber: 41
+                }, void 0)]
+              }, void 0, true, {
+                fileName: _jsxFileName$h,
+                lineNumber: 71,
+                columnNumber: 37
+              }, void 0)]
+            }, void 0, true, {
+              fileName: _jsxFileName$h,
+              lineNumber: 67,
+              columnNumber: 33
+            }, void 0)
+          }, void 0, false, {
+            fileName: _jsxFileName$h,
+            lineNumber: 66,
+            columnNumber: 29
+          }, void 0);
+        case "success":
+          return u("div", {
+            className: "rounded-md bg-green-50 p-4",
+            children: u("div", {
+              className: "flex items-center",
+              children: [u("div", {
+                className: "flex-shrink-0 p-1",
+                children: u(SvgCheckmark, {
+                  className: "h-5 w-5 text-green-400",
+                  "aria-hidden": "true"
+                }, void 0, false, {
+                  fileName: _jsxFileName$h,
+                  lineNumber: 98,
+                  columnNumber: 41
+                }, void 0)
+              }, void 0, false, {
+                fileName: _jsxFileName$h,
+                lineNumber: 97,
+                columnNumber: 37
+              }, void 0), u("div", {
+                className: "ml-3",
+                children: [u("h3", {
+                  className: "text-sm font-medium text-green-800",
+                  children: title
+                }, void 0, false, {
+                  fileName: _jsxFileName$h,
+                  lineNumber: 101,
+                  columnNumber: 41
+                }, void 0), description.length > 0 && u("div", {
+                  className: "mt-2 text-sm text-green-700",
+                  children: u("p", {
+                    children: description
+                  }, void 0, false, {
+                    fileName: _jsxFileName$h,
+                    lineNumber: 104,
+                    columnNumber: 49
+                  }, void 0)
+                }, void 0, false, {
+                  fileName: _jsxFileName$h,
+                  lineNumber: 103,
+                  columnNumber: 45
+                }, void 0)]
+              }, void 0, true, {
+                fileName: _jsxFileName$h,
+                lineNumber: 100,
+                columnNumber: 37
+              }, void 0), u("div", {
+                className: "ml-auto",
+                children: u("div", {
+                  className: "md:ml-6",
+                  children: u("button", {
+                    type: "button",
+                    className: "inline-flex rounded-md bg-green-50 p-1.5 text-green-500 ring-off hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-green-50",
+                    children: [u("span", {
+                      className: "sr-only",
+                      children: "Dismiss"
+                    }, void 0, false, {
+                      fileName: _jsxFileName$h,
+                      lineNumber: 114,
+                      columnNumber: 49
+                    }, void 0), u(SvgX, {
+                      className: "h-5 w-5",
+                      "aria-hidden": "true",
+                      onClick
+                    }, void 0, false, {
+                      fileName: _jsxFileName$h,
+                      lineNumber: 115,
+                      columnNumber: 49
+                    }, void 0)]
+                  }, void 0, true, {
+                    fileName: _jsxFileName$h,
+                    lineNumber: 110,
+                    columnNumber: 45
+                  }, void 0)
+                }, void 0, false, {
+                  fileName: _jsxFileName$h,
+                  lineNumber: 109,
+                  columnNumber: 41
+                }, void 0)
+              }, void 0, false, {
+                fileName: _jsxFileName$h,
+                lineNumber: 108,
+                columnNumber: 37
+              }, void 0)]
+            }, void 0, true, {
+              fileName: _jsxFileName$h,
+              lineNumber: 96,
+              columnNumber: 33
+            }, void 0)
+          }, void 0, false, {
+            fileName: _jsxFileName$h,
+            lineNumber: 95,
+            columnNumber: 29
+          }, void 0);
+      }
+    })()
+  }, void 0, false, {
+    fileName: _jsxFileName$h,
+    lineNumber: 25,
+    columnNumber: 9
+  }, void 0);
+};
+const ELLIPSIS = "...";
+const getRange = (start, end) => {
+  const length = end - start + 1;
+  return Array.from({
+    length
+  }, (_, index) => start + index);
+};
+const usePagination = ({
+  currentPage,
+  totalPages,
+  siblingCount = 1
+}) => {
+  const paginationRange = t(useMemo$1(() => {
+    const firstPageIndex = 1;
+    const lastPageIndex = totalPages;
+    const totalPagePills = siblingCount + 5;
+    const leftSiblingIndex = Math.max(currentPage - siblingCount, 1);
+    const rightSiblingIndex = Math.min(currentPage + siblingCount, totalPages);
+    const showLeftDots = leftSiblingIndex > 2;
+    const showRightDots = rightSiblingIndex < totalPages - 2;
+    if (totalPages <= totalPagePills) {
+      return getRange(1, totalPages);
+    }
+    if (!showLeftDots && showRightDots) {
+      const leftItemCount = 3 + 2 * siblingCount;
+      const leftRange = getRange(1, leftItemCount);
+      return [...leftRange, ELLIPSIS, totalPages];
+    }
+    if (showLeftDots && !showRightDots) {
+      const rightItemCount = 3 + 2 * siblingCount;
+      const rightRange = getRange(totalPages - rightItemCount + 1, totalPages);
+      return [firstPageIndex, ELLIPSIS, ...rightRange];
+    }
+    if (showLeftDots && showRightDots) {
+      const middleRange = getRange(leftSiblingIndex, rightSiblingIndex);
+      return [firstPageIndex, ELLIPSIS, ...middleRange, ELLIPSIS, lastPageIndex];
+    }
+  }, [currentPage, totalPages, siblingCount]), "paginationRange: (string | number)[] | undefined");
+  return paginationRange;
+};
+var _jsxFileName$g = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/Pagination/Pagination.tsx";
+const Pagination = ({
+  onPageChange,
+  totalPages,
+  currentPage
+}) => {
+  const productsCtx = useProducts();
+  const paginationRange = usePagination({
+    currentPage,
+    totalPages
+  });
+  useEffect(() => {
+    const {
+      currentPage: currentPage2,
+      totalPages: totalPages2
+    } = productsCtx;
+    if (currentPage2 > totalPages2) {
+      onPageChange(totalPages2);
+    }
+    return () => {
+    };
+  }, [productsCtx, onPageChange]);
+  const onPrevious = () => {
+    if (currentPage > 1) {
+      onPageChange(currentPage - 1);
+    }
+  };
+  const onNext = () => {
+    if (currentPage < totalPages) {
+      onPageChange(currentPage + 1);
+    }
+  };
+  return u("ul", {
+    className: "ds-plp-pagination flex justify-center items-center mt-2 mb-6 list-none",
+    children: [u(SvgChevron, {
+      className: `h-sm w-sm transform rotate-90 ${currentPage === 1 ? "stroke-gray-400 cursor-not-allowed" : "stroke-gray-600 cursor-pointer"}`,
+      onClick: onPrevious
+    }, void 0, false, {
+      fileName: _jsxFileName$g,
+      lineNumber: 53,
+      columnNumber: 13
+    }, void 0), paginationRange == null ? void 0 : paginationRange.map((page) => {
+      if (page === ELLIPSIS) {
+        return u("li", {
+          className: "ds-plp-pagination__dots text-gray-500 mx-sm my-auto",
+          children: "..."
+        }, page, false, {
+          fileName: _jsxFileName$g,
+          lineNumber: 63,
+          columnNumber: 25
+        }, void 0);
+      }
+      return u("li", {
+        className: `ds-plp-pagination__item flex items-center cursor-pointer text-center text-gray-500 my-auto mx-sm ${currentPage === page ? "ds-plp-pagination__item--current text-black font-medium underline underline-offset-4 decoration-black" : ""}`,
+        onClick: () => onPageChange(page),
+        children: page
+      }, page, false, {
+        fileName: _jsxFileName$g,
+        lineNumber: 70,
+        columnNumber: 21
+      }, void 0);
+    }), u(SvgChevron, {
+      className: `h-sm w-sm transform -rotate-90 ${currentPage === totalPages ? "stroke-gray-400 cursor-not-allowed" : "stroke-gray-600 cursor-pointer"}`,
+      onClick: onNext
+    }, void 0, false, {
+      fileName: _jsxFileName$g,
+      lineNumber: 84,
+      columnNumber: 13
+    }, void 0)]
+  }, void 0, true, {
+    fileName: _jsxFileName$g,
+    lineNumber: 52,
+    columnNumber: 9
+  }, void 0);
+};
+const registerOpenDropdownHandlers = ({
+  options,
+  activeIndex,
+  setActiveIndex,
+  select
+}) => {
+  const optionsLength = options.length;
+  const keyDownCallback = (e) => {
+    e.preventDefault();
+    switch (e.key) {
+      case "Up":
+      case "ArrowUp":
+        e.preventDefault();
+        setActiveIndex(activeIndex <= 0 ? optionsLength - 1 : activeIndex - 1);
+        return;
+      case "Down":
+      case "ArrowDown":
+        e.preventDefault();
+        setActiveIndex(activeIndex + 1 === optionsLength ? 0 : activeIndex + 1);
+        return;
+      case "Enter":
+      case " ":
+        e.preventDefault();
+        select(options[activeIndex].value);
+        return;
+      case "Esc":
+      case "Escape":
+        e.preventDefault();
+        select(null);
+        return;
+      case "PageUp":
+      case "Home":
+        e.preventDefault();
+        setActiveIndex(0);
+        return;
+      case "PageDown":
+      case "End":
+        e.preventDefault();
+        setActiveIndex(options.length - 1);
+        return;
+    }
+  };
+  document.addEventListener("keydown", keyDownCallback);
+  return () => {
+    document.removeEventListener("keydown", keyDownCallback);
+  };
+};
+const registerClosedDropdownHandlers = ({
+  setIsDropdownOpen
+}) => {
+  const keyDownCallback = (e) => {
+    switch (e.key) {
+      case "Up":
+      case "ArrowUp":
+      case "Down":
+      case "ArrowDown":
+      case " ":
+      case "Enter":
+        e.preventDefault();
+        setIsDropdownOpen(true);
+    }
+  };
+  document.addEventListener("keydown", keyDownCallback);
+  return () => {
+    document.removeEventListener("keydown", keyDownCallback);
+  };
+};
+const isSafari = () => {
+  const chromeInAgent = navigator.userAgent.indexOf("Chrome") > -1;
+  const safariInAgent = navigator.userAgent.indexOf("Safari") > -1;
+  return safariInAgent && !chromeInAgent;
+};
+const useAccessibleDropdown = ({
+  options,
+  value,
+  onChange
+}) => {
+  const [isDropdownOpen, setIsDropdownOpenInternal] = t(useState(false), "isDropdownOpen");
+  const listRef = t(useRef(null), "listRef");
+  const [activeIndex, setActiveIndex] = t(useState(0), "activeIndex");
+  const [isFocus, setIsFocus] = t(useState(false), "isFocus");
+  const select = (value2) => {
+    if (value2) {
+      onChange && onChange(value2);
+    }
+    setIsDropdownOpen(false);
+    setIsFocus(false);
+  };
+  const setIsDropdownOpen = (v) => {
+    if (v) {
+      const selected = options == null ? void 0 : options.findIndex((o) => o.value === value);
+      setActiveIndex(selected < 0 ? 0 : selected);
+      if (listRef.current && isSafari()) {
+        requestAnimationFrame(() => {
+          var _a;
+          (_a = listRef == null ? void 0 : listRef.current) == null ? void 0 : _a.focus();
+        });
+      }
+    } else if (listRef.current && isSafari()) {
+      requestAnimationFrame(() => {
+        var _a, _b;
+        (_b = (_a = listRef == null ? void 0 : listRef.current) == null ? void 0 : _a.previousSibling) == null ? void 0 : _b.focus();
+      });
+    }
+    setIsDropdownOpenInternal(v);
+  };
+  useEffect(() => {
+    if (isDropdownOpen) {
+      return registerOpenDropdownHandlers({
+        activeIndex,
+        setActiveIndex,
+        options,
+        select
+      });
+    }
+    if (isFocus) {
+      return registerClosedDropdownHandlers({
+        setIsDropdownOpen
+      });
+    }
+  }, [isDropdownOpen, activeIndex, isFocus]);
+  return {
+    isDropdownOpen,
+    setIsDropdownOpen,
+    activeIndex,
+    setActiveIndex,
+    select,
+    setIsFocus,
+    listRef
+  };
+};
+var _jsxFileName$f = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/PerPagePicker/PerPagePicker.tsx";
+const PerPagePicker = ({
+  value,
+  pageSizeOptions,
+  onChange
+}) => {
+  const pageSizeButton = t(useRef(null), "pageSizeButton");
+  const pageSizeMenu = t(useRef(null), "pageSizeMenu");
+  const selectedOption = pageSizeOptions.find((e) => e.value === value);
+  const {
+    isDropdownOpen,
+    setIsDropdownOpen,
+    activeIndex,
+    setActiveIndex,
+    select,
+    setIsFocus,
+    listRef
+  } = useAccessibleDropdown({
+    options: pageSizeOptions,
+    value,
+    onChange
+  });
+  useEffect(() => {
+    const menuRef = pageSizeMenu.current;
+    const handleBlur = () => {
+      setIsFocus(false);
+      setIsDropdownOpen(false);
+    };
+    const handleFocus = () => {
+      var _a;
+      if (((_a = menuRef == null ? void 0 : menuRef.parentElement) == null ? void 0 : _a.querySelector(":hover")) !== menuRef) {
+        setIsFocus(false);
+        setIsDropdownOpen(false);
+      }
+    };
+    menuRef == null ? void 0 : menuRef.addEventListener("blur", handleBlur);
+    menuRef == null ? void 0 : menuRef.addEventListener("focusin", handleFocus);
+    menuRef == null ? void 0 : menuRef.addEventListener("focusout", handleFocus);
+    return () => {
+      menuRef == null ? void 0 : menuRef.removeEventListener("blur", handleBlur);
+      menuRef == null ? void 0 : menuRef.removeEventListener("focusin", handleFocus);
+      menuRef == null ? void 0 : menuRef.removeEventListener("focusout", handleFocus);
+    };
+  }, [pageSizeMenu]);
+  return u(Fragment, {
+    children: u("div", {
+      ref: pageSizeMenu,
+      className: "ds-sdk-per-page-picker ml-2 mr-2 relative inline-block text-left bg-gray-100 rounded-md outline outline-1 outline-gray-200 hover:outline-gray-600 h-[32px]",
+      children: [u("button", {
+        className: "group flex justify-center items-center font-normal text-sm text-gray-700 rounded-md hover:cursor-pointer border-none bg-transparent hover:border-none hover:bg-transparent focus:border-none focus:bg-transparent active:border-none active:bg-transparent active:shadow-none h-full w-full px-sm",
+        ref: pageSizeButton,
+        onClick: () => setIsDropdownOpen(!isDropdownOpen),
+        onFocus: () => setIsFocus(false),
+        onBlur: () => setIsFocus(false),
+        children: [selectedOption ? `${selectedOption.label}` : "24", u(SvgChevron, {
+          className: `flex-shrink-0 m-auto ml-sm h-md w-md stroke-1 stroke-gray-600 ${isDropdownOpen ? "" : "rotate-180"}`
+        }, void 0, false, {
+          fileName: _jsxFileName$f,
+          lineNumber: 80,
+          columnNumber: 21
+        }, void 0)]
+      }, void 0, true, {
+        fileName: _jsxFileName$f,
+        lineNumber: 72,
+        columnNumber: 17
+      }, void 0), isDropdownOpen && u("ul", {
+        ref: listRef,
+        className: "ds-sdk-per-page-picker__items origin-top-right absolute hover:cursor-pointer right-0 w-full rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none mt-2 z-20",
+        children: pageSizeOptions.map((option, i) => u("li", {
+          "aria-selected": option.value === (selectedOption == null ? void 0 : selectedOption.value),
+          onMouseOver: () => setActiveIndex(i),
+          className: `py-xs hover:bg-gray-100 hover:text-gray-900 ${i === activeIndex ? "bg-gray-100 text-gray-900" : ""}}`,
+          children: u("a", {
+            className: `ds-sdk-per-page-picker__items--item block-display px-md py-sm text-sm mb-0
               no-underline active:no-underline focus:no-underline hover:no-underline
-              hover:text-gray-900 ${g.value===(o==null?void 0:o.value)?"ds-sdk-per-page-picker__items--item-selected font-semibold text-gray-900":"font-normal text-gray-800"}`,onClick:()=>u(g.value),children:g.label})},f))})]})})},Je=({onClick:e})=>a("div",{className:"ds-sdk-add-to-cart-button",children:m("button",{className:"flex items-center justify-center text-white text-sm rounded-full h-[32px] w-full p-sm",style:{"background-color":"#464646"},onClick:e,children:[a(La,{className:"w-[24px] pr-4"}),"Add To Cart"]})}),es=({image:e,alt:t,carouselIndex:r,index:n})=>{const s=Zt(null),[o,i]=be(""),[c,d]=be(!1),l=vr(s,{rootMargin:"200px"});return Ve(()=>{var u;l&&l!=null&&l.isIntersecting&&n===r&&(d(!0),i(((u=l==null?void 0:l.target)==null?void 0:u.dataset.src)||""))},[l,r,n,e]),a("img",{className:`aspect-auto w-100 h-auto ${c?"visible":"invisible"}`,ref:s,src:o,"data-src":typeof e=="object"?e.src:e,srcset:typeof e=="object"?e.srcset:null,alt:t})},xt=({images:e,productName:t,carouselIndex:r,setCarouselIndex:n})=>{const[s,o]=be(0),i=l=>{n(l)},c=()=>{n(r===0?0:l=>l-1)},d=()=>{r===e.length-1?n(0):n(l=>l+1)};return a(Z,{children:m("div",{class:"ds-sdk-product-image-carousel max-h-[250px] max-w-2xl m-auto",children:[a("div",{className:"flex flex-nowrap overflow-hidden relative rounded-lg w-full h-full",onTouchStart:l=>o(l.touches[0].clientX),onTouchEnd:l=>{const u=l.changedTouches[0].clientX;s>u?d():s<u&&c()},children:a("div",{className:"overflow-hidden relative max-w-[200px]",children:a("div",{className:"flex transition ease-out duration-40",style:{transform:`translateX(-${r*100}%)`},children:e.map((l,u)=>a(es,{image:l,carouselIndex:r,index:u,alt:t},u))})})}),e.length>1&&a("div",{className:"absolute z-1 flex space-x-3 -translate-x-1/2 bottom-0 left-1/2 pb-2 ",children:e.map((l,u)=>a("span",{style:r===u?{width:"12px",height:"12px","border-radius":"50%",border:"1px solid black",cursor:"pointer","background-color":"#252525"}:{width:"12px",height:"12px","border-radius":"50%",border:"1px solid silver",cursor:"pointer","background-color":"silver"},onClick:p=>{p.preventDefault(),i(u)}},u))})]})})},Xe=({id:e,value:t,type:r,checked:n,onClick:s})=>{const o=n?"border-black":r==="COLOR_HEX"?"border-transparent":"border-gray";if(r==="COLOR_HEX"){const c=t.toLowerCase(),d=`min-w-[32px] rounded-full p-sm border border-[1.5px] ${o} h-[32px] outline-transparent`,l=c==="#ffffff"||c==="#fff";return a("div",{className:`ds-sdk-swatch-button_${e}`,children:a("button",{className:d,style:{backgroundColor:c,border:!n&&l?"1px solid #ccc":void 0},onClick:s,checked:n},e)})}if(r==="IMAGE"&&t){const c=`object-cover object-center min-w-[32px] rounded-full p-sm border border-[1.5px] ${o} h-[32px] outline-transparent`,d=`background: url(${t}) no-repeat center; background-size: initial`;return a("div",{className:`ds-sdk-swatch-button_${t}`,children:a("button",{className:c,style:d,onClick:s,checked:n},e)})}const i=`flex items-center bg-white rounded-full p-sm border border-[1.5px]h-[32px] ${o} outline-transparent`;return a("div",{className:`ds-sdk-swatch-button_${t}`,children:a("button",{className:i,onClick:s,checked:n,children:t},e)})},Ct=5,kt=({isSelected:e,swatches:t,showMore:r,productUrl:n,onClick:s,sku:o})=>{const i=t.length>Ct,c=i?Ct-1:t.length;return a("div",{className:"ds-sdk-product-item__product-swatch-group flex column items-center space-x-2",children:i?m("div",{className:"flex",children:[t.slice(0,c).map(d=>{const l=e(d.id);return d&&d.type=="COLOR_HEX"&&a("div",{className:"ds-sdk-product-item__product-swatch-item mr-2 text-sm text-primary",children:a(Xe,{id:d.id,value:d.value,type:d.type,checked:!!l,onClick:()=>s([d.id],o)})})}),a("a",{href:n,className:"hover:no-underline",children:a("div",{className:"ds-sdk-product-item__product-swatch-item text-sm text-primary",children:a(Xe,{id:"show-more",value:`+${t.length-c}`,type:"TEXT",checked:!1,onClick:r})})})]}):t.slice(0,c).map(d=>{const l=e(d.id);return d&&d.type=="COLOR_HEX"&&a("div",{className:"ds-sdk-product-item__product-swatch-item text-sm text-primary",children:a(Xe,{id:d.id,value:d.value,type:d.type,checked:!!l,onClick:()=>s([d.id],o)})})})})},St=({isComplexProductView:e,item:t,isBundle:r,isGrouped:n,isGiftCard:s,isConfigurable:o,discount:i,currencySymbol:c,currencyRate:d})=>{const l=Ie(nt);let u;"product"in t&&(u=t.productView.price.final.amount);const p=(f,b,h)=>l.ProductCard.bundlePrice.split(" ").map((L,S)=>L==="{fromBundlePrice}"?`${oe(f,b,h,!1,!0)} `:L==="{toBundlePrice}"?oe(f,b,h,!0,!0):a("span",{className:"text-gray-500 text-xs font-normal mr-xs",children:L},S)),v=(f,b,h,P)=>(P?l.ProductCard.from:l.ProductCard.startingAt).split("{productPrice}").map((x,B)=>x===""?oe(f,b,h,!1,!0):a("span",{className:"text-gray-500 text-xs font-normal mr-xs",children:x},B)),g=f=>{const b=f?m(Z,{children:[a("span",{className:"line-through pr-2",children:oe(t,c,d,!1,!1)}),a("span",{className:"text-secondary",children:oe(t,c,d,!1,!0)})]}):oe(t,c,d,!1,!0);return l.ProductCard.asLowAs.split("{discountPrice}").map((L,S)=>L===""?b:a("span",{className:"text-gray-500 text-xs font-normal mr-xs",children:L},S))};return a(Z,{children:u&&m("div",{className:"ds-sdk-product-price",children:[!r&&!n&&!o&&!e&&i&&m("p",{className:"ds-sdk-product-price--discount mt-xs text-sm font-medium text-gray-900 my-auto",children:[a("span",{className:"line-through pr-2",children:oe(t,c,d,!1,!1)}),a("span",{className:"text-secondary",children:oe(t,c,d,!1,!0)})]}),!r&&!n&&!s&&!o&&!e&&!i&&a("p",{className:"ds-sdk-product-price--no-discount mt-xs text-sm font-medium text-gray-900 my-auto",children:oe(t,c,d,!1,!0)}),r&&a("div",{className:"ds-sdk-product-price--bundle",children:a("p",{className:"mt-xs text-sm font-medium text-gray-900 my-auto",children:p(t,c,d)})}),n&&a("p",{className:"ds-sdk-product-price--grouped mt-xs text-sm font-medium text-gray-900 my-auto",children:v(t,c,d,!1)}),s&&a("p",{className:"ds-sdk-product-price--gift-card mt-xs text-sm font-medium text-gray-900 my-auto",children:v(t,c,d,!0)}),!n&&!r&&(o||e)&&a("p",{className:"ds-sdk-product-price--configurable mt-xs text-sm font-medium text-gray-900 my-auto",children:g(i)})]})})},_t=({item:e,currencySymbol:t,currencyRate:r,setRoute:n,refineProduct:s,setCartUpdated:o,setItemAdded:i,setError:c,addToCart:d})=>{var Fe,Te,ne,Be,ze,ce,Me,Ee,Re,Oe,$e,we,ye,Pe,xe,Ce,ke,A,F,q,Y,K,R,W,de,Se,_e;const{product:l,productView:u}=e,[p,v]=y(0),[g,f]=y(""),[b,h]=y(),[P,L]=y(),[S,x]=y(!1),{addToCartGraphQL:B,refreshCart:w}=ka(),{viewType:C}=J(),{config:{optimizeImages:M,imageBaseWidth:k,imageCarousel:I,listview:O}}=te(),{screenSize:D}=Ge(),Q=()=>{x(!0)},j=()=>{x(!1)},re=async(V,ie)=>{const _=await s(V,ie);f(V[0]),h(_.refineProduct.images),L(_),v(0)},ae=V=>g?g===V:!1,z=b?lt(b??[],I?3:1):lt(u.images??[],I?3:1,((Fe=l.image)==null?void 0:Fe.url)??void 0);let N=[];M&&(N=cr(z,k??200));const T=P?((ce=(ze=(Be=(ne=(Te=P.refineProduct)==null?void 0:Te.priceRange)==null?void 0:ne.minimum)==null?void 0:Be.regular)==null?void 0:ze.amount)==null?void 0:ce.value)>(($e=(Oe=(Re=(Ee=(Me=P.refineProduct)==null?void 0:Me.priceRange)==null?void 0:Ee.minimum)==null?void 0:Re.final)==null?void 0:Oe.amount)==null?void 0:$e.value):((Pe=(ye=(we=l==null?void 0:l.price_range)==null?void 0:we.minimum_price)==null?void 0:ye.regular_price)==null?void 0:Pe.value)>((ke=(Ce=(xe=l==null?void 0:l.price_range)==null?void 0:xe.minimum_price)==null?void 0:Ce.final_price)==null?void 0:ke.value)||((q=(F=(A=u==null?void 0:u.price)==null?void 0:A.regular)==null?void 0:F.amount)==null?void 0:q.value)>((R=(K=(Y=u==null?void 0:u.price)==null?void 0:Y.final)==null?void 0:K.amount)==null?void 0:R.value),$=(l==null?void 0:l.__typename)==="SimpleProduct",E=(u==null?void 0:u.__typename)==="ComplexProductView",H=(l==null?void 0:l.__typename)==="BundleProduct",se=(l==null?void 0:l.__typename)==="GroupedProduct",pe=(l==null?void 0:l.__typename)==="GiftCardProduct",fe=(l==null?void 0:l.__typename)==="ConfigurableProduct",ee=()=>{var V;(V=window.magentoStorefrontEvents)==null||V.publish.searchProductClick(me,l==null?void 0:l.sku)},X=n?n({sku:u==null?void 0:u.sku,urlKey:u==null?void 0:u.urlKey}):l==null?void 0:l.canonical_url,ve=async()=>{var V,ie;if(c(!1),$)if(d)await d(u.sku,[],1);else{const _=await B(u.sku);if(_!=null&&_.errors||((ie=(V=_==null?void 0:_.data)==null?void 0:V.addProductsToCart)==null?void 0:ie.user_errors.length)>0){c(!0);return}i(l.name),w==null||w(),o(!0)}else X&&window.open(X,"_self")};return O&&C==="listview"?a(Z,{children:m("div",{className:"grid-container",children:[a("div",{className:"product-image ds-sdk-product-item__image relative rounded-md overflow-hidden}",children:a("a",{href:X,onClick:ee,className:"!text-primary hover:no-underline hover:text-primary",children:z.length?a(xt,{images:N.length?N:z,productName:l.name,carouselIndex:p,setCarouselIndex:v}):a(gt,{className:"max-h-[250px] max-w-[200px] pr-5 m-auto object-cover object-center lg:w-full"})})}),a("div",{className:"product-details",children:m("div",{className:"flex flex-col w-1/3",children:[m("a",{href:X,onClick:ee,className:"!text-primary hover:no-underline hover:text-primary",children:[a("div",{className:"ds-sdk-product-item__product-name mt-xs text-sm text-primary",children:l.name!==null&&Ze(l.name)}),m("div",{className:"ds-sdk-product-item__product-sku mt-xs text-sm text-primary",children:["SKU:",l.sku!==null&&Ze(l.sku)]})]}),a("div",{className:"ds-sdk-product-item__product-swatch flex flex-row mt-sm text-sm text-primary pb-6",children:(W=u==null?void 0:u.options)==null?void 0:W.map(V=>V.id==="color"&&a(kt,{isSelected:ae,swatches:V.values??[],showMore:ee,productUrl:X,onClick:re,sku:u==null?void 0:u.sku},u==null?void 0:u.sku))})]})}),a("div",{className:"product-price",children:a("a",{href:X,onClick:ee,className:"!text-primary hover:no-underline hover:text-primary",children:a(St,{item:P??e,isBundle:H,isGrouped:se,isGiftCard:pe,isConfigurable:fe,isComplexProductView:E,discount:T,currencySymbol:t,currencyRate:r})})}),a("div",{className:"product-description text-sm text-primary mt-xs",children:a("a",{href:X,onClick:ee,className:"!text-primary hover:no-underline hover:text-primary",children:(de=l.short_description)!=null&&de.html?a(Z,{children:a("span",{dangerouslySetInnerHTML:{__html:l.short_description.html}})}):a("span",{})})}),a("div",{className:"product-ratings"}),a("div",{className:"product-add-to-cart",children:a("div",{className:"pb-4 h-[38px] w-96",children:a(Je,{onClick:ve})})})]})}):m("div",{className:"ds-sdk-product-item group relative flex flex-col max-w-sm justify-between h-full hover:border-[1.5px] border-solid hover:shadow-lg border-offset-2 p-2",style:{"border-color":"#D5D5D5"},onMouseEnter:Q,onMouseLeave:j,children:[a("a",{href:X,onClick:ee,className:"!text-primary hover:no-underline hover:text-primary",children:m("div",{className:"ds-sdk-product-item__main relative flex flex-col justify-between h-full",children:[a("div",{className:"ds-sdk-product-item__image relative w-full h-full rounded-md overflow-hidden",children:z.length?a(xt,{images:N.length?N:z,productName:l.name,carouselIndex:p,setCarouselIndex:v}):a(gt,{className:"max-h-[45rem] w-full object-cover object-center lg:w-full"})}),a("div",{className:"flex flex-row",children:m("div",{className:"flex flex-col",children:[a("div",{className:"ds-sdk-product-item__product-name mt-md text-sm text-primary",children:l.name!==null&&Ze(l.name)}),a(St,{item:P??e,isBundle:H,isGrouped:se,isGiftCard:pe,isConfigurable:fe,isComplexProductView:E,discount:T,currencySymbol:t,currencyRate:r})]})})]})}),(u==null?void 0:u.options)&&((Se=u.options)==null?void 0:Se.length)>0&&a("div",{className:"ds-sdk-product-item__product-swatch flex flex-row mt-sm text-sm text-primary",children:(_e=u==null?void 0:u.options)==null?void 0:_e.map(V=>V.id=="color"&&a(kt,{isSelected:ae,swatches:V.values??[],showMore:ee,productUrl:X,onClick:re,sku:l==null?void 0:l.sku},l==null?void 0:l.sku))}),m("div",{className:"pb-4 mt-sm",children:[D.mobile&&a(Je,{onClick:ve}),S&&D.desktop&&a(Je,{onClick:ve})]})]})},ts=({products:e,numberOfColumns:t,showFilters:r})=>{const n=J(),{currencySymbol:s,currencyRate:o,setRoute:i,refineProduct:c,refreshCart:d,addToCart:l}=n,[u,p]=y(!1),[v,g]=y(""),{viewType:f}=J(),[b,h]=y(!1),{config:{listview:P}}=te(),L=r?"ds-sdk-product-list bg-body max-w-full pl-3 pb-2xl sm:pb-24":"ds-sdk-product-list bg-body w-full mx-auto pb-2xl sm:pb-24";return G(()=>{d&&d()},[v]),m("div",{className:lr("ds-sdk-product-list bg-body pb-2xl sm:pb-24",L),children:[u&&a("div",{className:"mt-8",children:a(je,{title:`You added ${v} to your shopping cart.`,type:"success",description:"",onClick:()=>p(!1)})}),b&&a("div",{className:"mt-8",children:a(je,{title:"Something went wrong trying to add an item to your cart.",type:"error",description:"",onClick:()=>h(!1)})}),P&&f==="listview"?a("div",{className:"w-full",children:a("div",{className:"ds-sdk-product-list__list-view-default mt-md grid grid-cols-none pt-[15px] w-full gap-[10px]",children:e==null?void 0:e.map(S=>{var x;return a(_t,{item:S,setError:h,currencySymbol:s,currencyRate:o,setRoute:i,refineProduct:c,setCartUpdated:p,setItemAdded:g,addToCart:l},(x=S==null?void 0:S.productView)==null?void 0:x.id)})})}):a("div",{style:{gridTemplateColumns:`repeat(${t}, minmax(0, 1fr))`},className:"ds-sdk-product-list__grid mt-md grid gap-y-8 gap-x-2xl xl:gap-x-8",children:e==null?void 0:e.map(S=>{var x;return a(_t,{item:S,setError:h,currencySymbol:s,currencyRate:o,setRoute:i,refineProduct:c,setCartUpdated:p,setItemAdded:g,addToCart:l},(x=S==null?void 0:S.productView)==null?void 0:x.id)})})]})},Lt=({showFilters:e})=>{const t=J(),{screenSize:r}=Ge(),{variables:n,items:s,setCurrentPage:o,currentPage:i,setPageSize:c,pageSize:d,totalPages:l,totalCount:u,minQueryLength:p,minQueryLengthReached:v,pageSizeOptions:g,loading:f}=t;G(()=>{i<1&&h(1)},[]);const b=Array.from({length:8}),h=x=>{typeof x=="number"&&(o(x),Ft(x))},P=x=>{c(x),hr(x)},L=le(),S=(x,B,w)=>L.ProductContainers.pagePicker.split(" ").map((k,I)=>k==="{pageSize}"?a(w,{pageSizeOptions:B,value:x,onChange:P},I):`${k} `);if(!v){const B=L.ProductContainers.minquery.replace("{variables.phrase}",n.phrase).replace("{minQueryLength}",p);return a("div",{className:"ds-sdk-min-query__page mx-auto max-w-8xl py-12 px-4 sm:px-6 lg:px-8",children:a(je,{title:B,type:"warning",description:""})})}return u?m(Z,{children:[f?m("div",{style:{gridTemplateColumns:`repeat(${r.columns}, minmax(0, 1fr))`},className:"ds-sdk-product-list__grid mt-md grid grid-cols-1 gap-y-8 gap-x-md sm:grid-cols-2 md:grid-cols-3 xl:gap-x-4 pl-8",children:[" ",b.map((x,B)=>a(Ut,{},B))]}):a(ts,{products:s,numberOfColumns:r.columns,showFilters:e}),m("div",{className:`flex flex-row justify-between max-w-full ${e?"mx-auto":"mr-auto"} w-full h-full`,children:[a("div",{children:S(d,g,Wa)}),l>1&&a(Ja,{currentPage:i,totalPages:l,onPageChange:h})]})]}):a("div",{className:"ds-sdk-no-results__page mx-auto max-w-8xl py-12 px-4 sm:px-6 lg:px-8",children:a(je,{title:L.ProductContainers.noresults,type:"warning",description:""})})},rs=({phrase:e,onKeyPress:t,placeholder:r})=>a("div",{className:"relative ds-sdk-search-bar",children:a("input",{id:"search",type:"text",value:e,onKeyPress:t,className:"border border-gray-300 text-gray-800 text-sm block-display p-xs pr-lg ds-sdk-search-bar__input",placeholder:r,autocomplete:"off"})}),as=({value:e,sortOptions:t,onChange:r})=>{const n=Ae(null),s=Ae(null),o=t.find(h=>h.value===e),i=le(),d=i.SortDropdown.option.replace("{selectedOption}",`${o==null?void 0:o.label}`),{isDropdownOpen:l,setIsDropdownOpen:u,activeIndex:p,setActiveIndex:v,select:g,setIsFocus:f,listRef:b}=Gt({options:t,value:e,onChange:r});return G(()=>{const h=s.current,P=()=>{f(!1),u(!1)},L=()=>{var S;((S=h==null?void 0:h.parentElement)==null?void 0:S.querySelector(":hover"))!==h&&(f(!1),u(!1))};return h==null||h.addEventListener("blur",P),h==null||h.addEventListener("focusin",L),h==null||h.addEventListener("focusout",L),()=>{h==null||h.removeEventListener("blur",P),h==null||h.removeEventListener("focusin",L),h==null||h.removeEventListener("focusout",L)}},[s]),a(Z,{children:m("div",{ref:s,class:"ds-sdk-sort-dropdown relative inline-block text-left bg-gray-100 rounded-md outline outline-1 outline-gray-200 hover:outline-gray-600 h-[32px] z-9",children:[m("button",{className:"group flex justify-center items-center font-normal text-sm text-gray-700 rounded-md hover:cursor-pointer border-none bg-transparent hover:border-none hover:bg-transparent focus:border-none focus:bg-transparent active:border-none active:bg-transparent active:shadow-none h-full w-full px-sm",ref:n,onClick:()=>u(!l),onFocus:()=>f(!1),onBlur:()=>f(!1),children:[a(za,{className:"h-md w-md mr-sm stroke-gray-600 m-auto"}),o?d:i.SortDropdown.title,a(Ue,{className:`flex-shrink-0 m-auto ml-sm h-md w-md stroke-1 stroke-gray-600 ${l?"":"rotate-180"}`})]}),l&&a("ul",{ref:b,tabIndex:-1,className:"ds-sdk-sort-dropdown__items origin-top-right absolute hover:cursor-pointer right-0 w-full rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none mt-2 z-20",children:t.map((h,P)=>a("li",{"aria-selected":h.value===(o==null?void 0:o.value),onMouseOver:()=>v(P),className:`py-xs hover:bg-gray-100 hover:text-gray-900 ${P===p?"bg-gray-100 text-gray-900":""}}`,children:a("a",{className:`ds-sdk-sort-dropdown__items--item block-display px-md py-sm text-sm mb-0
+              hover:text-gray-900 ${option.value === (selectedOption == null ? void 0 : selectedOption.value) ? "ds-sdk-per-page-picker__items--item-selected font-semibold text-gray-900" : "font-normal text-gray-800"}`,
+            onClick: () => select(option.value),
+            children: option.label
+          }, void 0, false, {
+            fileName: _jsxFileName$f,
+            lineNumber: 100,
+            columnNumber: 33
+          }, void 0)
+        }, i, false, {
+          fileName: _jsxFileName$f,
+          lineNumber: 92,
+          columnNumber: 29
+        }, void 0))
+      }, void 0, false, {
+        fileName: _jsxFileName$f,
+        lineNumber: 87,
+        columnNumber: 21
+      }, void 0)]
+    }, void 0, true, {
+      fileName: _jsxFileName$f,
+      lineNumber: 68,
+      columnNumber: 13
+    }, void 0)
+  }, void 0);
+};
+var _jsxFileName$e = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/AddToCartButton/AddToCartButton.tsx";
+const AddToCartButton = ({
+  onClick
+}) => {
+  return u("div", {
+    className: "ds-sdk-add-to-cart-button",
+    children: u("button", {
+      className: "flex items-center justify-center text-white text-sm rounded-full h-[32px] w-full p-sm",
+      style: {
+        "background-color": `#464646`
+      },
+      onClick,
+      children: [u(SvgCart, {
+        className: "w-[24px] pr-4"
+      }, void 0, false, {
+        fileName: _jsxFileName$e,
+        lineNumber: 27,
+        columnNumber: 17
+      }, void 0), "Add To Cart"]
+    }, void 0, true, {
+      fileName: _jsxFileName$e,
+      lineNumber: 20,
+      columnNumber: 13
+    }, void 0)
+  }, void 0, false, {
+    fileName: _jsxFileName$e,
+    lineNumber: 19,
+    columnNumber: 9
+  }, void 0);
+};
+var _jsxFileName$d = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/ImageCarousel/Image.tsx";
+const Image = ({
+  image,
+  alt,
+  carouselIndex,
+  index
+}) => {
+  const imageRef = t(useRef$1(null), "imageRef");
+  const [imageUrl, setImageUrl] = t(useState$1(""), "imageUrl");
+  const [isVisible, setIsVisible] = t(useState$1(false), "isVisible");
+  const entry = useIntersectionObserver(imageRef, {
+    rootMargin: "200px"
+  });
+  useEffect$1(() => {
+    var _a;
+    if (!entry) return;
+    if ((entry == null ? void 0 : entry.isIntersecting) && index === carouselIndex) {
+      setIsVisible(true);
+      setImageUrl(((_a = entry == null ? void 0 : entry.target) == null ? void 0 : _a.dataset.src) || "");
+    }
+  }, [entry, carouselIndex, index, image]);
+  return u("img", {
+    className: `aspect-auto w-100 h-auto ${isVisible ? "visible" : "invisible"}`,
+    ref: imageRef,
+    src: imageUrl,
+    "data-src": typeof image === "object" ? image.src : image,
+    srcset: typeof image === "object" ? image.srcset : null,
+    alt
+  }, void 0, false, {
+    fileName: _jsxFileName$d,
+    lineNumber: 32,
+    columnNumber: 9
+  }, void 0);
+};
+var _jsxFileName$c = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/ImageCarousel/ImageCarousel.tsx";
+const ImageCarousel = ({
+  images,
+  productName,
+  carouselIndex,
+  setCarouselIndex
+}) => {
+  const [swipeIndex, setSwipeIndex] = t(useState$1(0), "swipeIndex");
+  const cirHandler = (index) => {
+    setCarouselIndex(index);
+  };
+  const prevHandler = () => {
+    if (carouselIndex === 0) {
+      setCarouselIndex(0);
+    } else {
+      setCarouselIndex((prev) => prev - 1);
+    }
+  };
+  const nextHandler = () => {
+    if (carouselIndex === images.length - 1) {
+      setCarouselIndex(0);
+    } else {
+      setCarouselIndex((prev) => prev + 1);
+    }
+  };
+  return u(Fragment, {
+    children: u("div", {
+      class: "ds-sdk-product-image-carousel max-h-[250px] max-w-2xl m-auto",
+      children: [u("div", {
+        className: "flex flex-nowrap overflow-hidden relative rounded-lg w-full h-full",
+        onTouchStart: (e) => setSwipeIndex(e.touches[0].clientX),
+        onTouchEnd: (e) => {
+          const endIndex = e.changedTouches[0].clientX;
+          if (swipeIndex > endIndex) {
+            nextHandler();
+          } else if (swipeIndex < endIndex) {
+            prevHandler();
+          }
+        },
+        children: u("div", {
+          className: "overflow-hidden relative max-w-[200px]",
+          children: u("div", {
+            className: `flex transition ease-out duration-40`,
+            style: {
+              transform: `translateX(-${carouselIndex * 100}%)`
+            },
+            children: images.map((item, index) => {
+              return u(Image, {
+                image: item,
+                carouselIndex,
+                index,
+                alt: productName
+              }, index, false, {
+                fileName: _jsxFileName$c,
+                lineNumber: 72,
+                columnNumber: 37
+              }, void 0);
+            })
+          }, void 0, false, {
+            fileName: _jsxFileName$c,
+            lineNumber: 64,
+            columnNumber: 25
+          }, void 0)
+        }, void 0, false, {
+          fileName: _jsxFileName$c,
+          lineNumber: 63,
+          columnNumber: 21
+        }, void 0)
+      }, void 0, false, {
+        fileName: _jsxFileName$c,
+        lineNumber: 51,
+        columnNumber: 17
+      }, void 0), images.length > 1 && u("div", {
+        className: "absolute z-1 flex space-x-3 -translate-x-1/2 bottom-0 left-1/2 pb-2 ",
+        children: images.map((_item, index) => {
+          return u("span", {
+            style: carouselIndex === index ? {
+              width: `12px`,
+              height: `12px`,
+              "border-radius": `50%`,
+              border: `1px solid black`,
+              cursor: `pointer`,
+              "background-color": `#252525`
+            } : {
+              width: `12px`,
+              height: `12px`,
+              "border-radius": `50%`,
+              border: `1px solid silver`,
+              cursor: `pointer`,
+              "background-color": `silver`
+            },
+            onClick: (e) => {
+              e.preventDefault();
+              cirHandler(index);
+            }
+          }, index, false, {
+            fileName: _jsxFileName$c,
+            lineNumber: 88,
+            columnNumber: 33
+          }, void 0);
+        })
+      }, void 0, false, {
+        fileName: _jsxFileName$c,
+        lineNumber: 85,
+        columnNumber: 21
+      }, void 0)]
+    }, void 0, true, {
+      fileName: _jsxFileName$c,
+      lineNumber: 50,
+      columnNumber: 13
+    }, void 0)
+  }, void 0);
+};
+var _jsxFileName$b = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/SwatchButton/SwatchButton.tsx";
+const SwatchButton = ({
+  id,
+  value,
+  type,
+  checked,
+  onClick
+}) => {
+  const outlineColor = checked ? "border-black" : type === "COLOR_HEX" ? "border-transparent" : "border-gray";
+  if (type === "COLOR_HEX") {
+    const color = value.toLowerCase();
+    const className2 = `min-w-[32px] rounded-full p-sm border border-[1.5px] ${outlineColor} h-[32px] outline-transparent`;
+    const isWhite = color === "#ffffff" || color === "#fff";
+    return u("div", {
+      className: `ds-sdk-swatch-button_${id}`,
+      children: u("button", {
+        className: className2,
+        style: {
+          backgroundColor: color,
+          border: !checked && isWhite ? "1px solid #ccc" : void 0
+        },
+        onClick,
+        checked
+      }, id, false, {
+        fileName: _jsxFileName$b,
+        lineNumber: 34,
+        columnNumber: 17
+      }, void 0)
+    }, void 0, false, {
+      fileName: _jsxFileName$b,
+      lineNumber: 33,
+      columnNumber: 13
+    }, void 0);
+  }
+  if (type === "IMAGE" && value) {
+    const className2 = `object-cover object-center min-w-[32px] rounded-full p-sm border border-[1.5px] ${outlineColor} h-[32px] outline-transparent`;
+    const style = `background: url(${value}) no-repeat center; background-size: initial`;
+    return u("div", {
+      className: `ds-sdk-swatch-button_${value}`,
+      children: u("button", {
+        className: className2,
+        style,
+        onClick,
+        checked
+      }, id, false, {
+        fileName: _jsxFileName$b,
+        lineNumber: 53,
+        columnNumber: 17
+      }, void 0)
+    }, void 0, false, {
+      fileName: _jsxFileName$b,
+      lineNumber: 52,
+      columnNumber: 13
+    }, void 0);
+  }
+  const className = `flex items-center bg-white rounded-full p-sm border border-[1.5px]h-[32px] ${outlineColor} outline-transparent`;
+  return u("div", {
+    className: `ds-sdk-swatch-button_${value}`,
+    children: u("button", {
+      className,
+      onClick,
+      checked,
+      children: value
+    }, id, false, {
+      fileName: _jsxFileName$b,
+      lineNumber: 62,
+      columnNumber: 13
+    }, void 0)
+  }, void 0, false, {
+    fileName: _jsxFileName$b,
+    lineNumber: 61,
+    columnNumber: 9
+  }, void 0);
+};
+var _jsxFileName$a = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/SwatchButtonGroup/SwatchButtonGroup.tsx";
+const MAX_SWATCHES = 5;
+const SwatchButtonGroup = ({
+  isSelected,
+  swatches,
+  showMore,
+  productUrl,
+  onClick,
+  sku
+}) => {
+  const moreSwatches = swatches.length > MAX_SWATCHES;
+  const numberOfOptions = moreSwatches ? MAX_SWATCHES - 1 : swatches.length;
+  return u("div", {
+    className: "ds-sdk-product-item__product-swatch-group flex column items-center space-x-2",
+    children: moreSwatches ? u("div", {
+      className: "flex",
+      children: [swatches.slice(0, numberOfOptions).map((swatch) => {
+        const checked = isSelected(swatch.id);
+        return swatch && swatch.type == "COLOR_HEX" && u("div", {
+          className: "ds-sdk-product-item__product-swatch-item mr-2 text-sm text-primary",
+          children: u(SwatchButton, {
+            id: swatch.id,
+            value: swatch.value,
+            type: swatch.type,
+            checked: !!checked,
+            onClick: () => onClick([swatch.id], sku)
+          }, void 0, false, {
+            fileName: _jsxFileName$a,
+            lineNumber: 46,
+            columnNumber: 37
+          }, void 0)
+        }, void 0, false, {
+          fileName: _jsxFileName$a,
+          lineNumber: 45,
+          columnNumber: 33
+        }, void 0);
+      }), u("a", {
+        href: productUrl,
+        className: "hover:no-underline",
+        children: u("div", {
+          className: "ds-sdk-product-item__product-swatch-item text-sm text-primary",
+          children: u(SwatchButton, {
+            id: "show-more",
+            value: `+${swatches.length - numberOfOptions}`,
+            type: "TEXT",
+            checked: false,
+            onClick: showMore
+          }, void 0, false, {
+            fileName: _jsxFileName$a,
+            lineNumber: 59,
+            columnNumber: 29
+          }, void 0)
+        }, void 0, false, {
+          fileName: _jsxFileName$a,
+          lineNumber: 58,
+          columnNumber: 25
+        }, void 0)
+      }, void 0, false, {
+        fileName: _jsxFileName$a,
+        lineNumber: 57,
+        columnNumber: 21
+      }, void 0)]
+    }, void 0, true, {
+      fileName: _jsxFileName$a,
+      lineNumber: 39,
+      columnNumber: 17
+    }, void 0) : swatches.slice(0, numberOfOptions).map((swatch) => {
+      const checked = isSelected(swatch.id);
+      return swatch && swatch.type == "COLOR_HEX" && u("div", {
+        className: "ds-sdk-product-item__product-swatch-item text-sm text-primary",
+        children: u(SwatchButton, {
+          id: swatch.id,
+          value: swatch.value,
+          type: swatch.type,
+          checked: !!checked,
+          onClick: () => onClick([swatch.id], sku)
+        }, void 0, false, {
+          fileName: _jsxFileName$a,
+          lineNumber: 76,
+          columnNumber: 33
+        }, void 0)
+      }, void 0, false, {
+        fileName: _jsxFileName$a,
+        lineNumber: 75,
+        columnNumber: 29
+      }, void 0);
+    })
+  }, void 0, false, {
+    fileName: _jsxFileName$a,
+    lineNumber: 37,
+    columnNumber: 9
+  }, void 0);
+};
+var _jsxFileName$9 = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/ProductItem/ProductPrice.tsx";
+const ProductPrice = ({
+  isComplexProductView,
+  item,
+  isBundle,
+  isGrouped,
+  isGiftCard,
+  isConfigurable,
+  discount,
+  currencySymbol,
+  currencyRate
+}) => {
+  const translation = useContext(TranslationContext);
+  let price;
+  if ("product" in item) {
+    price = item.productView.price.final.amount;
+  }
+  const getBundledPrice = (item2, currencySymbol2, currencyRate2) => {
+    const bundlePriceTranslationOrder = translation.ProductCard.bundlePrice.split(" ");
+    return bundlePriceTranslationOrder.map((word, index) => word === "{fromBundlePrice}" ? `${getProductPrice(item2, currencySymbol2, currencyRate2, false, true)} ` : word === "{toBundlePrice}" ? getProductPrice(item2, currencySymbol2, currencyRate2, true, true) : u("span", {
+      className: "text-gray-500 text-xs font-normal mr-xs",
+      children: word
+    }, index, false, {
+      fileName: _jsxFileName$9,
+      lineNumber: 66,
+      columnNumber: 17
+    }, void 0));
+  };
+  const getPriceFormat = (item2, currencySymbol2, currencyRate2, isGiftCard2) => {
+    const priceTranslation = isGiftCard2 ? translation.ProductCard.from : translation.ProductCard.startingAt;
+    const startingAtTranslationOrder = priceTranslation.split("{productPrice}");
+    return startingAtTranslationOrder.map((word, index) => word === "" ? getProductPrice(item2, currencySymbol2, currencyRate2, false, true) : u("span", {
+      className: "text-gray-500 text-xs font-normal mr-xs",
+      children: word
+    }, index, false, {
+      fileName: _jsxFileName$9,
+      lineNumber: 85,
+      columnNumber: 17
+    }, void 0));
+  };
+  const getDiscountedPrice = (discount2) => {
+    const discountPrice = discount2 ? u(Fragment, {
+      children: [u("span", {
+        className: "line-through pr-2",
+        children: getProductPrice(item, currencySymbol, currencyRate, false, false)
+      }, void 0, false, {
+        fileName: _jsxFileName$9,
+        lineNumber: 95,
+        columnNumber: 17
+      }, void 0), u("span", {
+        className: "text-secondary",
+        children: getProductPrice(item, currencySymbol, currencyRate, false, true)
+      }, void 0, false, {
+        fileName: _jsxFileName$9,
+        lineNumber: 98,
+        columnNumber: 17
+      }, void 0)]
+    }, void 0) : getProductPrice(item, currencySymbol, currencyRate, false, true);
+    const discountedPriceTranslation = translation.ProductCard.asLowAs;
+    const discountedPriceTranslationOrder = discountedPriceTranslation.split("{discountPrice}");
+    return discountedPriceTranslationOrder.map((word, index) => word === "" ? discountPrice : u("span", {
+      className: "text-gray-500 text-xs font-normal mr-xs",
+      children: word
+    }, index, false, {
+      fileName: _jsxFileName$9,
+      lineNumber: 111,
+      columnNumber: 17
+    }, void 0));
+  };
+  return u(Fragment, {
+    children: price && u("div", {
+      className: "ds-sdk-product-price",
+      children: [!isBundle && !isGrouped && !isConfigurable && !isComplexProductView && discount && u("p", {
+        className: "ds-sdk-product-price--discount mt-xs text-sm font-medium text-gray-900 my-auto",
+        children: [u("span", {
+          className: "line-through pr-2",
+          children: getProductPrice(item, currencySymbol, currencyRate, false, false)
+        }, void 0, false, {
+          fileName: _jsxFileName$9,
+          lineNumber: 124,
+          columnNumber: 29
+        }, void 0), u("span", {
+          className: "text-secondary",
+          children: getProductPrice(item, currencySymbol, currencyRate, false, true)
+        }, void 0, false, {
+          fileName: _jsxFileName$9,
+          lineNumber: 127,
+          columnNumber: 29
+        }, void 0)]
+      }, void 0, true, {
+        fileName: _jsxFileName$9,
+        lineNumber: 123,
+        columnNumber: 25
+      }, void 0), !isBundle && !isGrouped && !isGiftCard && !isConfigurable && !isComplexProductView && !discount && u("p", {
+        className: "ds-sdk-product-price--no-discount mt-xs text-sm font-medium text-gray-900 my-auto",
+        children: getProductPrice(item, currencySymbol, currencyRate, false, true)
+      }, void 0, false, {
+        fileName: _jsxFileName$9,
+        lineNumber: 139,
+        columnNumber: 29
+      }, void 0), isBundle && u("div", {
+        className: "ds-sdk-product-price--bundle",
+        children: u("p", {
+          className: "mt-xs text-sm font-medium text-gray-900 my-auto",
+          children: getBundledPrice(item, currencySymbol, currencyRate)
+        }, void 0, false, {
+          fileName: _jsxFileName$9,
+          lineNumber: 146,
+          columnNumber: 29
+        }, void 0)
+      }, void 0, false, {
+        fileName: _jsxFileName$9,
+        lineNumber: 145,
+        columnNumber: 25
+      }, void 0), isGrouped && u("p", {
+        className: "ds-sdk-product-price--grouped mt-xs text-sm font-medium text-gray-900 my-auto",
+        children: getPriceFormat(item, currencySymbol, currencyRate, false)
+      }, void 0, false, {
+        fileName: _jsxFileName$9,
+        lineNumber: 153,
+        columnNumber: 25
+      }, void 0), isGiftCard && u("p", {
+        className: "ds-sdk-product-price--gift-card mt-xs text-sm font-medium text-gray-900 my-auto",
+        children: getPriceFormat(item, currencySymbol, currencyRate, true)
+      }, void 0, false, {
+        fileName: _jsxFileName$9,
+        lineNumber: 159,
+        columnNumber: 25
+      }, void 0), !isGrouped && !isBundle && (isConfigurable || isComplexProductView) && u("p", {
+        className: "ds-sdk-product-price--configurable mt-xs text-sm font-medium text-gray-900 my-auto",
+        children: getDiscountedPrice(discount)
+      }, void 0, false, {
+        fileName: _jsxFileName$9,
+        lineNumber: 165,
+        columnNumber: 25
+      }, void 0)]
+    }, void 0, true, {
+      fileName: _jsxFileName$9,
+      lineNumber: 121,
+      columnNumber: 17
+    }, void 0)
+  }, void 0);
+};
+var _jsxFileName$8 = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/ProductItem/ProductItem.tsx";
+const ProductItem = ({
+  item,
+  currencySymbol,
+  currencyRate,
+  setRoute,
+  refineProduct,
+  setCartUpdated,
+  setItemAdded,
+  setError,
+  addToCart
+}) => {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _A;
+  const {
+    product,
+    productView
+  } = item;
+  const [carouselIndex, setCarouselIndex] = t(useState(0), "carouselIndex");
+  const [selectedSwatch, setSelectedSwatch] = t(useState(""), "selectedSwatch");
+  const [imagesFromRefinedProduct, setImagesFromRefinedProduct] = t(useState(), "imagesFromRefinedProduct");
+  const [refinedProduct, setRefinedProduct] = t(useState(), "refinedProduct");
+  const [isHovering, setIsHovering] = t(useState(false), "isHovering");
+  const {
+    addToCartGraphQL,
+    refreshCart
+  } = useCart();
+  const {
+    viewType
+  } = useProducts();
+  const {
+    config: {
+      optimizeImages,
+      imageBaseWidth,
+      imageCarousel,
+      listview
+    }
+  } = useStore();
+  const {
+    screenSize
+  } = useSensor();
+  const handleMouseOver = () => {
+    setIsHovering(true);
+  };
+  const handleMouseOut = () => {
+    setIsHovering(false);
+  };
+  const handleSelection = async (optionIds, sku) => {
+    const data = await refineProduct(optionIds, sku);
+    setSelectedSwatch(optionIds[0]);
+    setImagesFromRefinedProduct(data.refineProduct.images);
+    setRefinedProduct(data);
+    setCarouselIndex(0);
+  };
+  const isSelected = (id) => {
+    const selected = selectedSwatch ? selectedSwatch === id : false;
+    return selected;
+  };
+  const productImageArray = imagesFromRefinedProduct ? getProductImageURLs(imagesFromRefinedProduct ?? [], imageCarousel ? 3 : 1) : getProductImageURLs(
+    productView.images ?? [],
+    imageCarousel ? 3 : 1,
+    // number of images to display in carousel
+    ((_a = product.image) == null ? void 0 : _a.url) ?? void 0
+  );
+  let optimizedImageArray = [];
+  if (optimizeImages) {
+    optimizedImageArray = generateOptimizedImages(productImageArray, imageBaseWidth ?? 200);
+  }
+  const discount = refinedProduct ? ((_f = (_e = (_d = (_c = (_b = refinedProduct.refineProduct) == null ? void 0 : _b.priceRange) == null ? void 0 : _c.minimum) == null ? void 0 : _d.regular) == null ? void 0 : _e.amount) == null ? void 0 : _f.value) > ((_k = (_j = (_i = (_h = (_g = refinedProduct.refineProduct) == null ? void 0 : _g.priceRange) == null ? void 0 : _h.minimum) == null ? void 0 : _i.final) == null ? void 0 : _j.amount) == null ? void 0 : _k.value) : ((_n = (_m = (_l = product == null ? void 0 : product.price_range) == null ? void 0 : _l.minimum_price) == null ? void 0 : _m.regular_price) == null ? void 0 : _n.value) > ((_q = (_p = (_o = product == null ? void 0 : product.price_range) == null ? void 0 : _o.minimum_price) == null ? void 0 : _p.final_price) == null ? void 0 : _q.value) || ((_t = (_s = (_r = productView == null ? void 0 : productView.price) == null ? void 0 : _r.regular) == null ? void 0 : _s.amount) == null ? void 0 : _t.value) > ((_w = (_v = (_u = productView == null ? void 0 : productView.price) == null ? void 0 : _u.final) == null ? void 0 : _v.amount) == null ? void 0 : _w.value);
+  const isSimple = (product == null ? void 0 : product.__typename) === "SimpleProduct";
+  const isComplexProductView = (productView == null ? void 0 : productView.__typename) === "ComplexProductView";
+  const isBundle = (product == null ? void 0 : product.__typename) === "BundleProduct";
+  const isGrouped = (product == null ? void 0 : product.__typename) === "GroupedProduct";
+  const isGiftCard = (product == null ? void 0 : product.__typename) === "GiftCardProduct";
+  const isConfigurable = (product == null ? void 0 : product.__typename) === "ConfigurableProduct";
+  const onProductClick = () => {
+    var _a2;
+    (_a2 = window.magentoStorefrontEvents) == null ? void 0 : _a2.publish.searchProductClick(SEARCH_UNIT_ID, product == null ? void 0 : product.sku);
+  };
+  const productUrl = setRoute ? setRoute({
+    sku: productView == null ? void 0 : productView.sku,
+    urlKey: productView == null ? void 0 : productView.urlKey
+  }) : product == null ? void 0 : product.canonical_url;
+  const handleAddToCart = async () => {
+    var _a2, _b2;
+    setError(false);
+    if (isSimple) {
+      if (addToCart) {
+        await addToCart(productView.sku, [], 1);
+      } else {
+        const response = await addToCartGraphQL(productView.sku);
+        if ((response == null ? void 0 : response.errors) || ((_b2 = (_a2 = response == null ? void 0 : response.data) == null ? void 0 : _a2.addProductsToCart) == null ? void 0 : _b2.user_errors.length) > 0) {
+          setError(true);
+          return;
+        }
+        setItemAdded(product.name);
+        refreshCart == null ? void 0 : refreshCart();
+        setCartUpdated(true);
+      }
+    } else if (productUrl) {
+      window.open(productUrl, "_self");
+    }
+  };
+  if (listview && viewType === "listview") {
+    return u(Fragment, {
+      children: u("div", {
+        className: "grid-container",
+        children: [u("div", {
+          className: `product-image ds-sdk-product-item__image relative rounded-md overflow-hidden}`,
+          children: u("a", {
+            href: productUrl,
+            onClick: onProductClick,
+            className: "!text-primary hover:no-underline hover:text-primary",
+            children: productImageArray.length ? u(ImageCarousel, {
+              images: optimizedImageArray.length ? optimizedImageArray : productImageArray,
+              productName: product.name,
+              carouselIndex,
+              setCarouselIndex
+            }, void 0, false, {
+              fileName: _jsxFileName$8,
+              lineNumber: 155,
+              columnNumber: 33
+            }, void 0) : u(SvgNoImage, {
+              className: `max-h-[250px] max-w-[200px] pr-5 m-auto object-cover object-center lg:w-full`
+            }, void 0, false, {
+              fileName: _jsxFileName$8,
+              lineNumber: 162,
+              columnNumber: 33
+            }, void 0)
+          }, void 0, false, {
+            fileName: _jsxFileName$8,
+            lineNumber: 148,
+            columnNumber: 25
+          }, void 0)
+        }, void 0, false, {
+          fileName: _jsxFileName$8,
+          lineNumber: 147,
+          columnNumber: 21
+        }, void 0), u("div", {
+          className: "product-details",
+          children: u("div", {
+            className: "flex flex-col w-1/3",
+            children: [u("a", {
+              href: productUrl,
+              onClick: onProductClick,
+              className: "!text-primary hover:no-underline hover:text-primary",
+              children: [u("div", {
+                className: "ds-sdk-product-item__product-name mt-xs text-sm text-primary",
+                children: product.name !== null && htmlStringDecode(product.name)
+              }, void 0, false, {
+                fileName: _jsxFileName$8,
+                lineNumber: 176,
+                columnNumber: 33
+              }, void 0), u("div", {
+                className: "ds-sdk-product-item__product-sku mt-xs text-sm text-primary",
+                children: ["SKU:", product.sku !== null && htmlStringDecode(product.sku)]
+              }, void 0, true, {
+                fileName: _jsxFileName$8,
+                lineNumber: 179,
+                columnNumber: 33
+              }, void 0)]
+            }, void 0, true, {
+              fileName: _jsxFileName$8,
+              lineNumber: 171,
+              columnNumber: 29
+            }, void 0), u("div", {
+              className: "ds-sdk-product-item__product-swatch flex flex-row mt-sm text-sm text-primary pb-6",
+              children: (_x = productView == null ? void 0 : productView.options) == null ? void 0 : _x.map((swatches) => swatches.id === "color" && u(SwatchButtonGroup, {
+                isSelected,
+                swatches: swatches.values ?? [],
+                showMore: onProductClick,
+                productUrl,
+                onClick: handleSelection,
+                sku: productView == null ? void 0 : productView.sku
+              }, productView == null ? void 0 : productView.sku, false, {
+                fileName: _jsxFileName$8,
+                lineNumber: 190,
+                columnNumber: 45
+              }, void 0))
+            }, void 0, false, {
+              fileName: _jsxFileName$8,
+              lineNumber: 186,
+              columnNumber: 29
+            }, void 0)]
+          }, void 0, true, {
+            fileName: _jsxFileName$8,
+            lineNumber: 169,
+            columnNumber: 25
+          }, void 0)
+        }, void 0, false, {
+          fileName: _jsxFileName$8,
+          lineNumber: 168,
+          columnNumber: 21
+        }, void 0), u("div", {
+          className: "product-price",
+          children: u("a", {
+            href: productUrl,
+            onClick: onProductClick,
+            className: "!text-primary hover:no-underline hover:text-primary",
+            children: u(ProductPrice, {
+              item: refinedProduct ?? item,
+              isBundle,
+              isGrouped,
+              isGiftCard,
+              isConfigurable,
+              isComplexProductView,
+              discount,
+              currencySymbol,
+              currencyRate
+            }, void 0, false, {
+              fileName: _jsxFileName$8,
+              lineNumber: 210,
+              columnNumber: 29
+            }, void 0)
+          }, void 0, false, {
+            fileName: _jsxFileName$8,
+            lineNumber: 205,
+            columnNumber: 25
+          }, void 0)
+        }, void 0, false, {
+          fileName: _jsxFileName$8,
+          lineNumber: 204,
+          columnNumber: 21
+        }, void 0), u("div", {
+          className: "product-description text-sm text-primary mt-xs",
+          children: u("a", {
+            href: productUrl,
+            onClick: onProductClick,
+            className: "!text-primary hover:no-underline hover:text-primary",
+            children: ((_y = product.short_description) == null ? void 0 : _y.html) ? u(Fragment, {
+              children: u("span", {
+                dangerouslySetInnerHTML: {
+                  __html: product.short_description.html
+                }
+              }, void 0, false, {
+                fileName: _jsxFileName$8,
+                lineNumber: 231,
+                columnNumber: 37
+              }, void 0)
+            }, void 0, false) : u("span", {}, void 0, false, {
+              fileName: _jsxFileName$8,
+              lineNumber: 238,
+              columnNumber: 33
+            }, void 0)
+          }, void 0, false, {
+            fileName: _jsxFileName$8,
+            lineNumber: 224,
+            columnNumber: 25
+          }, void 0)
+        }, void 0, false, {
+          fileName: _jsxFileName$8,
+          lineNumber: 223,
+          columnNumber: 21
+        }, void 0), u("div", {
+          className: "product-ratings"
+        }, void 0, false, {
+          fileName: _jsxFileName$8,
+          lineNumber: 244,
+          columnNumber: 21
+        }, void 0), u("div", {
+          className: "product-add-to-cart",
+          children: u("div", {
+            className: "pb-4 h-[38px] w-96",
+            children: u(AddToCartButton, {
+              onClick: handleAddToCart
+            }, void 0, false, {
+              fileName: _jsxFileName$8,
+              lineNumber: 247,
+              columnNumber: 29
+            }, void 0)
+          }, void 0, false, {
+            fileName: _jsxFileName$8,
+            lineNumber: 246,
+            columnNumber: 25
+          }, void 0)
+        }, void 0, false, {
+          fileName: _jsxFileName$8,
+          lineNumber: 245,
+          columnNumber: 21
+        }, void 0)]
+      }, void 0, true, {
+        fileName: _jsxFileName$8,
+        lineNumber: 146,
+        columnNumber: 17
+      }, void 0)
+    }, void 0);
+  }
+  return u("div", {
+    className: "ds-sdk-product-item group relative flex flex-col max-w-sm justify-between h-full hover:border-[1.5px] border-solid hover:shadow-lg border-offset-2 p-2",
+    style: {
+      "border-color": "#D5D5D5"
+    },
+    onMouseEnter: handleMouseOver,
+    onMouseLeave: handleMouseOut,
+    children: [u("a", {
+      href: productUrl,
+      onClick: onProductClick,
+      className: "!text-primary hover:no-underline hover:text-primary",
+      children: u("div", {
+        className: "ds-sdk-product-item__main relative flex flex-col justify-between h-full",
+        children: [u("div", {
+          className: "ds-sdk-product-item__image relative w-full h-full rounded-md overflow-hidden",
+          children: productImageArray.length ? u(ImageCarousel, {
+            images: optimizedImageArray.length ? optimizedImageArray : productImageArray,
+            productName: product.name,
+            carouselIndex,
+            setCarouselIndex
+          }, void 0, false, {
+            fileName: _jsxFileName$8,
+            lineNumber: 272,
+            columnNumber: 29
+          }, void 0) : u(SvgNoImage, {
+            className: `max-h-[45rem] w-full object-cover object-center lg:w-full`
+          }, void 0, false, {
+            fileName: _jsxFileName$8,
+            lineNumber: 279,
+            columnNumber: 29
+          }, void 0)
+        }, void 0, false, {
+          fileName: _jsxFileName$8,
+          lineNumber: 270,
+          columnNumber: 21
+        }, void 0), u("div", {
+          className: "flex flex-row",
+          children: u("div", {
+            className: "flex flex-col",
+            children: [u("div", {
+              className: "ds-sdk-product-item__product-name mt-md text-sm text-primary",
+              children: product.name !== null && htmlStringDecode(product.name)
+            }, void 0, false, {
+              fileName: _jsxFileName$8,
+              lineNumber: 284,
+              columnNumber: 29
+            }, void 0), u(ProductPrice, {
+              item: refinedProduct ?? item,
+              isBundle,
+              isGrouped,
+              isGiftCard,
+              isConfigurable,
+              isComplexProductView,
+              discount,
+              currencySymbol,
+              currencyRate
+            }, void 0, false, {
+              fileName: _jsxFileName$8,
+              lineNumber: 287,
+              columnNumber: 29
+            }, void 0)]
+          }, void 0, true, {
+            fileName: _jsxFileName$8,
+            lineNumber: 283,
+            columnNumber: 25
+          }, void 0)
+        }, void 0, false, {
+          fileName: _jsxFileName$8,
+          lineNumber: 282,
+          columnNumber: 21
+        }, void 0)]
+      }, void 0, true, {
+        fileName: _jsxFileName$8,
+        lineNumber: 269,
+        columnNumber: 17
+      }, void 0)
+    }, void 0, false, {
+      fileName: _jsxFileName$8,
+      lineNumber: 264,
+      columnNumber: 13
+    }, void 0), (productView == null ? void 0 : productView.options) && ((_z = productView.options) == null ? void 0 : _z.length) > 0 && u("div", {
+      className: "ds-sdk-product-item__product-swatch flex flex-row mt-sm text-sm text-primary",
+      children: (_A = productView == null ? void 0 : productView.options) == null ? void 0 : _A.map((swatches) => swatches.id == "color" && u(SwatchButtonGroup, {
+        isSelected,
+        swatches: swatches.values ?? [],
+        showMore: onProductClick,
+        productUrl,
+        onClick: handleSelection,
+        sku: product == null ? void 0 : product.sku
+      }, product == null ? void 0 : product.sku, false, {
+        fileName: _jsxFileName$8,
+        lineNumber: 320,
+        columnNumber: 33
+      }, void 0))
+    }, void 0, false, {
+      fileName: _jsxFileName$8,
+      lineNumber: 316,
+      columnNumber: 17
+    }, void 0), u("div", {
+      className: "pb-4 mt-sm",
+      children: [screenSize.mobile && u(AddToCartButton, {
+        onClick: handleAddToCart
+      }, void 0, false, {
+        fileName: _jsxFileName$8,
+        lineNumber: 334,
+        columnNumber: 39
+      }, void 0), isHovering && screenSize.desktop && u(AddToCartButton, {
+        onClick: handleAddToCart
+      }, void 0, false, {
+        fileName: _jsxFileName$8,
+        lineNumber: 335,
+        columnNumber: 54
+      }, void 0)]
+    }, void 0, true, {
+      fileName: _jsxFileName$8,
+      lineNumber: 333,
+      columnNumber: 13
+    }, void 0)]
+  }, void 0, true, {
+    fileName: _jsxFileName$8,
+    lineNumber: 256,
+    columnNumber: 9
+  }, void 0);
+};
+var _jsxFileName$7 = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/ProductList/ProductList.tsx";
+const ProductList = ({
+  products,
+  numberOfColumns,
+  showFilters
+}) => {
+  const productsCtx = useProducts();
+  const {
+    currencySymbol,
+    currencyRate,
+    setRoute,
+    refineProduct,
+    refreshCart,
+    addToCart
+  } = productsCtx;
+  const [cartUpdated, setCartUpdated] = t(useState(false), "cartUpdated");
+  const [itemAdded, setItemAdded] = t(useState(""), "itemAdded");
+  const {
+    viewType
+  } = useProducts();
+  const [error, setError] = t(useState(false), "error");
+  const {
+    config: {
+      listview
+    }
+  } = useStore();
+  const className = showFilters ? "ds-sdk-product-list bg-body max-w-full pl-3 pb-2xl sm:pb-24" : "ds-sdk-product-list bg-body w-full mx-auto pb-2xl sm:pb-24";
+  useEffect(() => {
+    refreshCart && refreshCart();
+  }, [itemAdded]);
+  return u("div", {
+    className: classNames("ds-sdk-product-list bg-body pb-2xl sm:pb-24", className),
+    children: [cartUpdated && u("div", {
+      className: "mt-8",
+      children: u(Alert, {
+        title: `You added ${itemAdded} to your shopping cart.`,
+        type: "success",
+        description: "",
+        onClick: () => setCartUpdated(false)
+      }, void 0, false, {
+        fileName: _jsxFileName$7,
+        lineNumber: 51,
+        columnNumber: 21
+      }, void 0)
+    }, void 0, false, {
+      fileName: _jsxFileName$7,
+      lineNumber: 50,
+      columnNumber: 17
+    }, void 0), error && u("div", {
+      className: "mt-8",
+      children: u(Alert, {
+        title: `Something went wrong trying to add an item to your cart.`,
+        type: "error",
+        description: "",
+        onClick: () => setError(false)
+      }, void 0, false, {
+        fileName: _jsxFileName$7,
+        lineNumber: 61,
+        columnNumber: 21
+      }, void 0)
+    }, void 0, false, {
+      fileName: _jsxFileName$7,
+      lineNumber: 60,
+      columnNumber: 17
+    }, void 0), listview && viewType === "listview" ? u("div", {
+      className: "w-full",
+      children: u("div", {
+        className: "ds-sdk-product-list__list-view-default mt-md grid grid-cols-none pt-[15px] w-full gap-[10px]",
+        children: products == null ? void 0 : products.map((product) => {
+          var _a;
+          return u(ProductItem, {
+            item: product,
+            setError,
+            currencySymbol,
+            currencyRate,
+            setRoute,
+            refineProduct,
+            setCartUpdated,
+            setItemAdded,
+            addToCart
+          }, (_a = product == null ? void 0 : product.productView) == null ? void 0 : _a.id, false, {
+            fileName: _jsxFileName$7,
+            lineNumber: 74,
+            columnNumber: 29
+          }, void 0);
+        })
+      }, void 0, false, {
+        fileName: _jsxFileName$7,
+        lineNumber: 72,
+        columnNumber: 21
+      }, void 0)
+    }, void 0, false, {
+      fileName: _jsxFileName$7,
+      lineNumber: 71,
+      columnNumber: 17
+    }, void 0) : u("div", {
+      style: {
+        gridTemplateColumns: `repeat(${numberOfColumns}, minmax(0, 1fr))`
+      },
+      className: "ds-sdk-product-list__grid mt-md grid gap-y-8 gap-x-2xl xl:gap-x-8",
+      children: products == null ? void 0 : products.map((product) => {
+        var _a;
+        return u(ProductItem, {
+          item: product,
+          setError,
+          currencySymbol,
+          currencyRate,
+          setRoute,
+          refineProduct,
+          setCartUpdated,
+          setItemAdded,
+          addToCart
+        }, (_a = product == null ? void 0 : product.productView) == null ? void 0 : _a.id, false, {
+          fileName: _jsxFileName$7,
+          lineNumber: 97,
+          columnNumber: 25
+        }, void 0);
+      })
+    }, void 0, false, {
+      fileName: _jsxFileName$7,
+      lineNumber: 90,
+      columnNumber: 17
+    }, void 0)]
+  }, void 0, true, {
+    fileName: _jsxFileName$7,
+    lineNumber: 48,
+    columnNumber: 9
+  }, void 0);
+};
+var _jsxFileName$6 = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/containers/ProductsContainer.tsx";
+const ProductsContainer = ({
+  showFilters
+}) => {
+  const productsCtx = useProducts();
+  const {
+    screenSize
+  } = useSensor();
+  const {
+    variables,
+    items,
+    setCurrentPage,
+    currentPage,
+    setPageSize,
+    pageSize,
+    totalPages,
+    totalCount,
+    minQueryLength,
+    minQueryLengthReached,
+    pageSizeOptions,
+    loading
+  } = productsCtx;
+  useEffect(() => {
+    if (currentPage < 1) {
+      goToPage(1);
+    }
+  }, []);
+  const productCardArray = Array.from({
+    length: 8
+  });
+  const goToPage = (page) => {
+    if (typeof page === "number") {
+      setCurrentPage(page);
+      handleUrlPagination(page);
+    }
+  };
+  const onPageSizeChange = (pageSizeOption) => {
+    setPageSize(pageSizeOption);
+    handleUrlPageSize(pageSizeOption);
+  };
+  const translation = useTranslation();
+  const getPageSizeTranslation = (pageSize2, pageSizeOptions2, PerPagePicker2) => {
+    const pageSizeTranslation = translation.ProductContainers.pagePicker;
+    const pageSizeTranslationOrder = pageSizeTranslation.split(" ");
+    return pageSizeTranslationOrder.map((word, index) => word === "{pageSize}" ? u(PerPagePicker2, {
+      pageSizeOptions: pageSizeOptions2,
+      value: pageSize2,
+      onChange: onPageSizeChange
+    }, index, false, {
+      fileName: _jsxFileName$6,
+      lineNumber: 76,
+      columnNumber: 17
+    }, void 0) : `${word} `);
+  };
+  if (!minQueryLengthReached) {
+    const templateMinQueryText = translation.ProductContainers.minquery;
+    const title = templateMinQueryText.replace("{variables.phrase}", variables.phrase).replace("{minQueryLength}", minQueryLength);
+    return u("div", {
+      className: "ds-sdk-min-query__page mx-auto max-w-8xl py-12 px-4 sm:px-6 lg:px-8",
+      children: u(Alert, {
+        title,
+        type: "warning",
+        description: ""
+      }, void 0, false, {
+        fileName: _jsxFileName$6,
+        lineNumber: 95,
+        columnNumber: 17
+      }, void 0)
+    }, void 0, false, {
+      fileName: _jsxFileName$6,
+      lineNumber: 94,
+      columnNumber: 13
+    }, void 0);
+  }
+  if (!totalCount) {
+    return u("div", {
+      className: "ds-sdk-no-results__page mx-auto max-w-8xl py-12 px-4 sm:px-6 lg:px-8",
+      children: u(Alert, {
+        title: translation.ProductContainers.noresults,
+        type: "warning",
+        description: ""
+      }, void 0, false, {
+        fileName: _jsxFileName$6,
+        lineNumber: 103,
+        columnNumber: 17
+      }, void 0)
+    }, void 0, false, {
+      fileName: _jsxFileName$6,
+      lineNumber: 102,
+      columnNumber: 13
+    }, void 0);
+  }
+  return u(Fragment, {
+    children: [loading ? u("div", {
+      style: {
+        gridTemplateColumns: `repeat(${screenSize.columns}, minmax(0, 1fr))`
+      },
+      className: "ds-sdk-product-list__grid mt-md grid grid-cols-1 gap-y-8 gap-x-md sm:grid-cols-2 md:grid-cols-3 xl:gap-x-4 pl-8",
+      children: [" ", productCardArray.map((_, index) => u(ProductCardShimmer, {}, index, false, {
+        fileName: _jsxFileName$6,
+        lineNumber: 119,
+        columnNumber: 25
+      }, void 0))]
+    }, void 0, true, {
+      fileName: _jsxFileName$6,
+      lineNumber: 111,
+      columnNumber: 17
+    }, void 0) : u(ProductList, {
+      products: items,
+      numberOfColumns: screenSize.columns,
+      showFilters
+    }, void 0, false, {
+      fileName: _jsxFileName$6,
+      lineNumber: 123,
+      columnNumber: 17
+    }, void 0), u("div", {
+      className: `flex flex-row justify-between max-w-full ${showFilters ? "mx-auto" : "mr-auto"} w-full h-full`,
+      children: [u("div", {
+        children: getPageSizeTranslation(pageSize, pageSizeOptions, PerPagePicker)
+      }, void 0, false, {
+        fileName: _jsxFileName$6,
+        lineNumber: 130,
+        columnNumber: 17
+      }, void 0), totalPages > 1 && u(Pagination, {
+        currentPage,
+        totalPages,
+        onPageChange: goToPage
+      }, void 0, false, {
+        fileName: _jsxFileName$6,
+        lineNumber: 132,
+        columnNumber: 21
+      }, void 0)]
+    }, void 0, true, {
+      fileName: _jsxFileName$6,
+      lineNumber: 125,
+      columnNumber: 13
+    }, void 0)]
+  }, void 0);
+};
+var _jsxFileName$5 = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/SearchBar/SearchBar.tsx";
+const SearchBar = ({
+  phrase,
+  onKeyPress,
+  placeholder
+}) => {
+  return u("div", {
+    className: "relative ds-sdk-search-bar",
+    children: u("input", {
+      id: "search",
+      type: "text",
+      value: phrase,
+      onKeyPress,
+      className: "border border-gray-300 text-gray-800 text-sm block-display p-xs pr-lg ds-sdk-search-bar__input",
+      placeholder,
+      autocomplete: "off"
+    }, void 0, false, {
+      fileName: _jsxFileName$5,
+      lineNumber: 23,
+      columnNumber: 13
+    }, void 0)
+  }, void 0, false, {
+    fileName: _jsxFileName$5,
+    lineNumber: 22,
+    columnNumber: 9
+  }, void 0);
+};
+var _jsxFileName$4 = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/SortDropdown/SortDropdown.tsx";
+const SortDropdown = ({
+  value,
+  sortOptions,
+  onChange
+}) => {
+  const sortOptionButton = t(useRef(null), "sortOptionButton");
+  const sortOptionMenu = t(useRef(null), "sortOptionMenu");
+  const selectedOption = sortOptions.find((e) => e.value === value);
+  const translation = useTranslation();
+  const sortOptionTranslation = translation.SortDropdown.option;
+  const sortOption = sortOptionTranslation.replace("{selectedOption}", `${selectedOption == null ? void 0 : selectedOption.label}`);
+  const {
+    isDropdownOpen,
+    setIsDropdownOpen,
+    activeIndex,
+    setActiveIndex,
+    select,
+    setIsFocus,
+    listRef
+  } = useAccessibleDropdown({
+    options: sortOptions,
+    value,
+    onChange
+  });
+  useEffect(() => {
+    const menuRef = sortOptionMenu.current;
+    const handleBlur = () => {
+      setIsFocus(false);
+      setIsDropdownOpen(false);
+    };
+    const handleFocus = () => {
+      var _a;
+      if (((_a = menuRef == null ? void 0 : menuRef.parentElement) == null ? void 0 : _a.querySelector(":hover")) !== menuRef) {
+        setIsFocus(false);
+        setIsDropdownOpen(false);
+      }
+    };
+    menuRef == null ? void 0 : menuRef.addEventListener("blur", handleBlur);
+    menuRef == null ? void 0 : menuRef.addEventListener("focusin", handleFocus);
+    menuRef == null ? void 0 : menuRef.addEventListener("focusout", handleFocus);
+    return () => {
+      menuRef == null ? void 0 : menuRef.removeEventListener("blur", handleBlur);
+      menuRef == null ? void 0 : menuRef.removeEventListener("focusin", handleFocus);
+      menuRef == null ? void 0 : menuRef.removeEventListener("focusout", handleFocus);
+    };
+  }, [sortOptionMenu]);
+  return u(Fragment, {
+    children: u("div", {
+      ref: sortOptionMenu,
+      class: "ds-sdk-sort-dropdown relative inline-block text-left bg-gray-100 rounded-md outline outline-1 outline-gray-200 hover:outline-gray-600 h-[32px] z-9",
+      children: [u("button", {
+        className: "group flex justify-center items-center font-normal text-sm text-gray-700 rounded-md hover:cursor-pointer border-none bg-transparent hover:border-none hover:bg-transparent focus:border-none focus:bg-transparent active:border-none active:bg-transparent active:shadow-none h-full w-full px-sm",
+        ref: sortOptionButton,
+        onClick: () => setIsDropdownOpen(!isDropdownOpen),
+        onFocus: () => setIsFocus(false),
+        onBlur: () => setIsFocus(false),
+        children: [u(SvgSort, {
+          className: "h-md w-md mr-sm stroke-gray-600 m-auto"
+        }, void 0, false, {
+          fileName: _jsxFileName$4,
+          lineNumber: 84,
+          columnNumber: 21
+        }, void 0), selectedOption ? sortOption : translation.SortDropdown.title, u(SvgChevron, {
+          className: `flex-shrink-0 m-auto ml-sm h-md w-md stroke-1 stroke-gray-600 ${isDropdownOpen ? "" : "rotate-180"}`
+        }, void 0, false, {
+          fileName: _jsxFileName$4,
+          lineNumber: 86,
+          columnNumber: 21
+        }, void 0)]
+      }, void 0, true, {
+        fileName: _jsxFileName$4,
+        lineNumber: 77,
+        columnNumber: 17
+      }, void 0), isDropdownOpen && u("ul", {
+        ref: listRef,
+        tabIndex: -1,
+        className: "ds-sdk-sort-dropdown__items origin-top-right absolute hover:cursor-pointer right-0 w-full rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none mt-2 z-20",
+        children: sortOptions.map((option, i) => u("li", {
+          "aria-selected": option.value === (selectedOption == null ? void 0 : selectedOption.value),
+          onMouseOver: () => setActiveIndex(i),
+          className: `py-xs hover:bg-gray-100 hover:text-gray-900 ${i === activeIndex ? "bg-gray-100 text-gray-900" : ""}}`,
+          children: u("a", {
+            className: `ds-sdk-sort-dropdown__items--item block-display px-md py-sm text-sm mb-0
               no-underline active:no-underline focus:no-underline hover:no-underline
-              hover:text-gray-900 ${h.value===(o==null?void 0:o.value)?"ds-sdk-sort-dropdown__items--item-selected font-semibold text-gray-900":"font-normal text-gray-800"}`,onClick:()=>g(h.value),children:h.label})},P))})]})})},ss=()=>{const{viewType:e,setViewType:t}=J(),r=n=>{mr(n),t(n)};return m("div",{className:"flex justify-between",children:[a("button",{className:`flex items-center ${e==="gridview"?"bg-gray-100":""} ring-black ring-opacity-5  p-sm text-sm h-[32px] border border-gray-300`,onClick:()=>r("gridview"),children:a(Ia,{className:"h-[20px] w-[20px]"})}),a("button",{className:`flex items-center ${e==="listview"?"bg-gray-100":""} ring-black ring-opacity-5 p-sm text-sm h-[32px] border border-gray-300`,onClick:()=>r("listview"),children:a(Ta,{className:"h-[20px] w-[20px]"})})]})},Nt=({facets:e,totalCount:t,screenSize:r})=>{var S,x,B;const n=ue(),s=te(),o=Rt(),i=J(),c=le(),[d,l]=y(!!((S=i.variables.filter)!=null&&S.length)),[u,p]=y(fr()),v=Jt(()=>{var w,C;p(br(c,o==null?void 0:o.sortable,(w=s==null?void 0:s.config)==null?void 0:w.displayOutOfStock,(C=s==null?void 0:s.config)==null?void 0:C.currentCategoryUrlPath))},[s,c,o]);G(()=>{v()},[v]);const g=(x=s.config)!=null&&x.currentCategoryUrlPath?"position_ASC":"relevance_DESC",f=he("product_list_order"),b=f||g,[h,P]=y(b),L=w=>{P(w),n.setSort(Bt(w)),pr(w)};return m("div",{className:"flex flex-col max-w-5xl lg:max-w-full ml-auto w-full h-full",children:[m("div",{className:`flex gap-x-2.5 mb-[1px] ${r.mobile?"justify-between":"justify-end"}`,children:[a("div",{children:r.mobile?t>0&&a("div",{className:"pb-4",children:a(it,{displayFilter:()=>l(!d),type:"mobile"})}):s.config.displaySearchBox&&a(rs,{phrase:n.phrase,onKeyPress:w=>{var C;w.key==="Enter"&&n.setPhrase((C=w==null?void 0:w.target)==null?void 0:C.value)},onClear:()=>n.setPhrase(""),placeholder:c.SearchBar.placeholder})}),t>0&&m(Z,{children:[((B=s==null?void 0:s.config)==null?void 0:B.listview)&&a(ss,{}),a(as,{sortOptions:u,value:h,onChange:L})]})]}),r.mobile&&d&&a(qt,{searchFacets:e})]})},ns=()=>{const e=ue(),t=J(),{screenSize:r}=Ge(),n=le(),{displayMode:s}=te().config,[o,i]=y(!0),c=n.Loading.title;let d=t.categoryName||"";t.variables.phrase&&(d=n.CategoryFilters.results.replace("{phrase}",`"${t.variables.phrase??""}"`));const l=u=>n.CategoryFilters.products.replace("{totalCount}",`${u}`);return a(Z,{children:s!=="PAGE"&&(!r.mobile&&o&&t.facets.length>0?a("div",{className:"ds-widgets bg-body py-2",children:m("div",{className:"flex",children:[a(Za,{loading:t.loading,pageLoading:t.pageLoading,facets:t.facets,totalCount:t.totalCount,categoryName:t.categoryName??"",phrase:t.variables.phrase??"",showFilters:o,setShowFilters:i,filterCount:e.filterCount}),m("div",{className:`ds-widgets_results flex flex-col items-center ${t.categoryName?"pt-16":"pt-28"} w-full h-full`,children:[a(Nt,{facets:t.facets,totalCount:t.totalCount,screenSize:r}),a(yt,{}),a(Lt,{showFilters:o})]})]})}):a("div",{className:"ds-widgets bg-body py-2",children:m("div",{className:"flex flex-col",children:[a("div",{className:"flex flex-col items-center w-full h-full",children:a("div",{className:"justify-start w-full h-full",children:a("div",{class:"hidden sm:flex ds-widgets-_actions relative max-w-[21rem] w-full h-full px-2 flex-col overflow-y-auto",children:m("div",{className:"ds-widgets_actions_header flex justify-between items-center mb-md",children:[d&&m("span",{children:[" ",d]}),!t.loading&&a("span",{className:"text-primary text-sm",children:l(t.totalCount)})]})})})}),m("div",{className:"ds-widgets_results flex flex-col items-center w-full h-full",children:[a("div",{className:"flex w-full h-full",children:!r.mobile&&!t.loading&&t.facets.length>0&&a("div",{className:"flex w-full h-full",children:a(it,{displayFilter:()=>i(!0),type:"desktop",title:`${n.Filter.showTitle}${e.filterCount>0?` (${e.filterCount})`:""}`})})}),t.loading?r.mobile?a(Ra,{label:c}):a($a,{}):m(Z,{children:[a("div",{className:"flex w-full h-full",children:a(Nt,{facets:t.facets,totalCount:t.totalCount,screenSize:r})}),a(yt,{}),a(Lt,{showFilters:o&&t.facets.length>0})]})]})]})}))})};function ms({storeDetails:e,root:t}){if(!e)throw new Error("Livesearch PLP's storeDetails prop was not provided");if(!t)throw new Error("Livesearch PLP's Root prop was not provided");const r=dr(),n=pt({...e,context:{...e.context,userViewHistory:r}});Kt(a(Fr,{...pt(n),children:a(Tr,{children:a(Br,{children:a(ba,{children:a(ha,{children:a(ga,{children:a(Sa,{children:a(ns,{})})})})})})})}),t)}export{ms as LiveSearchPLP,ms as default};
+              hover:text-gray-900 ${option.value === (selectedOption == null ? void 0 : selectedOption.value) ? "ds-sdk-sort-dropdown__items--item-selected font-semibold text-gray-900" : "font-normal text-gray-800"}`,
+            onClick: () => select(option.value),
+            children: option.label
+          }, void 0, false, {
+            fileName: _jsxFileName$4,
+            lineNumber: 107,
+            columnNumber: 33
+          }, void 0)
+        }, i, false, {
+          fileName: _jsxFileName$4,
+          lineNumber: 99,
+          columnNumber: 29
+        }, void 0))
+      }, void 0, false, {
+        fileName: _jsxFileName$4,
+        lineNumber: 93,
+        columnNumber: 21
+      }, void 0)]
+    }, void 0, true, {
+      fileName: _jsxFileName$4,
+      lineNumber: 73,
+      columnNumber: 13
+    }, void 0)
+  }, void 0);
+};
+var _jsxFileName$3 = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/components/ViewSwitcher/ViewSwitcher.tsx";
+const ViewSwitcher = () => {
+  const {
+    viewType,
+    setViewType
+  } = useProducts();
+  const handleClick = (viewType2) => {
+    handleViewType(viewType2);
+    setViewType(viewType2);
+  };
+  return u("div", {
+    className: "flex justify-between",
+    children: [u("button", {
+      className: `flex items-center ${viewType === "gridview" ? "bg-gray-100" : ""} ring-black ring-opacity-5  p-sm text-sm h-[32px] border border-gray-300`,
+      onClick: () => handleClick("gridview"),
+      children: u(SvgGridView, {
+        className: "h-[20px] w-[20px]"
+      }, void 0, false, {
+        fileName: _jsxFileName$3,
+        lineNumber: 31,
+        columnNumber: 17
+      }, void 0)
+    }, void 0, false, {
+      fileName: _jsxFileName$3,
+      lineNumber: 25,
+      columnNumber: 13
+    }, void 0), u("button", {
+      className: `flex items-center ${viewType === "listview" ? "bg-gray-100" : ""} ring-black ring-opacity-5 p-sm text-sm h-[32px] border border-gray-300`,
+      onClick: () => handleClick("listview"),
+      children: u(SvgListView, {
+        className: "h-[20px] w-[20px]"
+      }, void 0, false, {
+        fileName: _jsxFileName$3,
+        lineNumber: 39,
+        columnNumber: 17
+      }, void 0)
+    }, void 0, false, {
+      fileName: _jsxFileName$3,
+      lineNumber: 33,
+      columnNumber: 13
+    }, void 0)]
+  }, void 0, true, {
+    fileName: _jsxFileName$3,
+    lineNumber: 24,
+    columnNumber: 9
+  }, void 0);
+};
+var _jsxFileName$2 = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/containers/ProductsHeader.tsx";
+const ProductsHeader = ({
+  facets,
+  totalCount,
+  screenSize
+}) => {
+  var _a, _b, _c;
+  const searchCtx = useSearch();
+  const storeCtx = useStore();
+  const attributeMetadata = useAttributeMetadata();
+  const productsCtx = useProducts();
+  const translation = useTranslation();
+  const [showMobileFacet, setShowMobileFacet] = t(useState(!!((_a = productsCtx.variables.filter) == null ? void 0 : _a.length)), "showMobileFacet");
+  const [sortOptions, setSortOptions] = t(useState(defaultSortOptions()), "sortOptions");
+  const getSortOptions = useCallback(() => {
+    var _a2, _b2;
+    setSortOptions(getSortOptionsfromMetadata(translation, attributeMetadata == null ? void 0 : attributeMetadata.sortable, (_a2 = storeCtx == null ? void 0 : storeCtx.config) == null ? void 0 : _a2.displayOutOfStock, (_b2 = storeCtx == null ? void 0 : storeCtx.config) == null ? void 0 : _b2.currentCategoryUrlPath));
+  }, [storeCtx, translation, attributeMetadata]);
+  useEffect(() => {
+    getSortOptions();
+  }, [getSortOptions]);
+  const defaultSortOption = ((_b = storeCtx.config) == null ? void 0 : _b.currentCategoryUrlPath) ? "position_ASC" : "relevance_DESC";
+  const sortFromUrl = getValueFromUrl("product_list_order");
+  const sortByDefault = sortFromUrl ? sortFromUrl : defaultSortOption;
+  const [sortBy, setSortBy] = t(useState(sortByDefault), "sortBy");
+  const onSortChange = (sortOption) => {
+    setSortBy(sortOption);
+    searchCtx.setSort(generateGQLSortInput(sortOption));
+    handleUrlSort(sortOption);
+  };
+  return u("div", {
+    className: "flex flex-col max-w-5xl lg:max-w-full ml-auto w-full h-full",
+    children: [u("div", {
+      className: `flex gap-x-2.5 mb-[1px] ${screenSize.mobile ? "justify-between" : "justify-end"}`,
+      children: [u("div", {
+        children: screenSize.mobile ? totalCount > 0 && u("div", {
+          className: "pb-4",
+          children: u(FilterButton, {
+            displayFilter: () => setShowMobileFacet(!showMobileFacet),
+            type: "mobile"
+          }, void 0, false, {
+            fileName: _jsxFileName$2,
+            lineNumber: 75,
+            columnNumber: 35
+          }, void 0)
+        }, void 0, false, {
+          fileName: _jsxFileName$2,
+          lineNumber: 74,
+          columnNumber: 31
+        }, void 0) : storeCtx.config.displaySearchBox && u(SearchBar, {
+          phrase: searchCtx.phrase,
+          onKeyPress: (e) => {
+            var _a2;
+            if (e.key === "Enter") {
+              searchCtx.setPhrase((_a2 = e == null ? void 0 : e.target) == null ? void 0 : _a2.value);
+            }
+          },
+          onClear: () => searchCtx.setPhrase(""),
+          placeholder: translation.SearchBar.placeholder
+        }, void 0, false, {
+          fileName: _jsxFileName$2,
+          lineNumber: 82,
+          columnNumber: 31
+        }, void 0)
+      }, void 0, false, {
+        fileName: _jsxFileName$2,
+        lineNumber: 71,
+        columnNumber: 17
+      }, void 0), totalCount > 0 && u(Fragment, {
+        children: [((_c = storeCtx == null ? void 0 : storeCtx.config) == null ? void 0 : _c.listview) && u(ViewSwitcher, {}, void 0, false, {
+          fileName: _jsxFileName$2,
+          lineNumber: 96,
+          columnNumber: 56
+        }, void 0), u(SortDropdown, {
+          sortOptions,
+          value: sortBy,
+          onChange: onSortChange
+        }, void 0, false, {
+          fileName: _jsxFileName$2,
+          lineNumber: 98,
+          columnNumber: 25
+        }, void 0)]
+      }, void 0, true)]
+    }, void 0, true, {
+      fileName: _jsxFileName$2,
+      lineNumber: 70,
+      columnNumber: 13
+    }, void 0), screenSize.mobile && showMobileFacet && u(Facets, {
+      searchFacets: facets
+    }, void 0, false, {
+      fileName: _jsxFileName$2,
+      lineNumber: 102,
+      columnNumber: 54
+    }, void 0)]
+  }, void 0, true, {
+    fileName: _jsxFileName$2,
+    lineNumber: 69,
+    columnNumber: 9
+  }, void 0);
+};
+var _jsxFileName$1 = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/containers/App.tsx";
+const App = () => {
+  const searchCtx = useSearch();
+  const productsCtx = useProducts();
+  const {
+    screenSize
+  } = useSensor();
+  const translation = useTranslation();
+  const {
+    displayMode
+  } = useStore().config;
+  const [showFilters, setShowFilters] = t(useState(true), "showFilters");
+  const loadingLabel = translation.Loading.title;
+  let title = productsCtx.categoryName || "";
+  if (productsCtx.variables.phrase) {
+    const text = translation.CategoryFilters.results;
+    title = text.replace("{phrase}", `"${productsCtx.variables.phrase ?? ""}"`);
+  }
+  const getResults = (totalCount) => {
+    const resultsTranslation = translation.CategoryFilters.products;
+    const results = resultsTranslation.replace("{totalCount}", `${totalCount}`);
+    return results;
+  };
+  useEffect(() => {
+    console.log("products context", productsCtx);
+  }, [productsCtx]);
+  return u(Fragment, {
+    children: !(displayMode === "PAGE") && (!screenSize.mobile && showFilters && productsCtx.facets.length > 0 ? u("div", {
+      className: "ds-widgets bg-body py-2",
+      children: u("div", {
+        className: "flex",
+        children: [u(CategoryFilters, {
+          loading: productsCtx.loading,
+          pageLoading: productsCtx.pageLoading,
+          facets: productsCtx.facets,
+          totalCount: productsCtx.totalCount,
+          categoryName: productsCtx.categoryName ?? "",
+          phrase: productsCtx.variables.phrase ?? "",
+          showFilters,
+          setShowFilters,
+          filterCount: searchCtx.filterCount
+        }, void 0, false, {
+          fileName: _jsxFileName$1,
+          lineNumber: 52,
+          columnNumber: 29
+        }, void 0), u("div", {
+          className: `ds-widgets_results flex flex-col items-center ${productsCtx.categoryName ? "pt-16" : "pt-28"} w-full h-full`,
+          children: [u(ProductsHeader, {
+            facets: productsCtx.facets,
+            totalCount: productsCtx.totalCount,
+            screenSize
+          }, void 0, false, {
+            fileName: _jsxFileName$1,
+            lineNumber: 68,
+            columnNumber: 33
+          }, void 0), u(SelectedFilters, {}, void 0, false, {
+            fileName: _jsxFileName$1,
+            lineNumber: 73,
+            columnNumber: 33
+          }, void 0), u(ProductsContainer, {
+            showFilters
+          }, void 0, false, {
+            fileName: _jsxFileName$1,
+            lineNumber: 75,
+            columnNumber: 33
+          }, void 0)]
+        }, void 0, true, {
+          fileName: _jsxFileName$1,
+          lineNumber: 63,
+          columnNumber: 29
+        }, void 0)]
+      }, void 0, true, {
+        fileName: _jsxFileName$1,
+        lineNumber: 51,
+        columnNumber: 25
+      }, void 0)
+    }, void 0, false, {
+      fileName: _jsxFileName$1,
+      lineNumber: 50,
+      columnNumber: 21
+    }, void 0) : u("div", {
+      className: "ds-widgets bg-body py-2",
+      children: u("div", {
+        className: "flex flex-col",
+        children: [u("div", {
+          className: "flex flex-col items-center w-full h-full",
+          children: u("div", {
+            className: "justify-start w-full h-full",
+            children: u("div", {
+              class: "hidden sm:flex ds-widgets-_actions relative max-w-[21rem] w-full h-full px-2 flex-col overflow-y-auto",
+              children: u("div", {
+                className: "ds-widgets_actions_header flex justify-between items-center mb-md",
+                children: [title && u("span", {
+                  children: [" ", title]
+                }, void 0, true, {
+                  fileName: _jsxFileName$1,
+                  lineNumber: 86,
+                  columnNumber: 55
+                }, void 0), !productsCtx.loading && u("span", {
+                  className: "text-primary text-sm",
+                  children: getResults(productsCtx.totalCount)
+                }, void 0, false, {
+                  fileName: _jsxFileName$1,
+                  lineNumber: 88,
+                  columnNumber: 49
+                }, void 0)]
+              }, void 0, true, {
+                fileName: _jsxFileName$1,
+                lineNumber: 85,
+                columnNumber: 41
+              }, void 0)
+            }, void 0, false, {
+              fileName: _jsxFileName$1,
+              lineNumber: 84,
+              columnNumber: 37
+            }, void 0)
+          }, void 0, false, {
+            fileName: _jsxFileName$1,
+            lineNumber: 83,
+            columnNumber: 33
+          }, void 0)
+        }, void 0, false, {
+          fileName: _jsxFileName$1,
+          lineNumber: 82,
+          columnNumber: 29
+        }, void 0), u("div", {
+          className: "ds-widgets_results flex flex-col items-center w-full h-full",
+          children: [u("div", {
+            className: "flex w-full h-full",
+            children: !screenSize.mobile && !productsCtx.loading && productsCtx.facets.length > 0 && u("div", {
+              className: "flex w-full h-full",
+              children: u(FilterButton, {
+                displayFilter: () => setShowFilters(true),
+                type: "desktop",
+                title: `${translation.Filter.showTitle}${searchCtx.filterCount > 0 ? ` (${searchCtx.filterCount})` : ""}`
+              }, void 0, false, {
+                fileName: _jsxFileName$1,
+                lineNumber: 100,
+                columnNumber: 45
+              }, void 0)
+            }, void 0, false, {
+              fileName: _jsxFileName$1,
+              lineNumber: 99,
+              columnNumber: 41
+            }, void 0)
+          }, void 0, false, {
+            fileName: _jsxFileName$1,
+            lineNumber: 97,
+            columnNumber: 33
+          }, void 0), productsCtx.loading ? screenSize.mobile ? u(Loading, {
+            label: loadingLabel
+          }, void 0, false, {
+            fileName: _jsxFileName$1,
+            lineNumber: 112,
+            columnNumber: 41
+          }, void 0) : u(Shimmer, {}, void 0, false, {
+            fileName: _jsxFileName$1,
+            lineNumber: 114,
+            columnNumber: 41
+          }, void 0) : u(Fragment, {
+            children: [u("div", {
+              className: "flex w-full h-full",
+              children: u(ProductsHeader, {
+                facets: productsCtx.facets,
+                totalCount: productsCtx.totalCount,
+                screenSize
+              }, void 0, false, {
+                fileName: _jsxFileName$1,
+                lineNumber: 119,
+                columnNumber: 45
+              }, void 0)
+            }, void 0, false, {
+              fileName: _jsxFileName$1,
+              lineNumber: 118,
+              columnNumber: 41
+            }, void 0), u(SelectedFilters, {}, void 0, false, {
+              fileName: _jsxFileName$1,
+              lineNumber: 125,
+              columnNumber: 41
+            }, void 0), u(ProductsContainer, {
+              showFilters: showFilters && productsCtx.facets.length > 0
+            }, void 0, false, {
+              fileName: _jsxFileName$1,
+              lineNumber: 126,
+              columnNumber: 41
+            }, void 0)]
+          }, void 0, true)]
+        }, void 0, true, {
+          fileName: _jsxFileName$1,
+          lineNumber: 96,
+          columnNumber: 29
+        }, void 0)]
+      }, void 0, true, {
+        fileName: _jsxFileName$1,
+        lineNumber: 81,
+        columnNumber: 25
+      }, void 0)
+    }, void 0, false, {
+      fileName: _jsxFileName$1,
+      lineNumber: 80,
+      columnNumber: 21
+    }, void 0))
+  }, void 0);
+};
+var _jsxFileName = "/Users/stephen/work/code/ccdm/storefront-search-dropin/src/plp/LiveSearchPLP.tsx";
+function LiveSearchPLP({
+  storeDetails,
+  root
+}) {
+  if (!storeDetails) {
+    throw new Error("Livesearch PLP's storeDetails prop was not provided");
+  }
+  if (!root) {
+    throw new Error("Livesearch PLP's Root prop was not provided");
+  }
+  const userViewHistory = getUserViewHistory();
+  const updatedStoreDetails = validateStoreDetailsKeys({
+    ...storeDetails,
+    context: {
+      ...storeDetails.context,
+      userViewHistory
+    }
+  });
+  render(u(StoreContextProvider, {
+    ...validateStoreDetailsKeys(updatedStoreDetails),
+    children: u(AttributeMetadataProvider, {
+      children: u(SearchProvider, {
+        children: u(Resize, {
+          children: u(Translation, {
+            children: u(ProductsContextProvider, {
+              children: u(CartProvider, {
+                children: u(App, {}, void 0, false, {
+                  fileName: _jsxFileName,
+                  lineNumber: 48,
+                  columnNumber: 37
+                }, this)
+              }, void 0, false, {
+                fileName: _jsxFileName,
+                lineNumber: 47,
+                columnNumber: 33
+              }, this)
+            }, void 0, false, {
+              fileName: _jsxFileName,
+              lineNumber: 46,
+              columnNumber: 29
+            }, this)
+          }, void 0, false, {
+            fileName: _jsxFileName,
+            lineNumber: 45,
+            columnNumber: 25
+          }, this)
+        }, void 0, false, {
+          fileName: _jsxFileName,
+          lineNumber: 44,
+          columnNumber: 21
+        }, this)
+      }, void 0, false, {
+        fileName: _jsxFileName,
+        lineNumber: 43,
+        columnNumber: 17
+      }, this)
+    }, void 0, false, {
+      fileName: _jsxFileName,
+      lineNumber: 42,
+      columnNumber: 13
+    }, this)
+  }, void 0, false, {
+    fileName: _jsxFileName,
+    lineNumber: 41,
+    columnNumber: 9
+  }, this), root);
+}
+export {
+  LiveSearchPLP,
+  LiveSearchPLP as default
+};
+//# sourceMappingURL=ProductListingPage.js.map

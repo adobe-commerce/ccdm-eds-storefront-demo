@@ -1,6 +1,8 @@
-// import { LiveSearchPLP } from 'http://localhost:8081/src/plp/LiveSearchPLP.tsx';
-// import { render as provider  } from "/scripts/__dropins__/storefront-plp/render.js";
-import { LiveSearchPLP } from "/scripts/__dropins__/storefront-plp/containers/ProductListingPage.js";
+// import { LiveSearchPLP as LiveSearchPLPLocal } from 'http://localhost:8081/src/plp/LiveSearchPLP.tsx';
+import { events } from '@dropins/tools/event-bus.js';
+import { render as provider } from '../../../../../../../../scripts/__dropins__/storefront-plp/render.js';
+import { LiveSearchPLP } from '../../../../../../../../scripts/__dropins__/storefront-plp/containers/ProductListingPage.js';
+
 import { readBlockConfig } from '../../scripts/aem.js';
 import { getConfigValue } from '../../scripts/configs.js';
 
@@ -73,9 +75,16 @@ export default async function decorate(block) {
   //     }
   //   }, 200);
   // });
-
-  return LiveSearchPLP({ storeDetails, root: block });
-  // provider.render(ProductListingPage, { storeDetails })(block);
+  const local = document.createElement('div');
+  const stat = document.createElement('div');
+  block.appendChild(stat);
+  block.appendChild(local);
+  // TODO: SVG issue causes either local rendering or static rendering to break. You have to pick one.
+  // If you want local rendering to work, then in the icons/index.ts you have to add back `?react` at end of imports
+  // provider.render(LiveSearchPLPLocal, { storeDetails, root: local })(block);
+  // provider.render(LiveSearchPLP, { storeDetails, root: stat })(block);
+  // LiveSearchPLPLocal({ storeDetails, root: local });
+  LiveSearchPLP({ storeDetails, root: stat });
 }
 
 // import { LiveSearchPLP } from 'http://localhost:8081/src/plp/LiveSearchPLP.tsx';

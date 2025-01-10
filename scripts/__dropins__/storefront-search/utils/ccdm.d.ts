@@ -18,5 +18,5 @@ export declare const channels: {
 };
 export declare const setDemoContext: (brand: keyof typeof channels) => void;
 /** Sets the correct headers for CCDM configuration */
-export declare const configureHeaders: (type: unknown, payload: unknown) => void;
+export declare const setHeaders: () => void;
 //# sourceMappingURL=ccdm.d.ts.map

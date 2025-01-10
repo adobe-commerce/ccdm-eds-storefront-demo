@@ -2,7 +2,7 @@ import { D as DEMO_CONTEXT, b as setFetchGraphQlHeader, d as DEMO_DATA_KEY } fro
 import { h, i, r, a, e, f } from "./chunks/searchProducts.js";
 import { Initializer } from "@dropins/tools/lib.js";
 import { events } from "@dropins/tools/event-bus.js";
-import { setFetchGraphQlHeader as setFetchGraphQlHeader$1 } from "@dropins/tools/fetch-graphql.js";
+import "@dropins/tools/fetch-graphql.js";
 const channels = {
   "Aurora": {
     id: "b726c1e9-2842-4ab5-9b19-ca65c23bbb3b",
@@ -24,16 +24,43 @@ const setDemoContext = (brand) => {
   const data = channels[brand];
   window.localStorage.setItem(DEMO_CONTEXT, JSON.stringify(data));
 };
-const configureHeaders = (type, payload) => {
-  if (type === "Brand") {
-    console.log("brand changed");
-    const data = channels[payload];
-    setFetchGraphQlHeader("AC-Channel-Id", data.id);
-    setFetchGraphQlHeader("AC-Price-Book-Id", data.value.toLowerCase());
+function getMake() {
+  const context = JSON.parse(window.localStorage.getItem("_demo:context"));
+  const data = JSON.parse(window.localStorage.getItem("_demo:data"));
+  const makeId = context == null ? void 0 : context.id;
+  let make;
+  for (const [key, value] of Object.entries(data)) {
+    if ((value == null ? void 0 : value.id) === makeId) {
+      make = key;
+    }
   }
-  if (type === "Model") {
-    console.log("model changed");
-    channels[payload];
+  return {
+    make,
+    makeId
+  };
+}
+function getPriceBookHeader() {
+  const priceBook = window.localStorage.getItem("_demo:price-book") || "Brand";
+  if (priceBook === "Brand") {
+    const context = JSON.parse(window.localStorage.getItem("_demo:context"));
+    return context == null ? void 0 : context.value.toLowerCase();
+  }
+  return priceBook.toLowerCase();
+}
+const setHeaders = () => {
+  const model = window.localStorage.getItem("_demo:model");
+  const {
+    makeId
+  } = getMake();
+  const priceBook = getPriceBookHeader();
+  if (model) {
+    setFetchGraphQlHeader("AC-Policy-Model", model);
+  }
+  if (makeId) {
+    setFetchGraphQlHeader("AC-Channel-Id", makeId);
+  }
+  if (priceBook) {
+    setFetchGraphQlHeader("AC-Price-Book-Id", priceBook);
   }
 };
 const initializeDemoData = () => {
@@ -58,6 +85,7 @@ const initialize = new Initializer({
       ...defaultConfig,
       ...config2
     });
+    setHeaders();
   },
   listeners: () => [
     // events.on('authenticated', (authenticated) => {
@@ -77,9 +105,7 @@ const initialize = new Initializer({
       if (type === "PriceBook") {
         const priceBook = payload;
         window.localStorage.setItem("_demo:price-book", priceBook);
-        setFetchGraphQlHeader$1("AC-Price-Book-Id", priceBook.toLowerCase());
       }
-      configureHeaders(type, payload);
       window.location.reload();
     })
   ]

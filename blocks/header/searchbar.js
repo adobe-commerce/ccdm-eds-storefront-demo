@@ -1,10 +1,10 @@
 /* eslint-disable import/no-unresolved */
 
 // setting importmap to `@dropins/storefront-search` doesn't seem to work anymore ???
-// import { render as provider } from 'http://localhost:3002/render.js';
-// import SearchPopover from 'http://localhost:3002/containers/SearchPopover.js';
-import { render as provider } from "/scripts/__dropins__/storefront-search/render.js"
-import SearchPopover from "/scripts/__dropins__/storefront-search/containers/SearchPopover.js";
+import { render as provider } from 'http://localhost:3002/render.js';
+import SearchPopover from 'http://localhost:3002/containers/SearchPopover.js';
+// import { render as provider } from "/scripts/__dropins__/storefront-search/render.js"
+// import SearchPopover from "/scripts/__dropins__/storefront-search/containers/SearchPopover.js";
 
 // import { loadScript } from '../../scripts/aem.js';
 import { getConfigValue } from '../../scripts/configs.js';

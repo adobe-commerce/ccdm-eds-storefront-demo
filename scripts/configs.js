@@ -67,6 +67,24 @@ const getConfigForEnvironment = async (environment) => {
 };
 
 /**
+ * Retrieves headers from config entries like commerce.headers.pdp.my-header, etc and
+ * returns as object of all headers like { my-header: value, ... }
+*/
+export const getHeaders = async (scope, environment) => {
+  const env = environment || calcEnvironment();
+  const config = await getConfigForEnvironment(env);
+  const configElements = config.data.filter((el) => el?.key.includes(`headers.${scope}`));
+
+  return configElements.reduce((obj, item) => {
+    let { key } = item;
+    if (key.includes(`commerce.headers.${scope}.`)) {
+      key = key.replace(`commerce.headers.${scope}.`, '');
+    }
+    return { ...obj, [key]: item.value };
+  }, {});
+};
+
+/**
  * This function retrieves a configuration value for a given environment.
  *
  * @param {string} configParam - The configuration parameter to retrieve.

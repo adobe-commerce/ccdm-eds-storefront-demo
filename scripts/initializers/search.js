@@ -12,8 +12,6 @@ import { fetchPlaceholders } from '../aem.js';
 
 await initializeDropin(async () => {
   // should come from getConfigValue
-  // console.log(await getConfigValue('commerce-ccdm-enabled'));
-  // console.log(await getConfigValue('commerce-endpoint'));
   const labels = await fetchPlaceholders();
 
   const langDefinitions = {
@@ -37,6 +35,7 @@ await initializeDropin(async () => {
     storeViewCode: await getConfigValue('commerce-store-view-code'),
     customerGroup: await getConfigValue('commerce-customer-group'),
     route: ({ sku, urlKey }) => `/products/${urlKey}/${sku}`,
+    // headers: getHeaders('search'),
   };
 
   // configurations for

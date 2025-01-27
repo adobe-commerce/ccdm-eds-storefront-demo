@@ -35,21 +35,33 @@ await initializeDropin(async () => {
     storeViewCode: await getConfigValue('commerce-store-view-code'),
     customerGroup: await getConfigValue('commerce-customer-group'),
     route: ({ sku, urlKey }) => `/products/${urlKey}/${sku}`,
-    // headers: getHeaders('search'),
   };
 
-  // configurations for
+  // configurations for search functionality
   const search = {
     pageSize: 8,
     perPageConfig: {
-      pageSizeOptions: [12, 24, 36],
-      defaultPageSizeOption: 24,
+      pageSizeOptions: '12, 24, 36',
+      defaultPageSizeOption: '12',
     },
-    minQueryLength: 2,
+    minQueryLength: '2',
     currencySymbol: '$',
-    currencyRate: 1,
+    currencyRate: '1',
     displayOutOfStock: true,
     allowAllProducts: false,
+    imageCarousel: false,
+    optimizeImages: true,
+    imageBaseWidth: 200,
+    listview: true,
+    displayMode: '', // "" for plp || "PAGE" for category/catalog
+    addToCart: async (...args) => {
+      const { addProductsToCart } = await import('../storefront-cart/api.js');
+      await addProductsToCart([{
+        sku: args[0],
+        options: args[1],
+        quantity: args[2],
+      }]);
+    },
     route: {
       route: '/search',
       query: 'q',
@@ -59,6 +71,7 @@ await initializeDropin(async () => {
   setEndpoint(await getConfigValue('commerce-endpoint'));
   setFetchGraphQlHeaders({
     'Content-Type': 'application/json',
+    // getHeaders() from config here
     'AC-Environment-Id': await getConfigValue('commerce-environment-id'),
     'AC-Scope-Locale':
       (await getConfigValue('commerce-scope-locale')) ?? 'en-US',

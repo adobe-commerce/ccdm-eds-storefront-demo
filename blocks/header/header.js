@@ -16,6 +16,10 @@ import { renderAuthDropdown } from './renderAuthDropdown.js';
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
+const brandIds = {"Aurora":{"id":"b726c1e9-2842-4ab5-9b19-ca65c23bbb3b","value":"Aurora","models":["Flux","Nexus","Nova","Prism","Pulse"]},
+"Bolt":{"id":"552fb8e1-978f-42c5-aab2-d96642e436d8","value":"Bolt","models":["Atlas","Mammoth","Ranger","Scout","Terrain"]},
+"Cruz":{"id":"7140c0dc-0abf-4817-91ad-22f4edceeb85","value":"Cruz","models":["Breeze","Echo","Element","Harmony","Verde"]}};
+
 function closeOnEscape(e) {
   if (e.code === 'Escape') {
     const nav = document.getElementById('nav');
@@ -201,20 +205,20 @@ export default async function decorate(block) {
     // FOR CCDM DEMO ONLY
 
     const dropdownItems = navSections.querySelectorAll(':scope .default-content-wrapper > ul > li > ul > li');
+    
 
     dropdownItems
       // listen for individual clicks
       .forEach((navItem) => {
         navItem.addEventListener('click', () => {
           const navSection = navItem.parentNode.parentNode.querySelector('p');
-          // let selectedItem = navItem.textContent;
           const selectedItem = navItem.textContent;
 
           if (navSection.textContent.includes('Brand')) {
             navSection.innerText = `Brand: ${selectedItem}`;
-            events.emit('search/event', { type: 'Brand', payload: selectedItem });
+            // events.emit('search/event', { type: 'Brand', payload: selectedItem });
 
-            const { models } = data[selectedItem];
+            const { models } = brandIds[selectedItem];//data[selectedItem];
 
             const modelList = document.getElementById('select-model').querySelector('ul');
             modelList.innerHTML = '';
@@ -227,20 +231,31 @@ export default async function decorate(block) {
             if (!models.includes(selectedModel)) {
               const modelSelect = document.getElementById('select-model').querySelector('p');
               modelSelect.innerText = 'Model';
-
-              events.emit('search/event', { type: 'Model', payload: '' });
+              // events.emit('search/event', { type: 'Model', payload: '' });
             }
           }
 
           if (navSection.textContent.includes('Model')) {
             navSection.innerText = `Model: ${selectedItem}`;
-            events.emit('search/event', { type: 'Model', payload: selectedItem });
+            // events.emit('search/event', { type: 'Model', payload: selectedItem });
           }
 
           if (navSection.textContent.includes('Price Book')) {
             navSection.innerText = `Price Book: ${selectedItem}`;
-            events.emit('search/event', { type: 'PriceBook', payload: selectedItem });
+            // events.emit('search/event', { type: 'PriceBook', payload: selectedItem });
           }
+
+          let ddBrand = document.getElementById('select-brand').querySelector('p').innerText.split(':')[1]?.trim();
+          let ddModel = document.getElementById('select-model').querySelector('p').innerText.split(':')[1]?.trim();
+          let ddPriceBook = document.getElementById('select-price-book').querySelector('p').innerText.split(':')[1]?.trim();
+          events.emit('search/event', { 
+            channel: brandIds[ddBrand].id,
+            model: ddModel,
+            priceBook: ddPriceBook,
+           });
+          console.log('Selected Brand', ddBrand);
+          console.log('Selected Model', ddModel);
+          console.log('Selected Price Book', ddPriceBook);
         });
       });
   }

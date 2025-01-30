@@ -91,23 +91,23 @@ const initialize = new Initializer({
     // events.on('authenticated', (authenticated) => {
     //   console.log('authenticated', authenticated);
     // }),
-    events.on("search/event", ({
-      type,
-      payload
-    }) => {
-      const channelKey = payload;
-      if (type === "Brand") {
-        setDemoContext(channelKey);
-      }
-      if (type === "Model") {
-        window.localStorage.setItem("_demo:model", payload);
-      }
-      if (type === "PriceBook") {
-        const priceBook = payload;
-        window.localStorage.setItem("_demo:price-book", priceBook);
-      }
-      window.location.reload();
-    })
+    // events.on("search/event", ({
+    //   type,
+    //   payload
+    // }) => {
+    //   const channelKey = payload;
+    //   if (type === "Brand") {
+    //     setDemoContext(channelKey);
+    //   }
+    //   if (type === "Model") {
+    //     window.localStorage.setItem("_demo:model", payload);
+    //   }
+    //   if (type === "PriceBook") {
+    //     const priceBook = payload;
+    //     window.localStorage.setItem("_demo:price-book", priceBook);
+    //   }
+    //   window.location.reload();
+    // })
   ]
 });
 const config = initialize.config;

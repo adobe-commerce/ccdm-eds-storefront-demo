@@ -218,7 +218,7 @@ export default async function decorate(block) {
             navSection.innerText = `Brand: ${selectedItem}`;
             // events.emit('search/event', { type: 'Brand', payload: selectedItem });
 
-            const { models } = data[selectedItem];
+            const { models } = brandIds[selectedItem];//data[selectedItem];
 
             const modelList = document.getElementById('select-model').querySelector('ul');
             modelList.innerHTML = '';
@@ -245,11 +245,11 @@ export default async function decorate(block) {
             // events.emit('search/event', { type: 'PriceBook', payload: selectedItem });
           }
 
-          let ddBrand = document.getElementById('select-brand').querySelector('p').innerText.split(':')[1];
-          let ddModel = document.getElementById('select-model').querySelector('p').innerText.split(':')[1];
-          let ddPriceBook = document.getElementById('select-price-book').querySelector('p').innerText.split(':')[1];
+          let ddBrand = document.getElementById('select-brand').querySelector('p').innerText.split(':')[1]?.trim();
+          let ddModel = document.getElementById('select-model').querySelector('p').innerText.split(':')[1]?.trim();
+          let ddPriceBook = document.getElementById('select-price-book').querySelector('p').innerText.split(':')[1]?.trim();
           events.emit('search/event', { 
-            channel: 'b726c1e9-2842-4ab5-9b19-ca65c23bbb3b',
+            channel: brandIds[ddBrand].id,
             model: ddModel,
             priceBook: ddPriceBook,
            });
